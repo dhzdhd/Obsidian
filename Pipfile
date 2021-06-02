@@ -11,6 +11,7 @@ jishaku = "*"
 aiohttp = "*"
 loguru = "*"
 "dislash.py" = "*"
+discord-py-slash-command = "*"
 
 [dev-packages]
 

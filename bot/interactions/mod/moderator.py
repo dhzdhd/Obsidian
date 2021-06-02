@@ -63,6 +63,20 @@ class Moderator(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @slash_commands.command(
+        name="purge",
+        description="Delete certain amount of messages",
+        options=[
+            Option("amount", "Number of messages to be deleted", Type.INTEGER, required=True)
+        ]
+    )
+    @slash_commands.has_permissions(manage_guild=True)
+    async def clear_messages(self, ctx: SlashInteraction) -> None:
+        """Deletes given number of messages."""
+        amount = ctx.get("amount")
+
+        await ctx.channel.purge(limit=amount)
+
 
 def setup(bot: commands.Bot) -> None:
     """Load the Moderator cog."""

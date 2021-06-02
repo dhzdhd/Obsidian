@@ -1,5 +1,4 @@
 import datetime
-import random
 from typing import Tuple, Union
 
 from discord import Embed
@@ -28,8 +27,7 @@ class WolframCommands(commands.Cog):
     Commands
         └ wolfram / wa
             ├ image         Fetch the response to a query in the form of an image.
-            ├ text          Fetch the response to a query in a short phrase.
-            └ chat          Fetch the response of the Wolfram AI based on the given question/statement.
+            └ text          Fetch the response to a query in a short phrase.
     """
 
     def __init__(self, bot: commands.Bot) -> None:

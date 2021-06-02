@@ -52,6 +52,12 @@ class Moderator(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    @commands.command(name="purge")
+    @commands.has_permissions(manage_guild=True)
+    async def clear_messages(self, ctx: commands.Context, amount: int) -> None:
+        """Deletes given number of messages."""
+        await ctx.channel.purge(limit=amount)
+
 
 def setup(bot: commands.Bot) -> None:
     """Load the Moderator cog."""
