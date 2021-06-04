@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 
 from bot.utils.constants import Colours
+from bot.utils.embed import SuccessEmbed
 
 
 class Moderator(commands.Cog):
@@ -57,6 +58,18 @@ class Moderator(commands.Cog):
     async def clear_messages(self, ctx: commands.Context, amount: int) -> None:
         """Deletes given number of messages."""
         await ctx.channel.purge(limit=amount)
+
+    @commands.command(name="slowmode", aliases=("sm",))
+    @commands.has_permissions(manage_guild=True)
+    async def slow_mode(self, ctx: commands.Context, time: int = 0) -> None:
+        await ctx.message.delete()
+        await ctx.channel.edit(slowmode_delay=time)
+
+        embed = SuccessEmbed(
+            description=f"Set channel slowmode to {time} seconds.",
+            author=ctx.author
+        )
+        await ctx.send(embed=embed, delete_after=20)
 
 
 def setup(bot: commands.Bot) -> None:

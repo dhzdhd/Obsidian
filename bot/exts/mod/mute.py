@@ -5,6 +5,7 @@ import discord
 from discord.ext import commands
 
 from bot.utils.constants import Colours
+from bot.utils.embed import ErrorEmbed
 
 
 class MuteUnmute(commands.Cog):
@@ -21,14 +22,18 @@ class MuteUnmute(commands.Cog):
         self.bot = bot
 
     @staticmethod
-    async def _manage_role(ctx: commands.Context) -> discord.Role:
+    async def _manage_role(ctx: commands.Context, user: discord.Member) -> discord.Role:
         role: discord.Role = discord.utils.get(ctx.guild.roles, name="Muted")
 
         if not role:
             role = await ctx.guild.create_role(
                 name="Muted",
                 permissions={
-
+                    user: discord.PermissionOverwrite(
+                        send_messages=False,
+                        use_slash_commands=False,
+                        connect=False
+                    )
                 },
                 colour=discord.Colour.red(),
                 reason="A mute role"
@@ -42,7 +47,7 @@ class MuteUnmute(commands.Cog):
         """Mutes a user for a specified amount of time (defaulted to 5 minutes)"""
         await ctx.message.delete()
 
-        role = await self._manage_role(ctx)
+        role = await self._manage_role(ctx, user)
 
         mute_embed = discord.Embed(
             title=f"Muted user: **{user.display_name}**",
@@ -91,6 +96,29 @@ class MuteUnmute(commands.Cog):
         await user.remove_roles(role)
 
         await ctx.send(embed=unmute_embed, delete_after=60)
+
+    @commands.command(name="unmute")
+    @commands.has_permissions(manage_guild=True)
+    async def unmute(self, ctx: commands.Context, user: discord.Member) -> None:
+        unmute_embed = discord.Embed(
+            title=f"Unmuted user: **{user.display_name}**",
+            colour=Colours.AUDIT_COLORS["mod"],
+            description=f"The mute has been lifted.",
+            timestamp=datetime.datetime.utcnow(),
+        ).set_footer(text=f"Invoked by {ctx.author.name}", icon_url=ctx.author.avatar_url)
+        error_embed = ErrorEmbed(
+            "User is not muted!",
+            ctx.author
+        )
+
+        await ctx.message.delete()
+        muted_role = discord.utils.get(ctx.guild.roles, name="Muted")
+
+        if muted_role in user.roles:
+            await user.remove_roles(muted_role)
+            await ctx.send(embed=unmute_embed, delete_after=15)
+        else:
+            await ctx.send(embed=error_embed, delete_after=15)
 
 
 def setup(bot: commands.Bot) -> None:

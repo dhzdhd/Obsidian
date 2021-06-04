@@ -6,6 +6,7 @@ from dislash import slash_commands, Option, Type
 from dislash.interactions import SlashInteraction
 
 from bot.utils.constants import Colours
+from bot.utils.embed import SuccessEmbed
 
 
 class Moderator(commands.Cog):
@@ -61,7 +62,7 @@ class Moderator(commands.Cog):
                     user.guild.id
                 )
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @slash_commands.command(
         name="purge",
@@ -76,6 +77,25 @@ class Moderator(commands.Cog):
         amount = ctx.get("amount")
 
         await ctx.channel.purge(limit=amount)
+        return
+
+    @slash_commands.command(
+        name="slowmode",
+        description="Set channel slow mode",
+        options=[
+            Option("time", "Slow mode delay amount in seconds", Type.INTEGER, required=False)
+        ]
+    )
+    @slash_commands.has_permissions(manage_guild=True)
+    async def slow_mode(self, ctx: SlashInteraction) -> None:
+        time = ctx.get("time")
+        await ctx.channel.edit(slowmode_delay=time)
+
+        embed = SuccessEmbed(
+            description=f"Set channel slowmode to {time} seconds.",
+            author=ctx.author
+        )
+        await ctx.reply(embed=embed, delete_after=20)
 
 
 def setup(bot: commands.Bot) -> None:

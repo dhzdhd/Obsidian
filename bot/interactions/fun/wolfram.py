@@ -105,7 +105,7 @@ class WolframInteractions(commands.Cog):
                 name="Cannot see image?",
                 value=f"[Click here](https://www.wolframalpha.com/input/?i={query.replace(' ', '+')})",
             )
-        await ctx.send(embed=embed, delete_after=60)
+        await ctx.reply(embed=embed, delete_after=60)
 
     async def wolfram_short(self, ctx: SlashInteraction, query: str) -> None:
         """Sends wolfram image corresponding to the given query."""
@@ -124,7 +124,7 @@ class WolframInteractions(commands.Cog):
                 timestamp=datetime.datetime.utcnow()
             ).set_footer(text=f"Invoked by {ctx.author.name}", icon_url=ctx.author.avatar_url)
 
-        await ctx.send(embed=embed, delete_after=60)
+        await ctx.reply(embed=embed, delete_after=60)
 
 
 def setup(bot: commands.Bot) -> None:
