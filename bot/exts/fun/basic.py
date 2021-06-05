@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import random
 
 
 class BasicCommands(commands.Cog):
@@ -20,6 +21,16 @@ class BasicCommands(commands.Cog):
         await ctx.message.delete()
 
         await ctx.send(f"Pong! : **{round(self.bot.latency*1000)} ms**", delete_after=10)
+
+    @commands.command(name="flip", aliases=("coin",))
+    async def flip_a_coin(self, ctx: commands.Context) -> None:
+        await ctx.message.delete()
+        await ctx.send(random.choice(["Heads!", "Tails!"]))
+
+    @commands.command(name="roll", aliases=("die", "dice"))
+    async def roll_a_die(self, ctx: commands.Context) -> None:
+        await ctx.message.delete()
+        await ctx.send(f"You got a **{random.randint(1, 6)}**")
 
 
 def setup(bot: commands.Bot) -> None:

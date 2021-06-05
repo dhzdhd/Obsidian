@@ -24,7 +24,8 @@ class TicketCommands(commands.Cog):
     @ticket_group.command(name="new", aliases=("n", "open", "o"))
     async def ticket_new(self, ctx: commands.Context, user: discord.Member = None) -> None:
         mod_role = discord.utils.get(ctx.guild.roles, permissions=discord.Permissions(manage_guild=True))
-        #  Add ping later on...
+        print(mod_role)
+
         error_embed = ErrorEmbed(
             description="You have a ticket channel open! Close it to make a new one.",
             author=ctx.author
@@ -38,12 +39,12 @@ class TicketCommands(commands.Cog):
         ).set_footer(text=f"Invoked by {ctx.author.name}", icon_url=ctx.author.avatar_url)
 
         await ctx.message.delete()
-        if user is not None and ctx.author.permissions(manage_guild=False):
+        if user is not None and ctx.author.guild_permissions.manage_guild is not True:
             embed = ErrorEmbed(
                 description="A non moderator/admin cannot create tickets for other users!",
                 author=ctx.author
             )
-            await ctx.send(embed=embed)
+            await ctx.send(embed=embed, delete_after=15)
             return
 
         if user is None:

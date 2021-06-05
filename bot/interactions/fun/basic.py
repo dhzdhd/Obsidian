@@ -1,4 +1,5 @@
-import discord
+import random
+
 from discord.ext import commands
 from dislash import Option, Type
 from dislash import slash_commands
@@ -30,6 +31,14 @@ class BasicCommands(commands.Cog):
     )
     async def latency(self, ctx: SlashInteraction) -> None:
         await ctx.reply(f"Pong! : **{round(self.bot.latency*1000)} ms**", delete_after=10)
+
+    @slash_commands.command(name="flip", description="Flip a coin")
+    async def flip_a_coin(self, ctx: SlashInteraction) -> None:
+        await ctx.reply(random.choice(["Heads!", "Tails!"]))
+
+    @slash_commands.command(name="roll", description="Roll a die")
+    async def roll_a_die(self, ctx: SlashInteraction) -> None:
+        await ctx.reply(f"You got a **{random.randint(1, 6)}**")
 
 
 def setup(bot: commands.Bot) -> None:
