@@ -2,6 +2,7 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 import 'interactions/fun/basic.dart';
 import 'interactions/fun/youtube.dart';
+import 'interactions/utils/utilities.dart';
 import 'utils/constants.dart' show Tokens;
 
 late Nyxx bot;
@@ -50,6 +51,11 @@ void main() async {
         'warn', 'Warns user with reason', [
       CommandOptionBuilder(CommandOptionType.user, 'user', 'A server member')
     ]))
+
+    // Util commands
+    ..registerSlashCommand(
+        SlashCommandBuilder('invite', 'Send bot invite link.', [])
+          ..registerHandler(inviteBotSlashCommand))
 
     // Sync
     ..syncOnReady();
