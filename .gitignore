@@ -5,3 +5,8 @@
 # Conventional directory for build output.
 build/
 .env*
+.bin/extensions/
+bin/extensions/fun/basic.dart
+bin/extensions/fun/wolfram.dart
+bin/extensions/utils/bookmark.dart
+bin/extensions/utils/utilities.dart
