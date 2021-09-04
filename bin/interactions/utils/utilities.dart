@@ -5,16 +5,20 @@ import 'package:nyxx_interactions/interactions.dart';
 Future<void> inviteBotSlashCommand(InteractionEvent event) async {
   await event.acknowledge();
 
-  final inviteURL = await event.interactions.client.inviteLink;
+  final inviteURL = await event.interaction.guild
+      ?.getFromCache()
+      ?.channels
+      .first
+      .createInvite(temporary: false);
   await event.respond(
       MessageBuilder.content('**Invite link: $inviteURL (No permissions!!)**'));
 }
 
+/// FIXME:
 Future<void> latencySlashCommand(SlashCommandInteractionEvent event) async {
   await event.acknowledge();
 
-  final _gatewayLatency = event.interactions.client.shardManager.shards.first
-      .gatewayLatency.inMilliseconds;
+  final _gatewayLatency = event.interaction;
 
   final _apiStopwatch = Stopwatch()..start();
   await http.head(
@@ -45,6 +49,6 @@ Future<void> latencySlashCommand(SlashCommandInteractionEvent event) async {
     inline: false,
   );
 
-  // await _message.edit(embed: _latencyEmbed);
+  // await _message.edit(MessageBuilder.embed(_latencyEmbed));
   _messageStopwatch.stop();
 }

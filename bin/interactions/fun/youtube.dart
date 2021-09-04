@@ -14,6 +14,7 @@ var params = {
   'type': 'video',
 };
 var dio = Dio();
+late Message message;
 
 Future<void> ytOptionHandler(MultiselectInteractionEvent event) async {
   await event.acknowledge();
@@ -21,6 +22,8 @@ Future<void> ytOptionHandler(MultiselectInteractionEvent event) async {
   await event.sendFollowup(MessageBuilder.content(
     'https://www.youtube.com/watch?v=${event.interaction.values.first}',
   ));
+
+  // await message.delete();
 }
 
 Future<void> ytSlashCommand(SlashCommandInteractionEvent event) async {
@@ -31,10 +34,18 @@ Future<void> ytSlashCommand(SlashCommandInteractionEvent event) async {
   params['q'] = query;
 
   var response = await dio.get(YT_URL, queryParameters: params);
-  print(response.data['items'].toString());
   final videoList = response.data['items'];
 
-  var ytEmbed = EmbedBuilder()..title = 'Youtube search : $query';
+  var ytEmbed = EmbedBuilder()
+    ..title = 'Youtube search : $query'
+    ..color = DiscordColor.rose
+    ..timestamp = DateTime.now()
+    ..thumbnailUrl =
+        'https://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c545.png'
+    ..addFooter((footer) {
+      footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
+      footer.iconUrl = event.interaction.userAuthor?.avatarURL();
+    });
   for (var _ = 0; _ < 5; _++) {
     ytEmbed.addField(
         name: '${_ + 1}) ${videoList[_]['snippet']['title']}',
@@ -43,6 +54,7 @@ Future<void> ytSlashCommand(SlashCommandInteractionEvent event) async {
     vidIdList.add(videoList[_]['id']['videoId']);
   }
 
+  // message =
   await event.sendFollowup(MessageBuilder.embed(ytEmbed));
 
   final componentMessageBuilder = ComponentMessageBuilder();
