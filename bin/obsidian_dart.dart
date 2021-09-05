@@ -2,13 +2,17 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 import 'interactions/fun/basic.dart';
 import 'interactions/fun/youtube.dart';
+import 'interactions/mod/moderation.dart';
+import 'interactions/utils/bookmark.dart';
 import 'interactions/utils/utilities.dart';
 import 'utils/constants.dart' show Tokens;
+import 'utils/database.dart' show Database;
 
 late Nyxx bot;
 
 void main() async {
   Tokens.loadEnv();
+  Database();
 
   bot = Nyxx(
     Tokens.BOT_TOKEN,
@@ -48,11 +52,48 @@ void main() async {
 
     // Mod commands
     ..registerSlashCommand(SlashCommandBuilder(
-        'warn', 'Warns user with reason', [
-      CommandOptionBuilder(CommandOptionType.user, 'user', 'A server member')
+      'warn',
+      'Warns user with reason.',
+      [
+        CommandOptionBuilder(CommandOptionType.user, 'user', 'A server member.',
+            required: true),
+        CommandOptionBuilder(
+            CommandOptionType.string, 'reason', 'Reason for warn.')
+      ],
+    )..registerHandler(warnSlashCommand))
+    ..registerSlashCommand(
+        SlashCommandBuilder('mute', 'Mutes user for a certain time period.', [
+      CommandOptionBuilder(CommandOptionType.user, 'user', 'A server member',
+          required: true),
+      CommandOptionBuilder(
+          CommandOptionType.integer, 'time', 'Time period of mute.',
+          required: true),
+      CommandOptionBuilder(
+          CommandOptionType.string, 'reason', 'Reason for mute.')
+    ], permissions: [
+      ICommandPermissionBuilder.role(
+          PermissionsConstants.administrator.toSnowflake())
+    ]))
+    ..registerSlashCommand(
+        SlashCommandBuilder('unmute', 'Unmutes muted user.', [
+      CommandOptionBuilder(CommandOptionType.user, 'user', 'A server member',
+          required: true)
+    ]))
+    ..registerSlashCommand(
+        SlashCommandBuilder('ban', 'Bans user with optional reason.', [
+      CommandOptionBuilder(CommandOptionType.user, 'user', 'A server member',
+          required: true),
+      CommandOptionBuilder(
+          CommandOptionType.string, 'reason', 'Reason for ban.')
     ]))
 
     // Util commands
+    ..registerSlashCommand(SlashCommandBuilder(
+        'bookmark',
+        'Bookmark a message.',
+        [CommandOptionBuilder(CommandOptionType.string, 'id', 'Message ID.')])
+      ..registerHandler(bookmarkSlashCommand))
+    ..registerButtonHandler('bookmark', bookmarkOptionHandler)
     ..registerSlashCommand(
         SlashCommandBuilder('invite', 'Send bot invite link.', [])
           ..registerHandler(inviteBotSlashCommand))

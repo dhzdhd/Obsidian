@@ -6,6 +6,8 @@ import '../../utils/constants.dart';
 
 const LOCATION = '(37.0902,95.7129)';
 const YT_URL = 'https://www.googleapis.com/youtube/v3/search/';
+late Message message;
+var dio = Dio();
 var params = {
   'key': Tokens.YT_KEY,
   'part': 'snippet',
@@ -13,8 +15,6 @@ var params = {
   'videoEmbeddable': 'true',
   'type': 'video',
 };
-var dio = Dio();
-late Message message;
 
 Future<void> ytOptionHandler(MultiselectInteractionEvent event) async {
   await event.acknowledge();
