@@ -2,6 +2,16 @@ import 'package:http/http.dart' as http;
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 
+import '../../obsidian_dart.dart' show botInteractions;
+
+class UtilsCommonInteractions {
+  UtilsCommonInteractions() {
+    botInteractions.registerSlashCommand(
+        SlashCommandBuilder('invite', 'Send bot invite link.', [])
+          ..registerHandler(inviteBotSlashCommand));
+  }
+}
+
 Future<void> inviteBotSlashCommand(InteractionEvent event) async {
   await event.acknowledge();
 
