@@ -60,6 +60,7 @@ class FunYoutubeInteractions {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
+
     for (var _ = 0; _ < 5; _++) {
       ytEmbed.addField(
           name: '${_ + 1}) ${videoList[_]['snippet']['title']}',

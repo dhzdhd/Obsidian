@@ -3,8 +3,7 @@ description: A simple command-line application.
 version: 1.0.0
 # homepage: https://www.example.com
 
-publish-to:
-  none
+publish_to: 'none'
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -21,9 +20,9 @@ dependencies:
   nyxx: ^2.0.0-rc.13
   nyxx_commander: ^2.0.0-rc.12
   nyxx_extensions: ^2.0.0-rc.9
-  nyxx_interactions: ^2.0.0-rc.20
   postgres: ^2.4.1+2
-
+  nyxx_interactions: 
+    ^2.0.0-rc.20
     # git:
     #     url: git://github.com/nyxx-discord/nyxx.git
     #     path: nyxx_interactions/

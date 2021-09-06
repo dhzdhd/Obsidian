@@ -1,7 +1,10 @@
+import 'dart:cli';
+
 import 'package:postgres/postgres.dart';
 
 import 'constants.dart';
 
+// FIXME: Fix weird ass errors from db
 class Database {
   static late PostgreSQLConnection connection;
 
@@ -13,37 +16,65 @@ class Database {
       username: Tokens.POSTGRE_USER,
       password: Tokens.POSTGRE_PASSWORD,
     );
+    waitFor(connection.open());
   }
 
-  static Future<void> add(
+  static Future<bool> add(
       int userId, int guildId, String type, int value) async {
-    await connection.open();
+    var result = await view(userId, guildId);
 
-    var response = await connection.query(
-        'INSERT INTO users("user", guild, $type) VALUES(@user, @guild, @value)',
-        substitutionValues: {
-          'user': userId,
-          'guild': guildId,
-          'value': value,
-        });
-    print(response.toString());
+    if (result['user'] == userId && result['guild'] == guildId) return false;
 
-    await connection.close();
+    await connection.transaction((ctx) async {
+      await ctx.query(
+          'INSERT INTO users("user", guild, $type) VALUES(@user, @guild, @value)',
+          substitutionValues: {
+            'user': userId,
+            'guild': guildId,
+            'value': value,
+          });
+    });
+    return true;
   }
 
-  static Future<void> view(int userId, int guildId) async {
-    await connection.open();
-
+  // TODO: Check map for null
+  static Future<Map<String, int>> view(int userId, int guildId) async {
     var response = await connection.query(
       'SELECT * FROM users WHERE "user"=@user AND guild=@guild',
       substitutionValues: {'user': userId, 'guild': guildId},
     );
-    print(response.first.asMap());
-
-    await connection.close();
+    print(response.first.toString());
+    final map = response.first.asMap();
+    print(map);
+    return {
+      'user': map[1],
+      'guild': map[2],
+      'warns': map[3],
+      'mutes': map[4],
+      'bans': map[5]
+    };
   }
 
-  static Future<void> delete(int userId, int guildId) async {}
+  static Future<void> delete(int userId, int guildId) async {
+    await connection.transaction((ctx) async {
+      await ctx.query(
+        'DELETE FROM users WHERE "user"=@user AND guild=@guild',
+        substitutionValues: {'user': userId, 'guild': guildId},
+      );
+    });
+  }
 
-  static Future<void> update() async {}
+  static Future<void> update(
+      int userId, int guildId, String type, int value) async {
+    await connection.transaction((ctx) async {
+      var response = await ctx.query(
+          'UPDATE users SET $type=@value WHERE "user"=@user AND guild=@guild',
+          substitutionValues: {
+            'value': value,
+            'user': userId,
+            'guild': guildId
+          });
+      print(response.toString());
+    });
+  }
 }

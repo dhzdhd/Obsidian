@@ -6,6 +6,7 @@ import 'interactions/fun/youtube.dart';
 import 'interactions/mod/common.dart';
 import 'interactions/utils/bookmark.dart';
 import 'interactions/utils/common.dart';
+import 'package:logging/logging.dart' show Logger, Level;
 import 'utils/constants.dart' show Tokens;
 import 'utils/database.dart' show Database;
 
@@ -39,5 +40,9 @@ void main() async {
 
   bot.onReady.listen((ReadyEvent e) async {
     print('Ready!');
+  });
+
+  bot.onDisconnect.listen((DisconnectEvent event) async {
+    await Database.connection.close();
   });
 }
