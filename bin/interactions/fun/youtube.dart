@@ -38,7 +38,7 @@ class FunYoutubeInteractions {
       'https://www.youtube.com/watch?v=${event.interaction.values.first}',
     ));
 
-    // await message.delete();
+    await message.delete();
   }
 
   Future<void> ytSlashCommand(SlashCommandInteractionEvent event) async {
@@ -93,8 +93,7 @@ class FunYoutubeInteractions {
       vidIdList.add(videoList[_]['id']['videoId']);
     }
 
-    // message =
-    await event.sendFollowup(MessageBuilder.embed(ytEmbed));
+    message = await event.sendFollowup(MessageBuilder.embed(ytEmbed));
 
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()

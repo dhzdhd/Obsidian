@@ -1,10 +1,12 @@
-import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 
 import '../../obsidian_dart.dart';
 
 class UtilsPollInteractions {
+  static const EMPTY_BAR = ' ';
+  static const FILLED_BAR = '█';
+
   UtilsPollInteractions() {
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
@@ -12,9 +14,23 @@ class UtilsPollInteractions {
         'Start a poll.',
         [
           CommandOptionBuilder(
-              CommandOptionType.string, 'title', 'Title of the poll.'),
-          CommandOptionBuilder(CommandOptionType.string, 'options',
-              'Options for poll as comma separated strings.')
+            CommandOptionType.string,
+            'title',
+            'Title of the poll.',
+            required: true,
+          ),
+          CommandOptionBuilder(
+            CommandOptionType.string,
+            'options',
+            'Options for poll as comma separated strings.',
+            required: true,
+          ),
+          CommandOptionBuilder(
+            CommandOptionType.boolean,
+            'restrict multiple',
+            'Restrict multiple choices.',
+            required: true,
+          ),
         ],
       )..registerHandler(pollSlashCommand))
       ..registerButtonHandler('pollOption1', buttonOption1)
@@ -44,32 +60,38 @@ class UtilsPollInteractions {
     await event.acknowledge();
 
     final options = event.interaction.options;
-    final pollOptionList = options.elementAt(1).toString().split(',');
+    final pollOptionList = options.elementAt(1).value.toString().split(',');
 
     var pollEmbed = EmbedBuilder()
-      ..title = 'Poll: **${options.first.value}**'
+      ..title = ':bar_chart: Poll: **${options.first.value}**'
       ..color = DiscordColor.blue
       ..timestamp = DateTime.now()
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
+    pollOptionList.forEach((element) {
+      pollEmbed.addField(
+        name: '${(pollOptionList.indexOf(element) + 1)}) $element',
+        content: '                     | 0% (0)',
+      );
+    });
 
     await event.sendFollowup(MessageBuilder.embed(pollEmbed));
 
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder();
 
+    for (var _ = 0; _ < pollOptionList.length; _++) {
+      componentRow.addComponent(ButtonBuilder(
+          '${(_ + 1).toString()}', 'pollOption$_', ComponentStyle.primary));
+    }
+
     componentRow
       ..addComponent(
           ButtonBuilder('Deselect', 'pollDeselect', ComponentStyle.secondary))
       ..addComponent(
           ButtonBuilder('Cancel', 'pollCancel', ComponentStyle.danger));
-
-    for (var _ = 0; _ < pollOptionList.length; _++) {
-      componentRow.addComponent(
-          ButtonBuilder(_.toString(), 'pollOption$_', ComponentStyle.primary));
-    }
 
     componentMessageBuilder.addComponentRow(componentRow);
     await event.respond(componentMessageBuilder);

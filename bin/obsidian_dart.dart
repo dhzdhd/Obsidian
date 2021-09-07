@@ -18,6 +18,8 @@ void main() async {
   Tokens.loadEnv();
   Database();
 
+  // Logger.root.level = Level.FINE;
+
   bot = Nyxx(
     Tokens.BOT_TOKEN,
     GatewayIntents.all,
@@ -36,7 +38,7 @@ void main() async {
   // Utils interactions
   UtilsCommonInteractions();
   UtilsBookmarkInteractions();
-  UtilsPollInteractions();
+  // UtilsPollInteractions();
 
   botInteractions.syncOnReady();
 

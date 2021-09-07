@@ -17,12 +17,12 @@ dependencies:
   dio: ^4.0.0
   dotenv: ^3.0.0
   http: ^0.13.3
-  nyxx: ^2.0.0-rc.13
+  nyxx: ^2.0.0-rc.15
   nyxx_commander: ^2.0.0-rc.12
   nyxx_extensions: ^2.0.0-rc.9
   postgres: ^2.4.1+2
   nyxx_interactions: 
-    ^2.0.0-rc.20
+    ^2.0.0-rc.22
     # git:
     #     url: git://github.com/nyxx-discord/nyxx.git
     #     path: nyxx_interactions/
