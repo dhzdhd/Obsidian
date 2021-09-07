@@ -19,15 +19,15 @@ EmbedBuilder successEmbed(String desc, IMessageAuthor author) {
     });
 }
 
-EmbedBuilder errorEmbed(String desc, IMessageAuthor author) {
+EmbedBuilder errorEmbed(String desc, User? author) {
   return EmbedBuilder()
     ..title = _error[_random.nextInt(_error.length)]
     ..description = desc
     ..color = DiscordColor.red
     ..timestamp = DateTime.utc(2021)
     ..addFooter((footer) {
-      footer.text = 'Error made by ${author.username}';
-      footer.iconUrl = author.avatarURL();
+      footer.text = 'Error made by ${author?.username}';
+      footer.iconUrl = author?.avatarURL();
     });
 }
 

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 
 import '../../utils/constants.dart';
 import '../../obsidian_dart.dart' show botInteractions;
+import '../../utils/embed.dart';
 
 class FunYoutubeInteractions {
   FunYoutubeInteractions() {
@@ -47,8 +48,31 @@ class FunYoutubeInteractions {
     final query = await event.interaction.options.first.value;
     params['q'] = query;
 
-    var response = await dio.get(YT_URL, queryParameters: params);
-    final videoList = response.data['items'];
+    late final videoList;
+    late final errEmbed;
+
+    try {
+      var response = await dio.get(YT_URL, queryParameters: params);
+      videoList = response.data['items'];
+      var _ = videoList[0];
+    } on DioError catch (err) {
+      var code = err.response?.statusCode;
+      if (code == 403) {
+        errEmbed = errorEmbed(
+            'YT API Quota finished. Sorry for the inconvenience.',
+            event.interaction.userAuthor);
+
+        await event.respond(MessageBuilder.embed(errEmbed));
+        return;
+      }
+    } on RangeError catch (_) {
+      errEmbed = errorEmbed(
+          'The requested video was not found. Try with a different query.',
+          event.interaction.userAuthor);
+
+      await event.respond(MessageBuilder.embed(errEmbed));
+      return;
+    }
 
     var ytEmbed = EmbedBuilder()
       ..title = 'Youtube search : $query'
