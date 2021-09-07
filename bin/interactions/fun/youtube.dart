@@ -45,7 +45,7 @@ class FunYoutubeInteractions {
     await event.acknowledge();
 
     var vidIdList = [];
-    final query = await event.interaction.options.first.value;
+    final query = await event.getArg('query').value;
     params['q'] = query;
 
     late final videoList;

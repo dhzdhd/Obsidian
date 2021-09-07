@@ -20,7 +20,16 @@ class FunBasicInteractions {
       ..registerSlashCommand(SlashCommandBuilder('roll', 'Roll a die.', [])
         ..registerHandler(rollSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder('flip', 'Flip a coin.', [])
-        ..registerHandler(flipSlashCommand));
+        ..registerHandler(flipSlashCommand))
+      ..registerSlashCommand(SlashCommandBuilder(
+        'rip',
+        'Create a rip user message',
+        [
+          CommandOptionBuilder(
+              CommandOptionType.user, 'user', 'A server member.',
+              required: true)
+        ],
+      )..registerHandler(ripUserSlashCommand));
   }
 
   Future<void> avatarSlashCommand(SlashCommandInteractionEvent event) async {
@@ -33,8 +42,6 @@ class FunBasicInteractions {
     await event.respond(MessageBuilder.content(avatar.toString()));
   }
 
-  Future<void> ripUserSlashCommand(SlashCommandInteractionEvent event) async {}
-
   Future<void> rollSlashCommand(InteractionEvent event) async {
     await event.acknowledge();
     await event.respond(
@@ -45,5 +52,24 @@ class FunBasicInteractions {
     await event.acknowledge();
     await event.respond(MessageBuilder.content(
         ':coin: ${['Heads', 'Tails'][_random.nextInt(2)]}'));
+  }
+
+  // FIXME: Wrong indentation and position of avatar
+  Future<void> ripUserSlashCommand(SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final user = event.interaction.resolved?.users.first;
+    final year = DateTime.now().year;
+
+    final message = '''
+    :rip:
+    He won't be missed
+    Gone and forgotten
+    ${user?.avatarURL(format: 'png', size: 128)}
+    :bird: $year-$year :bird:
+    1 like :heart: = 1 prayer :pray:
+    ''';
+
+    await event.respond(MessageBuilder.content(message));
   }
 }
