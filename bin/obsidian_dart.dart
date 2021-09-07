@@ -7,6 +7,7 @@ import 'interactions/mod/common.dart';
 import 'interactions/utils/bookmark.dart';
 import 'interactions/utils/common.dart';
 import 'package:logging/logging.dart' show Logger, Level;
+import 'interactions/utils/poll.dart';
 import 'utils/constants.dart' show Tokens;
 import 'utils/database.dart' show Database;
 
@@ -35,6 +36,7 @@ void main() async {
   // Utils interactions
   UtilsCommonInteractions();
   UtilsBookmarkInteractions();
+  UtilsPollInteractions();
 
   botInteractions.syncOnReady();
 
