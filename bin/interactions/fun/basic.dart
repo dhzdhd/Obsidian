@@ -54,7 +54,7 @@ class FunBasicInteractions {
         ':coin: ${['Heads', 'Tails'][_random.nextInt(2)]}'));
   }
 
-  // FIXME: Wrong indentation and position of avatar
+  // FIXME: Wrong position of avatar
   Future<void> ripUserSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
@@ -62,12 +62,12 @@ class FunBasicInteractions {
     final year = DateTime.now().year;
 
     final message = '''
-    :rip:
-    He won't be missed
-    Gone and forgotten
-    ${user?.avatarURL(format: 'png', size: 128)}
-    :bird: $year-$year :bird:
-    1 like :heart: = 1 prayer :pray:
+:rip:
+He won't be missed
+Gone and forgotten
+${user?.avatarURL(format: 'png', size: 128)}
+:bird: $year-$year :bird:
+1 like :heart: = 1 prayer :pray:
     ''';
 
     await event.respond(MessageBuilder.content(message));
