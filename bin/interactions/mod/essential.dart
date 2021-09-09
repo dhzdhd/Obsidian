@@ -6,8 +6,8 @@ import '../../utils/constants.dart';
 import '../../utils/database.dart';
 import '../../obsidian_dart.dart' show botInteractions;
 
-class ModCommonInteractions {
-  ModCommonInteractions() {
+class ModEssentialInteractions {
+  ModEssentialInteractions() {
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
         'warn',
@@ -89,7 +89,7 @@ class ModCommonInteractions {
       await Database.add(user?.id.id as int,
           event.interaction.guild?.id.id as int, 'warns', 1);
     } on PostgreSQLException catch (err) {
-      print(err.detail);
+      print(err.toString());
     }
 
     await event.respond(MessageBuilder.embed(warnEmbed));

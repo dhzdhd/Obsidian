@@ -4,8 +4,12 @@ import 'package:nyxx_interactions/interactions.dart';
 import '../../obsidian_dart.dart';
 
 class UtilsPollInteractions {
-  static const EMPTY_BAR = ' ';
+  static const EMPTY_BAR = '▒';
   static const FILLED_BAR = '█';
+  late EmbedBuilder staticPollEmbed;
+
+  var userChoiceMap = {};
+  var optionPercentMap = {};
 
   UtilsPollInteractions() {
     botInteractions
@@ -22,12 +26,12 @@ class UtilsPollInteractions {
           CommandOptionBuilder(
             CommandOptionType.string,
             'options',
-            'Options for poll as comma separated strings.',
+            'Options for poll as comma separated strings. Max - 5',
             required: true,
           ),
           CommandOptionBuilder(
             CommandOptionType.boolean,
-            'restrict multiple',
+            'restrict',
             'Restrict multiple choices.',
             required: true,
           ),
@@ -42,7 +46,12 @@ class UtilsPollInteractions {
       ..registerButtonHandler('pollCancel', buttonOptionCancel);
   }
 
-  Future<void> buttonOption1(ButtonInteractionEvent event) async {}
+  Future<void> buttonOption1(ButtonInteractionEvent event) async {
+    await event.acknowledge();
+    var pollEmbed = staticPollEmbed;
+
+    await event.interaction.message?.edit(MessageBuilder.embed(pollEmbed));
+  }
 
   Future<void> buttonOption2(ButtonInteractionEvent event) async {}
 
@@ -59,21 +68,26 @@ class UtilsPollInteractions {
   Future<void> pollSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final options = event.interaction.options;
-    final pollOptionList = options.elementAt(1).value.toString().split(',');
+    final title = event.getArg('title').value;
+    final options = event.getArg('options').value.toString().split(',');
+    final restrict = event.getArg('restrict').value;
+    print(restrict.runtimeType.toString());
 
-    var pollEmbed = EmbedBuilder()
-      ..title = ':bar_chart: Poll: **${options.first.value}**'
+    staticPollEmbed = EmbedBuilder()
+      ..title = ':bar_chart: Poll: **$title**'
       ..color = DiscordColor.blue
       ..timestamp = DateTime.now()
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
-    pollOptionList.forEach((element) {
+
+    var pollEmbed = staticPollEmbed;
+
+    options.forEach((element) {
       pollEmbed.addField(
-        name: '${(pollOptionList.indexOf(element) + 1)}) $element',
-        content: '                     | 0% (0)',
+        name: '${(options.indexOf(element) + 1)}) $element',
+        content: '${EMPTY_BAR * 20}| 0% (0)',
       );
     });
 
@@ -82,9 +96,11 @@ class UtilsPollInteractions {
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder();
 
-    for (var _ = 0; _ < pollOptionList.length; _++) {
+    for (var _ = 0; _ < options.length; _++) {
       componentRow.addComponent(ButtonBuilder(
           '${(_ + 1).toString()}', 'pollOption$_', ComponentStyle.primary));
+
+      optionPercentMap[_ + 1] = 0;
     }
 
     componentRow

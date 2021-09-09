@@ -3,7 +3,7 @@ import 'package:nyxx_interactions/interactions.dart';
 import 'interactions/fun/basic.dart';
 import 'interactions/fun/wolfram.dart';
 import 'interactions/fun/youtube.dart';
-import 'interactions/mod/common.dart';
+import 'interactions/mod/essential.dart';
 import 'interactions/utils/bookmark.dart';
 import 'interactions/utils/common.dart';
 import 'package:logging/logging.dart' show Logger, Level;
@@ -21,10 +21,14 @@ void main() async {
 
   // Logger.root.level = Level.FINE;
 
-  bot = Nyxx(
-    Tokens.BOT_TOKEN,
-    GatewayIntents.all,
-  );
+  bot = Nyxx(Tokens.BOT_TOKEN, GatewayIntents.all,
+      options: ClientOptions(
+        initialPresence: PresenceBuilder.of(
+          status: UserStatus.online,
+          activity: ActivityBuilder('VALORANT', ActivityType.streaming,
+              url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
+        ),
+      ));
 
   botInteractions = Interactions(bot);
 
@@ -34,12 +38,12 @@ void main() async {
   FunYoutubeInteractions();
 
   // Mod interactions
-  ModCommonInteractions();
+  ModEssentialInteractions();
 
   // Utils interactions
   UtilsCommonInteractions();
   UtilsBookmarkInteractions();
-  // UtilsPollInteractions();
+  UtilsPollInteractions();
   UtilsEvalInteractions();
 
   botInteractions.syncOnReady();

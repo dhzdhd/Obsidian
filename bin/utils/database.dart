@@ -21,9 +21,9 @@ class Database {
 
   static Future<bool> add(
       int userId, int guildId, String type, int value) async {
-    var result = await view(userId, guildId);
+    // var result = await view(userId, guildId);
 
-    if (result['user'] == userId && result['guild'] == guildId) return false;
+    // if (result['user'] == userId && result['guild'] == guildId) return false;
 
     await connection.transaction((ctx) async {
       await ctx.query(
