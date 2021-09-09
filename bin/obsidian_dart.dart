@@ -4,6 +4,8 @@ import 'interactions/fun/basic.dart';
 import 'interactions/fun/wolfram.dart';
 import 'interactions/fun/youtube.dart';
 import 'interactions/mod/essential.dart';
+import 'interactions/mod/mute.dart';
+import 'interactions/mod/warn_ban.dart';
 import 'interactions/utils/bookmark.dart';
 import 'interactions/utils/common.dart';
 import 'package:logging/logging.dart' show Logger, Level;
@@ -39,6 +41,8 @@ void main() async {
 
   // Mod interactions
   ModEssentialInteractions();
+  ModMuteInteractions();
+  ModWarnBanInteractions();
 
   // Utils interactions
   UtilsCommonInteractions();
