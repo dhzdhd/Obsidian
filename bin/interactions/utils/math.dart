@@ -3,6 +3,7 @@ import 'package:nyxx_interactions/interactions.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 import '../../obsidian_dart.dart';
+import '../../utils/embed.dart';
 
 class UtilsMathInteractions {
   UtilsMathInteractions() {
@@ -25,8 +26,8 @@ class UtilsMathInteractions {
           'derivative',
           'Find the derivative of a function.',
           options: [
-            CommandOptionBuilder(
-                CommandOptionType.string, 'variable', 'The //FIXME:',
+            CommandOptionBuilder(CommandOptionType.string, 'variable',
+                'The differentiating variable',
                 required: true),
             CommandOptionBuilder(CommandOptionType.string, 'expression',
                 'The expression to be evaluated.',
@@ -38,11 +39,9 @@ class UtilsMathInteractions {
   }
 
   String evaluate(String expr) {
-    if (expr == '') return '';
-
     expr = expr.replaceAll('x', '*');
 
-    var eval = 0;
+    late final eval;
     final p = Parser();
     final cm = ContextModel();
 
@@ -50,6 +49,8 @@ class UtilsMathInteractions {
       final exp = p.parse(expr);
       eval = exp.evaluate(EvaluationType.REAL, cm);
     } on RangeError catch (_) {
+      return 'Invalid expression';
+    } on FormatException catch (_) {
       return 'Invalid expression';
     }
 
@@ -61,12 +62,32 @@ class UtilsMathInteractions {
     return '';
   }
 
+  EmbedBuilder createMathEmbed(
+      SlashCommandInteractionEvent event, String expr, String result) {
+    if (expr == 'Invalid expression') {
+      return errorEmbed(
+          'Invalid expression entered!', event.interaction.userAuthor);
+    }
+
+    return EmbedBuilder()
+      ..title = 'Expression = **$expr**'
+      ..description = 'Result: \n$result'
+      ..color = DiscordColor.chartreuse
+      ..timestamp = DateTime.now()
+      ..addFooter((footer) {
+        footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
+        footer.iconUrl = event.interaction.userAuthor?.avatarURL();
+      });
+  }
+
   Future<void> evalSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
     final expr = event.getArg('expression').value.toString();
 
     final result = evaluate(expr);
-    await event.respond(MessageBuilder.content(result));
+
+    final embed = createMathEmbed(event, expr, result);
+    await event.respond(MessageBuilder.embed(embed));
   }
 
   Future<void> deriveSlashCommand(SlashCommandInteractionEvent event) async {

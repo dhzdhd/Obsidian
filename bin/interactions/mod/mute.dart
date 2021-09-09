@@ -19,6 +19,7 @@ class ModMuteInteractions {
           CommandOptionBuilder(
               CommandOptionType.string, 'reason', 'Reason for mute.')
         ],
+        defaultPermissions: false,
         permissions: [
           ICommandPermissionBuilder.role(
               PermissionsConstants.manageGuild.toSnowflake())
@@ -32,6 +33,7 @@ class ModMuteInteractions {
               CommandOptionType.user, 'user', 'A server member',
               required: true)
         ],
+        defaultPermissions: false,
         permissions: [
           ICommandPermissionBuilder.role(
               PermissionsConstants.manageGuild.toSnowflake())
