@@ -78,6 +78,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  math_expressions:
+    dependency: "direct main"
+    description:
+      name: math_expressions
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   meta:
     dependency: transitive
     description:
@@ -183,5 +190,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  vector_math:
+    dependency: transitive
+    description:
+      name: vector_math
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
 sdks:
   dart: ">=2.13.0 <3.0.0"

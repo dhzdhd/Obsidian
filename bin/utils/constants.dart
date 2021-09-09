@@ -18,7 +18,8 @@ class Tokens {
   static String YT_KEY = '';
 
   static void loadEnv() {
-    load();
+    // Switch between dev and stable .env's
+    load('dev.env');
 
     BOT_TOKEN = env['BOT_TOKEN'].toString();
     BOT_OWNER = env['BOT_OWNER'].toString();
