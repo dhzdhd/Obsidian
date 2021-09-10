@@ -54,23 +54,35 @@ class UtilsMathInteractions {
       return 'Invalid expression';
     }
 
-    final answer = eval.toString();
-    return answer;
+    final result = eval.toString();
+    return result;
   }
 
   String derive(String variable, String expr) {
-    return '';
+    final p = Parser();
+    final exp = p.parse(expr);
+
+    final result = exp.derive(variable.trim());
+    return result.toString();
   }
 
-  EmbedBuilder createMathEmbed(
-      SlashCommandInteractionEvent event, String expr, String result) {
+  String simplify(String expr) {
+    final p = Parser();
+    final exp = p.parse(expr);
+
+    final result = exp.simplify();
+    return result.toString();
+  }
+
+  EmbedBuilder createMathEmbed(String title, SlashCommandInteractionEvent event,
+      String expr, String result) {
     if (expr == 'Invalid expression') {
       return errorEmbed(
           'Invalid expression entered!', event.interaction.userAuthor);
     }
 
     return EmbedBuilder()
-      ..title = 'Expression = **$expr**'
+      ..title = '$title | **$expr**'
       ..description = 'Result: \n$result'
       ..color = DiscordColor.chartreuse
       ..timestamp = DateTime.now()
@@ -86,11 +98,18 @@ class UtilsMathInteractions {
 
     final result = evaluate(expr);
 
-    final embed = createMathEmbed(event, expr, result);
+    final embed = createMathEmbed('Evaluate', event, expr, result);
     await event.respond(MessageBuilder.embed(embed));
   }
 
   Future<void> deriveSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
+    final expr = event.getArg('expression').value.toString();
+    final variable = event.getArg('variable').value.toString();
+
+    final result = derive(variable, expr);
+
+    final embed = createMathEmbed('Derive', event, expr, result);
+    await event.respond(MessageBuilder.embed(embed));
   }
 }
