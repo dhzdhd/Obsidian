@@ -50,6 +50,8 @@ class UtilsPollInteractions {
     await event.acknowledge();
     var pollEmbed = staticPollEmbed;
 
+    await event.editOriginalResponse(MessageBuilder.embed(pollEmbed));
+
     await event.interaction.message?.edit(MessageBuilder.embed(pollEmbed));
   }
 

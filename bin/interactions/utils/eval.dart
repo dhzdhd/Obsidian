@@ -1,4 +1,3 @@
-import 'dart:cli';
 import 'dart:isolate';
 
 import 'package:nyxx/nyxx.dart';
@@ -17,7 +16,7 @@ class UtilsEvalInteractions {
             'The code to be evaluated in the form of a function.',
             required: true)
       ],
-      defaultPermissions: false,
+      defaultPermissions: true,
       permissions: [
         ICommandPermissionBuilder.user(Tokens.BOT_OWNER.toSnowflake())
       ],

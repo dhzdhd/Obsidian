@@ -48,6 +48,7 @@ class Emojis {
 
   static const String TICK = '<:tick:822469654710190080>';
   static const String CANCEL = '<:redTick:596576672149667840>';
+  static const RIP = '<:RIP:772044046390394880>';
 }
 
 class Names {

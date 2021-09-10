@@ -21,7 +21,7 @@ class ModWarnBanInteractions {
               CommandOptionType.string, 'reason', 'Reason for warn.',
               required: true)
         ],
-        defaultPermissions: false,
+        defaultPermissions: true,
         permissions: [
           ICommandPermissionBuilder.role(
               PermissionsConstants.manageGuild.toSnowflake())
@@ -37,7 +37,7 @@ class ModWarnBanInteractions {
           CommandOptionBuilder(
               CommandOptionType.string, 'reason', 'Reason for ban.')
         ],
-        defaultPermissions: false,
+        defaultPermissions: true,
         permissions: [
           ICommandPermissionBuilder.role(
               PermissionsConstants.banMembers.toSnowflake())
