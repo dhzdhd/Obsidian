@@ -35,7 +35,7 @@ void main() async {
 
   botInteractions = Interactions(bot);
 
-  // TODO: tictactoe, 
+  // TODO: tictactoe,
 
   // Fun interactions
   FunBasicInteractions();
@@ -43,14 +43,14 @@ void main() async {
   FunYoutubeInteractions();
 
   // Mod interactions
-  ModEssentialInteractions();
-  ModMuteInteractions();
-  ModWarnBanInteractions();
+  // ModEssentialInteractions();
+  // ModMuteInteractions();
+  // ModWarnBanInteractions();
 
   // Utils interactions
-  UtilsCommonInteractions();
-  UtilsBookmarkInteractions();
-  UtilsPollInteractions();
+  // UtilsCommonInteractions();
+  // UtilsBookmarkInteractions();
+  // UtilsPollInteractions();
   UtilsEvalInteractions();
   UtilsMathInteractions();
 
