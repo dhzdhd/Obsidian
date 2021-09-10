@@ -43,7 +43,7 @@ void main() async {
   FunYoutubeInteractions();
 
   // Mod interactions
-  // ModEssentialInteractions();
+  ModEssentialInteractions();
   // ModMuteInteractions();
   // ModWarnBanInteractions();
 

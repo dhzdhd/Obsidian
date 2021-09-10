@@ -44,16 +44,19 @@ class FunWolframInteractions {
 
   Future<String> webRequestHandler(
       String url, Map<String, String> params) async {
-    var response = await _dio.get(url, queryParameters: params);
-    if (response.statusCode == 200) {
-      return response.data.toString();
-    } else if (response.statusCode == 400) {
-      return 'Sorry, the API did not find any input to interpret.';
-    } else if (response.statusCode == 501) {
-      return 'Sorry, the API could not understand your input.';
-    } else {
-      return 'Unidentified error! Status code: ${response.statusCode}, Error: ${response.data}';
+    late var response;
+    try {
+      response = await _dio.get(url, queryParameters: params);
+    } on DioError catch (err) {
+      if (err.response?.statusCode == 400) {
+        return 'Sorry, the API did not find any input to interpret.';
+      } else if (err.response?.statusCode == 501) {
+        return 'Sorry, the API could not understand your input.';
+      } else {
+        return 'Unidentified error! Status code: ${err.response?.statusCode}, Error: ${err.message}';
+      }
     }
+    return response;
   }
 
   EmbedBuilder createWolframEmbed(
@@ -62,6 +65,7 @@ class FunWolframInteractions {
       ..title = title
       ..description = desc
       ..color = DiscordColor.sapGreen
+      ..timestamp = DateTime.now()
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
