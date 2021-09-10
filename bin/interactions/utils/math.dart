@@ -60,7 +60,15 @@ class UtilsMathInteractions {
 
   String derive(String variable, String expr) {
     final p = Parser();
-    final exp = p.parse(expr);
+    late final exp;
+
+    try {
+      exp = p.parse(expr);
+    } on RangeError catch (_) {
+      return 'Invalid expression';
+    } on FormatException catch (_) {
+      return 'Invalid expression';
+    }
 
     final result = exp.derive(variable.trim());
     return result.toString();
