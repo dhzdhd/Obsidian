@@ -33,8 +33,8 @@ class ModEssentialInteractions {
     final amount = event.getArg('amount').value;
 
     final channel = event.interaction.channel.getFromCache();
-    final toDelete = await channel?.downloadMessages(limit: amount).toList()
-        as Iterable<Message>;
+    final toDelete =
+        await channel?.downloadMessages(limit: amount).toList() ?? [];
     await channel?.bulkRemoveMessages(toDelete);
   }
 
@@ -43,7 +43,7 @@ class ModEssentialInteractions {
     final amount = event.getArg('amount').value;
     final keyword = event.getArg('keyword').value;
 
-    var toDelete = [];
+    List<Message> toDelete = [];
     final channel = event.interaction.channel.getFromCache();
     final messageList = await channel?.downloadMessages(limit: amount).toList()
         as Iterable<Message>;
@@ -53,6 +53,6 @@ class ModEssentialInteractions {
       }
     });
 
-    await channel?.bulkRemoveMessages(toDelete as Iterable<Message>);
+    await channel?.bulkRemoveMessages(toDelete);
   }
 }
