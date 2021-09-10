@@ -1,9 +1,5 @@
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
-import 'package:postgres/postgres.dart';
-
-import '../../utils/constants.dart';
-import '../../utils/database.dart';
 import '../../obsidian_dart.dart' show botInteractions;
 
 class ModEssentialInteractions {
@@ -34,7 +30,7 @@ class ModEssentialInteractions {
 
   Future<void> purgeSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    final amount = event.getArg('anount').value;
+    final amount = event.getArg('amount').value;
 
     final channel = event.interaction.channel.getFromCache();
     final toDelete = await channel?.downloadMessages(limit: amount).toList()
