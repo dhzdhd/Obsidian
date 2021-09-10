@@ -21,11 +21,6 @@ class ModWarnBanInteractions {
               CommandOptionType.string, 'reason', 'Reason for warn.',
               required: true)
         ],
-        defaultPermissions: true,
-        permissions: [
-          ICommandPermissionBuilder.role(
-              PermissionsConstants.manageGuild.toSnowflake())
-        ],
       )..registerHandler(warnSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
         'ban',
@@ -36,11 +31,6 @@ class ModWarnBanInteractions {
               required: true),
           CommandOptionBuilder(
               CommandOptionType.string, 'reason', 'Reason for ban.')
-        ],
-        defaultPermissions: true,
-        permissions: [
-          ICommandPermissionBuilder.role(
-              PermissionsConstants.banMembers.toSnowflake())
         ],
       ));
   }

@@ -21,11 +21,6 @@ class ModMuteInteractions {
           CommandOptionBuilder(
               CommandOptionType.string, 'reason', 'Reason for mute.')
         ],
-        defaultPermissions: true,
-        permissions: [
-          ICommandPermissionBuilder.role(
-              PermissionsConstants.manageMessages.toSnowflake())
-        ],
       ))
       ..registerSlashCommand(SlashCommandBuilder(
         'unmute',
@@ -34,11 +29,6 @@ class ModMuteInteractions {
           CommandOptionBuilder(
               CommandOptionType.user, 'user', 'A server member',
               required: true)
-        ],
-        defaultPermissions: true,
-        permissions: [
-          ICommandPermissionBuilder.role(
-              PermissionsConstants.manageGuild.toSnowflake())
         ],
       ));
   }

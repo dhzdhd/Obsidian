@@ -35,6 +35,8 @@ void main() async {
 
   botInteractions = Interactions(bot);
 
+  // TODO: tictactoe, 
+
   // Fun interactions
   FunBasicInteractions();
   FunWolframInteractions();
