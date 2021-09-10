@@ -22,10 +22,10 @@ class ModEssentialInteractions {
               'The keyword based on which messages are deleted.',
               required: true),
           CommandOptionBuilder(CommandOptionType.integer, 'amount',
-              'Amount of messages to be deleted.',
+              'Index from latest message of messages to be deleted.',
               required: true)
         ],
-      ));
+      )..registerHandler(censorSlashCommand));
   }
 
   Future<void> purgeSlashCommand(SlashCommandInteractionEvent event) async {
@@ -36,5 +36,23 @@ class ModEssentialInteractions {
     final toDelete = await channel?.downloadMessages(limit: amount).toList()
         as Iterable<Message>;
     await channel?.bulkRemoveMessages(toDelete);
+  }
+
+  Future<void> censorSlashCommand(SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+    final amount = event.getArg('amount').value;
+    final keyword = event.getArg('keyword').value;
+
+    var toDelete = [];
+    final channel = event.interaction.channel.getFromCache();
+    final messageList = await channel?.downloadMessages(limit: amount).toList()
+        as Iterable<Message>;
+    messageList.forEach((element) {
+      if (element.content.contains(keyword)) {
+        toDelete.add(element);
+      }
+    });
+
+    await channel?.bulkRemoveMessages(toDelete as Iterable<Message>);
   }
 }
