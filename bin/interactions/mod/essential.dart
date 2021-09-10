@@ -14,7 +14,8 @@ class ModEssentialInteractions {
         'Delete a set number of messages.',
         [
           CommandOptionBuilder(CommandOptionType.integer, 'amount',
-              'The number of messages to be deleted.')
+              'The number of messages to be deleted.',
+              required: true)
         ],
       )..registerHandler(purgeSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
@@ -22,9 +23,11 @@ class ModEssentialInteractions {
         'Delete certain amount of messages based on a keyword.',
         [
           CommandOptionBuilder(CommandOptionType.string, 'keyword',
-              'The keyword based on which messages are deleted.'),
+              'The keyword based on which messages are deleted.',
+              required: true),
           CommandOptionBuilder(CommandOptionType.integer, 'amount',
-              'Amount of messages to be deleted.')
+              'Amount of messages to be deleted.',
+              required: true)
         ],
       ));
   }

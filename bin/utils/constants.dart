@@ -18,7 +18,8 @@ class Tokens {
   static String YT_KEY = '';
 
   static void loadEnv() {
-    load();
+    // Switch between dev and stable .env's
+    load('.env');
 
     BOT_TOKEN = env['BOT_TOKEN'].toString();
     BOT_OWNER = env['BOT_OWNER'].toString();
@@ -47,6 +48,7 @@ class Emojis {
 
   static const String TICK = '<:tick:822469654710190080>';
   static const String CANCEL = '<:redTick:596576672149667840>';
+  static const RIP = '<:RIP:772044046390394880>';
 }
 
 class Names {

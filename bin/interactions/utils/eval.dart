@@ -1,10 +1,10 @@
-import 'dart:cli';
 import 'dart:isolate';
 
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 
 import '../../obsidian_dart.dart';
+import '../../utils/constants.dart';
 
 class UtilsEvalInteractions {
   UtilsEvalInteractions() {
@@ -15,6 +15,10 @@ class UtilsEvalInteractions {
         CommandOptionBuilder(CommandOptionType.string, 'code',
             'The code to be evaluated in the form of a function.',
             required: true)
+      ],
+      defaultPermissions: true,
+      permissions: [
+        ICommandPermissionBuilder.user(Tokens.BOT_OWNER.toSnowflake())
       ],
     )..registerHandler(evalSlashCommand));
   }
@@ -31,6 +35,7 @@ class UtilsEvalInteractions {
       import 'dart:isolate';
       import 'dart:math';
       import 'dart:cli';
+      import 'dart:io' hide exit;
 
       // For http requests
       import 'package:dio/dio.dart';

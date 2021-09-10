@@ -32,10 +32,6 @@ class ModWarnBanInteractions {
           CommandOptionBuilder(
               CommandOptionType.string, 'reason', 'Reason for ban.')
         ],
-        permissions: [
-          ICommandPermissionBuilder.role(
-              PermissionsConstants.banMembers.toSnowflake())
-        ],
       ));
   }
 
