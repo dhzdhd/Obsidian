@@ -11,26 +11,35 @@ class UtilsBookmarkInteractions {
           'Bookmark a message.',
           [CommandOptionBuilder(CommandOptionType.string, 'id', 'Message ID.')])
         ..registerHandler(bookmarkSlashCommand))
-      ..registerButtonHandler('bookmark', bookmarkOptionHandler);
+      ..registerButtonHandler('bookmark', bookmarkOptionHandler)
+      ..registerButtonHandler('bookmark-delete', deleteOptionHandler);
   }
 
   Future<void> bookmarkOptionHandler(ButtonInteractionEvent event) async {
     await event.acknowledge();
 
     // await message.delete();
+    print('hmm');
+  }
+
+  Future<void> deleteOptionHandler(ButtonInteractionEvent event) async {
+    await event.acknowledge();
+
+    await event.deleteOriginalResponse();
   }
 
   Future<void> bookmarkSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
     late Message? message;
 
-    final arg = event.interaction.options.first.value;
-    print(arg);
-    if (arg.isEmpty) {
-      message = null;
+    final id = int.tryParse(event.getArg('id').value);
+    print(id);
+    if (id == null) {
+      event.getOriginalResponse().then((value) => print(value.content));
     } else {
-      message =
-          await event.interaction.channel.getFromCache()?.fetchMessage(arg);
+      message = await event.interaction.channel
+          .getFromCache()
+          ?.fetchMessage(id.toSnowflake());
     }
 
     final bookmarkEmbed = EmbedBuilder()
