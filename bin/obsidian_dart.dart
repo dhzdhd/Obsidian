@@ -14,6 +14,7 @@ import 'interactions/utils/math.dart';
 import 'interactions/utils/poll.dart';
 import 'utils/constants.dart' show Tokens;
 import 'utils/database.dart' show Database;
+import 'utils/roles.dart';
 
 late Nyxx bot;
 late Interactions botInteractions;
@@ -53,6 +54,7 @@ void main() async {
   // UtilsPollInteractions();
   UtilsEvalInteractions();
   UtilsMathInteractions();
+  UtilsRolesInteractions();
 
   botInteractions.syncOnReady();
 

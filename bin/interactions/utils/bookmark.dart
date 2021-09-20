@@ -59,6 +59,7 @@ class UtilsBookmarkInteractions {
       ..title = 'Bookmarked message'
       ..description = message?.url
       ..color = DiscordColor.azure
+      ..timestamp = DateTime.now()
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
