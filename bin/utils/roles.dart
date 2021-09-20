@@ -57,6 +57,18 @@ class UtilsRolesInteractions {
       });
 
     message = await event.sendFollowup(MessageBuilder.embed(addRoleEmbed));
+
+    final componentMessageBuilder = ComponentMessageBuilder();
+    final componentRow = ComponentRowBuilder()
+      ..addComponent(
+          ButtonBuilder('Add role', 'roleAdd', ComponentStyle.primary))
+      ..addComponent(
+          ButtonBuilder('Remove role', 'roleRemove', ComponentStyle.secondary))
+      ..addComponent(
+          ButtonBuilder('Delete', 'roleCancel', ComponentStyle.danger));
+    componentMessageBuilder.addComponentRow(componentRow);
+
+    await event.respond(componentMessageBuilder);
   }
 
   Future<void> addRoleButtonHandler(ButtonInteractionEvent event) async {
@@ -68,16 +80,21 @@ class UtilsRolesInteractions {
         ?.sendMessage(MessageBuilder.content('Added ${role?.name} to you!'));
   }
 
-  Future<void> removeRoleButtonHandler(ButtonInteractionEvent event) async {}
+  Future<void> removeRoleButtonHandler(ButtonInteractionEvent event) async {
+    await event.acknowledge();
+  }
 
   Future<void> cancelButtonHandler(ButtonInteractionEvent event) async {
     await event.acknowledge();
+
+    await message?.delete();
   }
 
   Future<void> deleteRoleSlashCommand(
       SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    await message?.delete();
+    role = event.interaction.resolved?.roles.first;
+    await role?.delete();
   }
 }

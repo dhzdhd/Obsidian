@@ -29,14 +29,13 @@ void main() async {
       options: ClientOptions(
         initialPresence: PresenceBuilder.of(
           status: UserStatus.online,
-          activity: ActivityBuilder('VALORANT', ActivityType.streaming,
+          activity: ActivityBuilder(
+              'Free iFon 13 download', ActivityType.streaming,
               url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
         ),
       ));
 
   botInteractions = Interactions(bot);
-
-  // TODO: tictactoe,
 
   // Fun interactions
   FunBasicInteractions();
