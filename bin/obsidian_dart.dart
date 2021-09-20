@@ -49,7 +49,7 @@ void main() async {
 
   // Utils interactions
   // UtilsCommonInteractions();
-  // UtilsBookmarkInteractions();
+  UtilsBookmarkInteractions();
   // UtilsPollInteractions();
   UtilsEvalInteractions();
   UtilsMathInteractions();

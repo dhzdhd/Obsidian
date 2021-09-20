@@ -4,36 +4,58 @@ import 'package:nyxx/nyxx.dart';
 import '../../obsidian_dart.dart' show botInteractions;
 
 class UtilsBookmarkInteractions {
+  late Message? message;
+  late EmbedBuilder bookmarkEmbed;
+
   UtilsBookmarkInteractions() {
     botInteractions
-      ..registerSlashCommand(SlashCommandBuilder(
-          'bookmark',
-          'Bookmark a message.',
-          [CommandOptionBuilder(CommandOptionType.string, 'id', 'Message ID.')])
-        ..registerHandler(bookmarkSlashCommand))
-      ..registerButtonHandler('bookmark', bookmarkOptionHandler);
+      ..registerSlashCommand(
+          SlashCommandBuilder('bookmark', 'Bookmark a message.', [
+        CommandOptionBuilder(
+          CommandOptionType.string,
+          'id',
+          'Message ID.',
+          required: true,
+        )
+      ])
+            ..registerHandler(bookmarkSlashCommand))
+      ..registerButtonHandler('addBookmark', addOptionHandler)
+      ..registerButtonHandler('deleteBookmark', deleteOptionHandler);
   }
 
-  Future<void> bookmarkOptionHandler(ButtonInteractionEvent event) async {
+  Future<void> addOptionHandler(ButtonInteractionEvent event) async {
+    await event.acknowledge();
+    final author = event.interaction.userAuthor;
+
+    await author?.sendMessage(MessageBuilder.embed(bookmarkEmbed)) ??
+        await event.respond(
+          MessageBuilder.content(
+              "Your DM's are closed! I cannot send the bookmarke message to you!"),
+          hidden: true,
+        );
+  }
+
+  Future<void> deleteOptionHandler(ButtonInteractionEvent event) async {
     await event.acknowledge();
 
-    // await message.delete();
+    await event.deleteOriginalResponse();
   }
 
   Future<void> bookmarkSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    late Message? message;
 
-    final arg = event.interaction.options.first.value;
-    print(arg);
-    if (arg.isEmpty) {
-      message = null;
+    final id = int.tryParse(event.getArg('id').value);
+
+    if (id == null) {
+      await event.respond(MessageBuilder.content('Enter a valid message ID!'));
+      return;
     } else {
-      message =
-          await event.interaction.channel.getFromCache()?.fetchMessage(arg);
+      message = await event.interaction.channel
+          .getFromCache()
+          ?.fetchMessage(id.toSnowflake());
     }
 
-    final bookmarkEmbed = EmbedBuilder()
+    bookmarkEmbed = EmbedBuilder()
       ..title = 'Bookmarked message'
       ..description = message?.url
       ..color = DiscordColor.azure
@@ -47,9 +69,9 @@ class UtilsBookmarkInteractions {
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(ButtonBuilder(
-          ':dart: Bookmark this ', 'bookmark', ComponentStyle.success))
+          'Bookmark this ', 'addBookmark', ComponentStyle.success))
       ..addComponent(
-          ButtonBuilder(':x: Delete', 'bookmark', ComponentStyle.danger));
+          ButtonBuilder('Delete', 'deleteBookmark', ComponentStyle.danger));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);
