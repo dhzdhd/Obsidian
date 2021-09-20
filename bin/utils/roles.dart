@@ -74,14 +74,27 @@ class UtilsRolesInteractions {
   Future<void> addRoleButtonHandler(ButtonInteractionEvent event) async {
     await event.acknowledge();
 
-    await event.interaction.memberAuthor?.addRole(role!);
+    try {
+      await event.interaction.memberAuthor?.addRole(role as SnowflakeEntity);
+    } catch (err) {
+      await event.respond(
+          MessageBuilder.content('You already have the role - ${role?.name}!'),
+          hidden: true);
+    }
 
-    await event.interaction.userAuthor
-        ?.sendMessage(MessageBuilder.content('Added ${role?.name} to you!'));
+    await event.respond(
+        MessageBuilder.content('Added role - ${role?.name} to you!'),
+        hidden: true);
   }
 
   Future<void> removeRoleButtonHandler(ButtonInteractionEvent event) async {
     await event.acknowledge();
+
+    await event.interaction.memberAuthor?.removeRole(role as SnowflakeEntity);
+
+    await event.respond(
+        MessageBuilder.content('Removed role - ${role?.name} from you!'),
+        hidden: true);
   }
 
   Future<void> cancelButtonHandler(ButtonInteractionEvent event) async {
