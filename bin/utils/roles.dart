@@ -42,7 +42,9 @@ class UtilsRolesInteractions {
 
   Future<void> removeRoleButtonHandler(ButtonInteractionEvent event) async {}
 
-  Future<void> cancelButtonHandler(ButtonInteractionEvent event) async {}
+  Future<void> cancelButtonHandler(ButtonInteractionEvent event) async {
+    await event.acknowledge();
+  }
 
   Future<void> deleteRoleSlashCommand(
       SlashCommandInteractionEvent event) async {
