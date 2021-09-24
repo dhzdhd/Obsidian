@@ -14,6 +14,7 @@ import 'interactions/utils/math.dart';
 import 'interactions/utils/poll.dart';
 import 'utils/constants.dart' show Tokens;
 import 'utils/database.dart' show Database;
+import 'utils/roles.dart';
 
 late Nyxx bot;
 late Interactions botInteractions;
@@ -28,14 +29,13 @@ void main() async {
       options: ClientOptions(
         initialPresence: PresenceBuilder.of(
           status: UserStatus.online,
-          activity: ActivityBuilder('VALORANT', ActivityType.streaming,
+          activity: ActivityBuilder(
+              'Free iFon 13 download', ActivityType.streaming,
               url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
         ),
       ));
 
   botInteractions = Interactions(bot);
-
-  // TODO: tictactoe,
 
   // Fun interactions
   FunBasicInteractions();
@@ -48,11 +48,12 @@ void main() async {
   // ModWarnBanInteractions();
 
   // Utils interactions
-  // UtilsCommonInteractions();
+  UtilsCommonInteractions();
   UtilsBookmarkInteractions();
   // UtilsPollInteractions();
   UtilsEvalInteractions();
   UtilsMathInteractions();
+  UtilsRolesInteractions();
 
   botInteractions.syncOnReady();
 
