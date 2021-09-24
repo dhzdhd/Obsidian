@@ -4,6 +4,7 @@ import 'package:nyxx_interactions/interactions.dart';
 import '../obsidian_dart.dart';
 import 'constants.dart';
 
+// TODO: Make messages ephemeral
 class UtilsRolesInteractions {
   late Message? message;
   late Role? role;
@@ -48,7 +49,7 @@ class UtilsRolesInteractions {
 
     final addRoleEmbed = EmbedBuilder()
       ..title = 'Add the below role to yourself'
-      ..description = '${role?.mention}'
+      ..description = '${role?.name}'
       ..color = DiscordColor.aquamarine
       ..timestamp = DateTime.now()
       ..addFooter((footer) {
@@ -82,9 +83,9 @@ class UtilsRolesInteractions {
           hidden: true);
     }
 
-    await event.respond(
-        MessageBuilder.content('Added role - ${role?.name} to you!'),
-        hidden: true);
+    await event.sendFollowup(
+      MessageBuilder.content('Added role - ${role?.name} to you!'),
+    );
   }
 
   Future<void> removeRoleButtonHandler(ButtonInteractionEvent event) async {

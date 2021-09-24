@@ -48,7 +48,7 @@ void main() async {
   // ModWarnBanInteractions();
 
   // Utils interactions
-  // UtilsCommonInteractions();
+  UtilsCommonInteractions();
   UtilsBookmarkInteractions();
   // UtilsPollInteractions();
   UtilsEvalInteractions();

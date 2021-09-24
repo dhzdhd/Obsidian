@@ -6,22 +6,37 @@ import '../../obsidian_dart.dart' show botInteractions;
 
 class UtilsCommonInteractions {
   UtilsCommonInteractions() {
-    botInteractions.registerSlashCommand(
-        SlashCommandBuilder('invite', 'Send bot invite link.', [])
-          ..registerHandler(inviteBotSlashCommand));
+    botInteractions
+      ..registerSlashCommand(SlashCommandBuilder(
+        'invite',
+        'Send bot invite link.',
+        [],
+      )..registerHandler(inviteBotSlashCommand));
+    // ..registerSlashCommand(SlashCommandBuilder(
+    //   'ping',
+    //   'Get latency of bot',
+    //   [],
+    // )..registerHandler(latencySlashCommand));
   }
 }
 
-Future<void> inviteBotSlashCommand(InteractionEvent event) async {
+Future<void> inviteBotSlashCommand(SlashCommandInteractionEvent event) async {
   await event.acknowledge();
-
-  final inviteURL = await event.interaction.guild
+  final channel = event.interaction.guild
       ?.getFromCache()
       ?.channels
-      .first
-      .createInvite(temporary: false);
-  await event.respond(
-      MessageBuilder.content('**Invite link: $inviteURL (No permissions!!)**'));
+      .firstWhere((element) => element.channelType != ChannelType.category);
+
+  late Invite? invites;
+  try {
+    invites = await channel?.fetchChannelInvites().first;
+  } catch (err) {
+    invites = await channel?.createInvite(temporary: false, unique: false);
+  }
+
+  final inviteUrl = invites?.url;
+  await event
+      .respond(MessageBuilder.content('Server invite URL: **$inviteUrl**'));
 }
 
 /// FIXME:

@@ -88,7 +88,8 @@ class FunYoutubeInteractions {
     for (var _ = 0; _ < 5; _++) {
       ytEmbed.addField(
           name: '${_ + 1}) ${videoList[_]['snippet']['title']}',
-          content: videoList[_]['snippet']['thumbnails']['high']['url'],
+          content:
+              '[Thumbnail](${videoList[_]['snippet']['thumbnails']['high']['url']})',
           inline: false);
       vidIdList.add(videoList[_]['id']['videoId']);
     }
