@@ -24,6 +24,7 @@ dependencies:
   nyxx_interactions: 
     ^2.0.0-rc.22
   math_expressions: ^2.2.0
+  supabase: ^0.2.7
     # git:
     #     url: git://github.com/nyxx-discord/nyxx.git
     #     path: nyxx_interactions/

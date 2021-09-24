@@ -3,6 +3,7 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 
 import '../../obsidian_dart.dart' show botInteractions;
+import '../../utils/constraints.dart';
 
 class UtilsCommonInteractions {
   UtilsCommonInteractions() {
@@ -11,69 +12,74 @@ class UtilsCommonInteractions {
         'invite',
         'Send bot invite link.',
         [],
-      )..registerHandler(inviteBotSlashCommand));
-    // ..registerSlashCommand(SlashCommandBuilder(
-    //   'ping',
-    //   'Get latency of bot',
-    //   [],
-    // )..registerHandler(latencySlashCommand));
+      )..registerHandler(inviteBotSlashCommand))
+      ..registerSlashCommand(SlashCommandBuilder(
+        'ping',
+        'Get latency of bot',
+        [],
+      )..registerHandler(latencySlashCommand));
   }
 }
 
 Future<void> inviteBotSlashCommand(SlashCommandInteractionEvent event) async {
   await event.acknowledge();
+  final guild = event.interaction.guild?.getFromCache();
   final channel = event.interaction.guild
       ?.getFromCache()
       ?.channels
-      .firstWhere((element) => element.channelType != ChannelType.category);
+      .firstWhere((element) => element.channelType == ChannelType.text);
 
-  late Invite? invites;
-  try {
-    invites = await channel?.fetchChannelInvites().first;
-  } catch (err) {
-    invites = await channel?.createInvite(temporary: false, unique: false);
+  if (!(await checkForMod(event))) {
+    await event.respond(MessageBuilder.content(
+        'You do not have the permissions to use this command!'));
+    return;
   }
 
-  final inviteUrl = invites?.url;
+  late Invite? invite;
+  try {
+    invite = await guild?.fetchGuildInvites().first;
+  } catch (err) {
+    invite = await channel?.createInvite(temporary: false, unique: false);
+  }
+
+  final inviteUrl = invite?.url;
   await event
       .respond(MessageBuilder.content('Server invite URL: **$inviteUrl**'));
 }
 
-/// FIXME:
 Future<void> latencySlashCommand(SlashCommandInteractionEvent event) async {
   await event.acknowledge();
 
-  final _gatewayLatency = event.interaction;
+  final gatewayLatency = event.client.shardManager.gatewayLatency.inSeconds;
 
-  final _apiStopwatch = Stopwatch()..start();
+  final apiStopwatch = Stopwatch()..start();
   await http.head(
       Uri(scheme: 'https', host: Constants.host, path: Constants.baseUri));
-  final _apiLatency = _apiStopwatch.elapsedMilliseconds;
-  _apiStopwatch.stop();
+  final apiLatency = apiStopwatch.elapsedMilliseconds;
+  apiStopwatch.stop();
 
-  final _latencyEmbed = EmbedBuilder()
+  final latencyEmbed = EmbedBuilder()
     ..color = DiscordColor.purple
     ..title = 'Latency'
-    ..timestamp = DateTime.utc(2021)
+    ..timestamp = DateTime.now()
     ..addField(
-        name: 'Gateway latency', content: '$_gatewayLatency ms', inline: false)
-    ..addField(name: 'REST latency', content: '$_apiLatency ms', inline: false)
+        name: 'Gateway latency', content: '$gatewayLatency ms', inline: false)
+    ..addField(name: 'REST latency', content: '$apiLatency ms', inline: false)
     ..addField(name: 'Message latency', content: 'Pending ...', inline: false)
     ..addFooter((footer) {
       footer.text = 'Requested by: ${event.interaction.userAuthor?.username}';
       footer.iconUrl = event.interaction.userAuthor?.avatarURL();
     });
 
-  final _messageStopwatch = Stopwatch()..start();
-  final _message =
-      await event.sendFollowup(MessageBuilder.embed(_latencyEmbed));
+  final messageStopwatch = Stopwatch()..start();
+  final message = await event.sendFollowup(MessageBuilder.embed(latencyEmbed));
 
-  _latencyEmbed.replaceField(
+  latencyEmbed.replaceField(
     name: 'Message latency',
-    content: '${_messageStopwatch.elapsedMilliseconds} ms',
+    content: '${messageStopwatch.elapsedMilliseconds} ms',
     inline: false,
   );
 
-  // await _message.edit(MessageBuilder.embed(_latencyEmbed));
-  _messageStopwatch.stop();
+  await message.edit(MessageBuilder.embed(latencyEmbed));
+  messageStopwatch.stop();
 }

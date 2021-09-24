@@ -14,18 +14,24 @@ class Tokens {
   static int POSTGRE_PORT = 6543;
   static String POSTGRE_DATABASE = 'postgres';
 
+  static late String SUPABASE_URL;
+  static late String SUPABASE_KEY;
+
   static String WOLFRAM_ID = '';
   static String YT_KEY = '';
 
   static void loadEnv() {
     // Switch between dev and stable .env's
-    load('.env');
+    load('dev.env');
 
     BOT_TOKEN = env['BOT_TOKEN'].toString();
     BOT_OWNER = env['BOT_OWNER'].toString();
 
     POSTGRE_PASSWORD = env['POSTGRE_PASSWORD'].toString();
     POSTGRE_DSN = env['POSTGRE_DSN'].toString();
+
+    SUPABASE_URL = env['SUPABASE_URL'].toString();
+    SUPABASE_KEY = env['SUPABASE_KEY'].toString();
 
     WOLFRAM_ID = env['WA_ID'].toString();
     YT_KEY = env['YT_KEY'].toString();

@@ -5,6 +5,7 @@ import 'package:nyxx_interactions/interactions.dart';
 import 'package:nyxx/nyxx.dart';
 
 import '../../utils/constants.dart';
+import '../../utils/constraints.dart';
 import '../../utils/database.dart';
 
 class ModWarnBanInteractions {
@@ -39,7 +40,13 @@ class ModWarnBanInteractions {
     await event.acknowledge();
 
     final user = event.interaction.resolved?.users.first;
-    final reason = event.interaction.options.elementAt(1).value;
+    final reason = event.getArg('reason').value;
+
+    if (!(await checkForMod(event))) {
+      await event.respond(MessageBuilder.content(
+          'You do not have the permissions to use this command!'));
+      return;
+    }
 
     final warnEmbed = EmbedBuilder()
       ..title = ':warning: Warned user: ${user?.username}'
@@ -52,6 +59,8 @@ class ModWarnBanInteractions {
       });
 
     try {
+      // await Database.view(
+      //     user?.id.id as int, event.interaction.guild?.id.id as int);
       await Database.add(user?.id.id as int,
           event.interaction.guild?.id.id as int, 'warns', 1);
     } on PostgreSQLException catch (err) {

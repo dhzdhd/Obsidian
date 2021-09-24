@@ -1,8 +1,8 @@
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 
-import '../obsidian_dart.dart';
-import 'constants.dart';
+import '../../obsidian_dart.dart';
+import '../../utils/constants.dart';
 
 // TODO: Make messages ephemeral
 class UtilsRolesInteractions {
