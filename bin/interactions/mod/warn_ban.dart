@@ -14,7 +14,7 @@ class ModWarnBanInteractions {
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
         'warn',
-        'Warns user with reason.',
+        '|MOD ONLY| Warns user with reason.',
         [
           CommandOptionBuilder(
               CommandOptionType.user, 'user', 'A server member.',
@@ -26,7 +26,7 @@ class ModWarnBanInteractions {
       )..registerHandler(warnSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
         'ban',
-        'Bans user with optional reason.',
+        '|MOD ONLY| Bans user with optional reason.',
         [
           CommandOptionBuilder(
               CommandOptionType.user, 'user', 'A server member',
@@ -34,7 +34,8 @@ class ModWarnBanInteractions {
           CommandOptionBuilder(
               CommandOptionType.string, 'reason', 'Reason for ban.')
         ],
-      )..registerHandler(banSlashCommand));
+      )..registerHandler(banSlashCommand))
+      ..registerButtonHandler('ban', banButtonHandler);
   }
 
   Future<void> warnSlashCommand(SlashCommandInteractionEvent event) async {
@@ -70,6 +71,7 @@ class ModWarnBanInteractions {
     }
   }
 
+  // TODO: Implement deleteMessageDays in ban()
   Future<void> banSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
@@ -84,7 +86,7 @@ class ModWarnBanInteractions {
     }
 
     try {
-      await member?.ban(reason: reason);
+      await member?.ban(auditReason: reason);
     } catch (err) {
       await event.respond(MessageBuilder.embed(errorEmbed(
           'Error in banning the user!', event.interaction.userAuthor)));
@@ -111,5 +113,9 @@ class ModWarnBanInteractions {
           'Error in adding ban data to the database!',
           event.interaction.userAuthor)));
     }
+  }
+
+  Future<void> banButtonHandler(ButtonInteractionEvent event) async {
+    await event.acknowledge();
   }
 }

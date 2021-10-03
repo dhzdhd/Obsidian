@@ -52,9 +52,15 @@ class Colors {
 class Emojis {
   /// Custom unicode and discord Emojis
 
-  static const String TICK = '<:tick:822469654710190080>';
-  static const String CANCEL = '<:redTick:596576672149667840>';
-  static const RIP = '<:RIP:772044046390394880>';
+  static const String TICK = '<a:tick:894228435025690624>';
+  static const String CANCEL = '<a:cancel:894228934026199050>';
+  static const String RIP = '<:rip:894236412696748032>';
+  static const String VC_MUTE = '<:vcmute:894228535122735124>';
+  static const String VC_UNMUTE = '<:vcunmute:894228326510624789>';
+  static const String WARNING = '<:warning:894230113242193930>';
+  static const String QUESTION = '<:question:894232833005092894>';
+  static const String STAFF = '<:staff:894230173170434098>';
+  static const String MOD = '<:modshield:894230053620178954>';
 }
 
 class Names {

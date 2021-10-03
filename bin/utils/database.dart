@@ -69,6 +69,7 @@ class Database {
     return flag;
   }
 
+  // FIXME:
   static Future<List<Map>> viewAll(String amount) async {
     if (amount == '0') amount = '*';
     final response =

@@ -7,6 +7,18 @@ final _random = Random();
 final _success = Names.SUCCESS_LIST;
 final _error = Names.ERROR_LIST;
 
+EmbedBuilder confirmEmbed(String desc, User? author) {
+  return EmbedBuilder()
+    ..title = 'Warning!'
+    ..description = desc
+    ..color = DiscordColor.yellow
+    ..timestamp = DateTime.now()
+    ..addFooter((footer) {
+      footer.text = 'Requested by ${author?.username}';
+      footer.iconUrl = author?.avatarURL();
+    });
+}
+
 EmbedBuilder successEmbed(String desc, User? author) {
   return EmbedBuilder()
     ..title = _success[_random.nextInt(_success.length)]

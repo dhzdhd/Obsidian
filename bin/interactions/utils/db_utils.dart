@@ -15,7 +15,7 @@ class UtilsDbInteractions {
         CommandOptionBuilder(
           CommandOptionType.subCommand,
           'view',
-          'View all user data.',
+          '|BOT OWNER ONLY| View all user data.',
           options: [
             CommandOptionBuilder(
               CommandOptionType.integer,
@@ -27,12 +27,13 @@ class UtilsDbInteractions {
         CommandOptionBuilder(
           CommandOptionType.subCommand,
           'delete',
-          'Delete all user data',
+          '|BOT OWNER ONLY| Delete all user data',
         )..registerHandler(deleteDataSlashCommand)
       ],
     ));
   }
 
+  // FIXME:
   Future<void> viewDataSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
     var amount = event.getArg('amount').value ?? 0;
