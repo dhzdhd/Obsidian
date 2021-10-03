@@ -45,7 +45,7 @@ class UtilsDbInteractions {
       return;
     }
 
-    var response = await Database.viewAll(amount);
+    var response = await UserDatabase.viewAll(amount);
     await event.respond(MessageBuilder.content(response.toString()));
   }
 
@@ -59,7 +59,7 @@ class UtilsDbInteractions {
       return;
     }
 
-    var response = await Database.deleteAll();
+    var response = await UserDatabase.deleteAll();
 
     if (response) {
       await event.respond(MessageBuilder.embed(successEmbed(

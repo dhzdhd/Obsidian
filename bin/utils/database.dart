@@ -2,16 +2,16 @@ import 'package:supabase/supabase.dart';
 
 import 'constants.dart';
 
-class Database {
-  static late SupabaseClient supabaseClient;
+late SupabaseClient _supabaseClient;
 
-  Database() {
-    supabaseClient = SupabaseClient(Tokens.SUPABASE_URL, Tokens.SUPABASE_KEY);
-  }
+void initDatabase() {
+  _supabaseClient = SupabaseClient(Tokens.SUPABASE_URL, Tokens.SUPABASE_KEY);
+}
 
+class UserDatabase {
   static Future<bool> add(
       int userId, int guildId, String type, int value) async {
-    final response = await supabaseClient.from('users').insert({
+    final response = await _supabaseClient.from('users').insert({
       'id': '$userId$guildId',
       'user': userId,
       'guild': guildId,
@@ -26,8 +26,8 @@ class Database {
     }
   }
 
-  static Future<Map> view(int userId, int guildId) async {
-    final response = await supabaseClient
+  static Future<Map> fetch(int userId, int guildId) async {
+    final response = await _supabaseClient
         .from('users')
         .select()
         .eq('id', '$userId$guildId')
@@ -37,11 +37,11 @@ class Database {
   }
 
   static Future<bool> update(int userId, int guildId, String type) async {
-    var viewResponse = await view(userId, guildId);
+    var viewResponse = await fetch(userId, guildId);
     var value = int.parse(viewResponse[type].toString());
     ++value;
 
-    final updateResponse = await supabaseClient
+    final updateResponse = await _supabaseClient
         .from('users')
         .update({'$type': value})
         .eq('id', '$userId$guildId')
@@ -52,7 +52,7 @@ class Database {
   }
 
   static Future<bool> delete(int userId, int guildId) async {
-    final response = await supabaseClient
+    final response = await _supabaseClient
         .from('users')
         .delete()
         .eq('id', '$userId$guildId')
@@ -63,7 +63,7 @@ class Database {
   }
 
   static Future<bool> deleteAll() async {
-    final response = await supabaseClient.from('users').delete().execute();
+    final response = await _supabaseClient.from('users').delete().execute();
 
     var flag = (response.error == null) ? true : false;
     return flag;
@@ -73,8 +73,26 @@ class Database {
   static Future<List<Map>> viewAll(String amount) async {
     if (amount == '0') amount = '*';
     final response =
-        await supabaseClient.from('users').select(amount).execute();
+        await _supabaseClient.from('users').select(amount).execute();
 
     return response.data;
+  }
+}
+
+class LogDatabase {
+  static Future<bool> add(int guildId, int channelId) async {
+    return true;
+  }
+
+  static Future<bool> fetch(int guildId) async {
+    return true;
+  }
+
+  static Future<bool> update(int guildId, int channelId) async {
+    return true;
+  }
+
+  static Future<bool> delete(int guildId) async {
+    return true;
   }
 }

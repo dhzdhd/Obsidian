@@ -14,7 +14,7 @@ import 'interactions/utils/eval.dart';
 import 'interactions/utils/math.dart';
 import 'interactions/utils/poll.dart';
 import 'utils/constants.dart' show Tokens;
-import 'utils/database.dart' show Database;
+import 'utils/database.dart' show initDatabase;
 import 'interactions/utils/roles.dart';
 
 late Nyxx bot;
@@ -22,7 +22,7 @@ late Interactions botInteractions;
 
 void main() async {
   Tokens.loadEnv();
-  Database();
+  initDatabase();
 
   bot = Nyxx(Tokens.BOT_TOKEN, GatewayIntents.all,
       options: ClientOptions(

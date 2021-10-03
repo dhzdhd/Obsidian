@@ -60,7 +60,7 @@ class ModWarnBanInteractions {
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
 
-    var response = await Database.add(
+    var response = await UserDatabase.add(
         user?.id.id as int, event.interaction.guild?.id.id as int, 'warns', 1);
 
     if (response) {
@@ -103,7 +103,7 @@ class ModWarnBanInteractions {
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
 
-    var response = await Database.add(
+    var response = await UserDatabase.add(
         user?.id.id as int, event.interaction.guild?.id.id as int, 'bans', 1);
 
     if (response) {

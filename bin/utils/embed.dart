@@ -9,7 +9,7 @@ final _error = Names.ERROR_LIST;
 
 EmbedBuilder confirmEmbed(String desc, User? author) {
   return EmbedBuilder()
-    ..title = 'Warning!'
+    ..title = '${Emojis.QUESTION} Confirmation'
     ..description = desc
     ..color = DiscordColor.yellow
     ..timestamp = DateTime.now()
@@ -46,7 +46,7 @@ EmbedBuilder errorEmbed(String desc, User? author) {
 EmbedBuilder auditEmbed(
     String title, String desc, Member author, String _type) {
   return EmbedBuilder()
-    ..title = title
+    ..title = '${Emojis.STAFF} $title'
     ..description = desc
     ..color = Colors.AUDIT_COLORS[_type]
     ..timestamp = DateTime.now()
