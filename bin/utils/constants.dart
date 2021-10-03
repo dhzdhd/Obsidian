@@ -22,7 +22,7 @@ class Tokens {
 
   static void loadEnv() {
     // Switch between dev and stable .env's
-    load('dev.env');
+    load('.env');
 
     BOT_TOKEN = env['BOT_TOKEN'].toString();
     BOT_OWNER = env['BOT_OWNER'].toString();

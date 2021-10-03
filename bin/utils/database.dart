@@ -3,41 +3,15 @@ import 'package:supabase/supabase.dart';
 
 import 'constants.dart';
 
-// FIXME: Fix weird ass errors from db
 class Database {
   static late SupabaseClient supabaseClient;
-  // static late PostgreSQLConnection connection;
 
   Database() {
-    // connection = PostgreSQLConnection(
-    //   Tokens.POSTGRE_HOST,
-    //   Tokens.POSTGRE_PORT,
-    //   Tokens.POSTGRE_DATABASE,
-    //   username: Tokens.POSTGRE_USER,
-    //   password: Tokens.POSTGRE_PASSWORD,
-    // );
-    // waitFor(connection.open());
-
     supabaseClient = SupabaseClient(Tokens.SUPABASE_URL, Tokens.SUPABASE_KEY);
   }
 
   static Future<bool> add(
       int userId, int guildId, String type, int value) async {
-    // await connection.transaction((ctx) async {
-    //   try {
-    //     await ctx.execute(
-    //         'INSERT INTO users(id, "user", guild, $type) VALUES(@id, @user, @guild, @value)',
-    //         substitutionValues: {
-    //           'id': '$userId$guildId',
-    //           'user': userId,
-    //           'guild': guildId,
-    //           'value': value,
-    //         });
-    //   } catch (err) {
-    //     await update(userId, guildId, type);
-    //   }
-    // });
-
     final response = await supabaseClient.from('users').insert({
       'id': '$userId$guildId',
       'user': userId,
@@ -53,67 +27,20 @@ class Database {
     }
   }
 
-  // TODO: Check map for null
-  static Future<Map<String, int>> view(int userId, int guildId) async {
-    // var response = await connection.query(
-    //   'SELECT * FROM users WHERE id=@id',
-    //   substitutionValues: {'id': '$userId$guildId'},
-    // );
-    // print(response.first.toString());
-    // final map = response.first.asMap();
-    // print(map);
-    // return {
-    //   'user': map[1],
-    //   'guild': map[2],
-    //   'warns': map[3],
-    //   'mutes': map[4],
-    //   'bans': map[5]
-    // };
-
+  static Future<Map> view(int userId, int guildId) async {
     final response = await supabaseClient
         .from('users')
         .select()
         .eq('id', '$userId$guildId')
         .execute();
-    print(response.data);
 
-    return {};
-  }
-
-  static Future<bool> delete(int userId, int guildId) async {
-    // await connection.transaction((ctx) async {
-    //   await ctx.execute(
-    //     'DELETE FROM users WHERE id=@id',
-    //     substitutionValues: {'id': '$userId$guildId'},
-    //   );
-    // });
-
-    final response = await supabaseClient
-        .from('users')
-        .delete()
-        .eq('id', '$userId$guildId')
-        .execute();
-
-    if (response.error == null) {
-      return true;
-    }
-    return false;
+    return response.data[0];
   }
 
   static Future<bool> update(int userId, int guildId, String type) async {
-    final viewResponse = await view(userId, guildId);
-    var value = viewResponse['$type'] as int;
+    var viewResponse = await view(userId, guildId);
+    var value = int.parse(viewResponse[type].toString());
     ++value;
-
-    // await connection.transaction((ctx) async {
-    //   var response = await ctx.execute(
-    //       'UPDATE users SET $type=@value WHERE id=@id',
-    //       substitutionValues: {
-    //         'value': value,
-    //         'id': '$userId$guildId',
-    //       });
-    //   print(response.toString());
-    // });
 
     final updateResponse = await supabaseClient
         .from('users')
@@ -121,9 +48,33 @@ class Database {
         .eq('id', '$userId$guildId')
         .execute();
 
-    if (updateResponse.error == null) {
-      return true;
-    }
-    return false;
+    var flag = (updateResponse.error == null) ? true : false;
+    return flag;
+  }
+
+  static Future<bool> delete(int userId, int guildId) async {
+    final response = await supabaseClient
+        .from('users')
+        .delete()
+        .eq('id', '$userId$guildId')
+        .execute();
+
+    var flag = (response.error == null) ? true : false;
+    return flag;
+  }
+
+  static Future<bool> deleteAll() async {
+    final response = await supabaseClient.from('users').delete().execute();
+
+    var flag = (response.error == null) ? true : false;
+    return flag;
+  }
+
+  static Future<List<Map>> viewAll(String amount) async {
+    if (amount == '0') amount = '*';
+    final response =
+        await supabaseClient.from('users').select(amount).execute();
+
+    return response.data;
   }
 }

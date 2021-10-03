@@ -7,6 +7,7 @@ import 'package:nyxx/nyxx.dart';
 import '../../utils/constants.dart';
 import '../../utils/constraints.dart';
 import '../../utils/database.dart';
+import '../../utils/embed.dart';
 
 class ModWarnBanInteractions {
   ModWarnBanInteractions() {
@@ -58,15 +59,14 @@ class ModWarnBanInteractions {
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
 
-    try {
-      // await Database.view(
-      //     user?.id.id as int, event.interaction.guild?.id.id as int);
-      await Database.add(user?.id.id as int,
-          event.interaction.guild?.id.id as int, 'warns', 1);
-    } on PostgreSQLException catch (err) {
-      print(err.toString());
-    }
+    var response = await Database.add(
+        user?.id.id as int, event.interaction.guild?.id.id as int, 'warns', 1);
 
-    await event.respond(MessageBuilder.embed(warnEmbed));
+    if (response) {
+      await event.respond(MessageBuilder.embed(warnEmbed));
+    } else {
+      await event.respond(MessageBuilder.embed(errorEmbed(
+          'Error in warning the user!', event.interaction.userAuthor)));
+    }
   }
 }

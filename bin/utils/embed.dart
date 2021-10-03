@@ -7,15 +7,15 @@ final _random = Random();
 final _success = Names.SUCCESS_LIST;
 final _error = Names.ERROR_LIST;
 
-EmbedBuilder successEmbed(String desc, IMessageAuthor author) {
+EmbedBuilder successEmbed(String desc, User? author) {
   return EmbedBuilder()
     ..title = _success[_random.nextInt(_success.length)]
     ..description = desc
     ..color = DiscordColor.green
     ..timestamp = DateTime.now()
     ..addFooter((footer) {
-      footer.text = 'Requested by ${author.username}';
-      footer.iconUrl = author.avatarURL();
+      footer.text = 'Requested by ${author?.username}';
+      footer.iconUrl = author?.avatarURL();
     });
 }
 
