@@ -1,4 +1,3 @@
-import 'package:postgres/postgres.dart';
 import 'package:supabase/supabase.dart';
 
 import 'constants.dart';
