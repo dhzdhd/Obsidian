@@ -8,13 +8,13 @@ import 'interactions/mod/mute.dart';
 import 'interactions/mod/warn_ban.dart';
 import 'interactions/utils/bookmark.dart';
 import 'interactions/utils/common.dart';
-import 'package:logging/logging.dart' show Logger, Level;
+import 'interactions/utils/db_utils.dart';
 import 'interactions/utils/eval.dart';
 import 'interactions/utils/math.dart';
 import 'interactions/utils/poll.dart';
 import 'utils/constants.dart' show Tokens;
 import 'utils/database.dart' show Database;
-import 'utils/roles.dart';
+import 'interactions/utils/roles.dart';
 
 late Nyxx bot;
 late Interactions botInteractions;
@@ -23,14 +23,11 @@ void main() async {
   Tokens.loadEnv();
   Database();
 
-  // Logger.root.level = Level.FINE;
-
   bot = Nyxx(Tokens.BOT_TOKEN, GatewayIntents.all,
       options: ClientOptions(
         initialPresence: PresenceBuilder.of(
           status: UserStatus.online,
-          activity: ActivityBuilder(
-              'Free iFon 13 download', ActivityType.streaming,
+          activity: ActivityBuilder("your DM's 👀", ActivityType.listening,
               url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
         ),
       ));
@@ -45,7 +42,7 @@ void main() async {
   // Mod interactions
   ModEssentialInteractions();
   // ModMuteInteractions();
-  // ModWarnBanInteractions();
+  ModWarnBanInteractions();
 
   // Utils interactions
   UtilsCommonInteractions();
@@ -54,14 +51,11 @@ void main() async {
   UtilsEvalInteractions();
   UtilsMathInteractions();
   UtilsRolesInteractions();
+  UtilsDbInteractions();
 
   botInteractions.syncOnReady();
 
   bot.onReady.listen((ReadyEvent e) async {
     print('Ready!');
-  });
-
-  bot.onDisconnect.listen((DisconnectEvent event) async {
-    await Database.connection.close();
   });
 }

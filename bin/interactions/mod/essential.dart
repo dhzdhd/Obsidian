@@ -1,6 +1,7 @@
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 import '../../obsidian_dart.dart' show botInteractions;
+import '../../utils/constraints.dart';
 
 class ModEssentialInteractions {
   ModEssentialInteractions() {
@@ -32,16 +33,35 @@ class ModEssentialInteractions {
     await event.acknowledge();
     final amount = event.getArg('amount').value;
 
+    if (!(await checkForMod(event))) {
+      await event.respond(MessageBuilder.content(
+          'You do not have the permissions to use this command!'));
+      return;
+    }
+
     final channel = event.interaction.channel.getFromCache();
     final toDelete =
         await channel?.downloadMessages(limit: amount).toList() ?? [];
-    await channel?.bulkRemoveMessages(toDelete);
+
+    try {
+      await channel?.bulkRemoveMessages(toDelete);
+    } catch (err) {
+      await event.respond(
+          MessageBuilder.content('Amount must be at least 2 and at most 100'),
+          hidden: true);
+    }
   }
 
   Future<void> censorSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
     final amount = event.getArg('amount').value;
     final keyword = event.getArg('keyword').value;
+
+    if (!(await checkForMod(event))) {
+      await event.respond(MessageBuilder.content(
+          'You do not have the permissions to use this command!'));
+      return;
+    }
 
     List<Message> toDelete = [];
     final channel = event.interaction.channel.getFromCache();
@@ -53,6 +73,13 @@ class ModEssentialInteractions {
       }
     });
 
-    await channel?.bulkRemoveMessages(toDelete);
+    try {
+      await channel?.bulkRemoveMessages(toDelete);
+    } catch (err) {
+      await event.respond(
+        MessageBuilder.content('Amount must be at least 2 and at most 100'),
+        hidden: true,
+      );
+    }
   }
 }
