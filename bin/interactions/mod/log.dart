@@ -21,7 +21,7 @@ class ModLogInteractions {
                 'Channel to assign to logging.',
                 required: true)
           ],
-        ),
+        )..registerHandler(createLogSlashCommand),
         CommandOptionBuilder(
           CommandOptionType.subCommand,
           'delete',
@@ -31,7 +31,7 @@ class ModLogInteractions {
                 'Logging channel to delete.',
                 required: true)
           ],
-        )
+        )..registerHandler(deleteLogSlashCommand)
       ],
     ));
   }
@@ -39,6 +39,16 @@ class ModLogInteractions {
   Future<void> createLogSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
     var channel = event.interaction.resolved?.channels.first;
+
+    if (!(channel?.type == ChannelType.text)) {
+      await event.respond(
+        MessageBuilder.embed(
+          errorEmbed('The given channel cannot be used as a log channel!',
+              event.interaction.userAuthor),
+        ),
+      );
+      return;
+    }
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.content(
@@ -50,12 +60,19 @@ class ModLogInteractions {
         event.interaction.guild?.id.id as int, channel?.id.id as int);
 
     if (response) {
-      await event.respond(MessageBuilder.embed(successEmbed(
-          'Successfully created a log channel!',
-          event.interaction.userAuthor)));
+      await event.respond(MessageBuilder.embed(
+        successEmbed(
+          'Successfully added the log channel data in the database!',
+          event.interaction.userAuthor,
+        ),
+      ));
     } else {
-      await event.respond(MessageBuilder.embed(errorEmbed(
-          'Error in creating the log channel!', event.interaction.userAuthor)));
+      await event.respond(MessageBuilder.embed(
+        errorEmbed(
+          'Error in adding the log channel data to the database!',
+          event.interaction.userAuthor,
+        ),
+      ));
     }
   }
 
@@ -72,12 +89,19 @@ class ModLogInteractions {
         await LogDatabase.delete(event.interaction.guild?.id.id as int);
 
     if (response) {
-      await event.respond(MessageBuilder.embed(successEmbed(
-          'Successfully deleted the log channel!',
-          event.interaction.userAuthor)));
+      await event.respond(
+        MessageBuilder.embed(successEmbed(
+          'Successfully deleted the log channel data from database!',
+          event.interaction.userAuthor,
+        )),
+      );
     } else {
-      await event.respond(MessageBuilder.embed(errorEmbed(
-          'Error in deleting the log channel!', event.interaction.userAuthor)));
+      await event.respond(
+        MessageBuilder.embed(errorEmbed(
+          'Error in deleting the log channel data from the database!\n A log channel may not exist in this server!',
+          event.interaction.userAuthor,
+        )),
+      );
     }
   }
 }
