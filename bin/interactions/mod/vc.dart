@@ -13,12 +13,12 @@ class ModVcInteractions {
             CommandOptionBuilder(
               CommandOptionType.subCommand,
               'mute',
-              '·MOD ONLY· Mute VC members.',
+              '<MOD ONLY> Mute VC members.',
               options: [
                 CommandOptionBuilder(
                     CommandOptionType.user, 'user', 'User to mute in VC')
               ],
-            )..registerHandler(vcMuteSlashCommand),
+            ),
             CommandOptionBuilder(
               CommandOptionType.subCommand,
               'unmute',
@@ -27,7 +27,7 @@ class ModVcInteractions {
                 CommandOptionBuilder(
                     CommandOptionType.user, 'user', 'User to unmute in VC')
               ],
-            )..registerHandler(vcUnmuteSlashCommand),
+            ),
           ],
         ),
       )

@@ -8,7 +8,7 @@ class ModEssentialInteractions {
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
         'purge',
-        '|**MOD ONLY**| Delete a set number of messages.',
+        '<MOD ONLY> Delete a set number of messages.',
         [
           CommandOptionBuilder(CommandOptionType.integer, 'amount',
               'The number of messages to be deleted.',
@@ -17,7 +17,7 @@ class ModEssentialInteractions {
       )..registerHandler(purgeSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
         'censor',
-        '|MOD ONLY| Delete certain amount of messages based on a keyword.',
+        '<MOD ONLY> Delete certain amount of messages based on a keyword.',
         [
           CommandOptionBuilder(CommandOptionType.string, 'keyword',
               'The keyword based on which messages are deleted.',

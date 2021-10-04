@@ -14,7 +14,7 @@ class ModWarnBanInteractions {
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
         'warn',
-        '|MOD ONLY| Warns user with reason.',
+        '<MOD ONLY> Warns user with reason.',
         [
           CommandOptionBuilder(
               CommandOptionType.user, 'user', 'A server member.',
@@ -26,7 +26,7 @@ class ModWarnBanInteractions {
       )..registerHandler(warnSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
         'ban',
-        '|MOD ONLY| Bans user with optional reason.',
+        '<MOD ONLY> Bans user with optional reason.',
         [
           CommandOptionBuilder(
               CommandOptionType.user, 'user', 'A server member',

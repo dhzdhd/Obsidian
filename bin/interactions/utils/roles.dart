@@ -3,6 +3,8 @@ import 'package:nyxx_interactions/interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/constants.dart';
+import '../../utils/constraints.dart';
+import '../../utils/embed.dart';
 
 // TODO: Make messages ephemeral
 class UtilsRolesInteractions {
@@ -18,7 +20,7 @@ class UtilsRolesInteractions {
           CommandOptionBuilder(
             CommandOptionType.subCommand,
             'add',
-            'Add users to an existing role.',
+            '<MOD ONLY> Add users to an existing role.',
             options: [
               CommandOptionBuilder(
                   CommandOptionType.role, 'role', 'Name of role',
@@ -28,7 +30,7 @@ class UtilsRolesInteractions {
           CommandOptionBuilder(
             CommandOptionType.subCommand,
             'delete',
-            'Delete a role.',
+            '<MOD ONLY> Delete a role.',
             options: [
               CommandOptionBuilder(
                   CommandOptionType.role, 'role', 'Name of role.',
@@ -44,8 +46,13 @@ class UtilsRolesInteractions {
 
   Future<void> addToRoleSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
-
     role = event.interaction.resolved?.roles.first;
+
+    if (!(await checkForMod(event))) {
+      await event.respond(MessageBuilder.content(
+          'You do not have the permissions to use this command!'));
+      return;
+    }
 
     final addRoleEmbed = EmbedBuilder()
       ..title = 'Add the below role to yourself'
@@ -107,8 +114,22 @@ class UtilsRolesInteractions {
   Future<void> deleteRoleSlashCommand(
       SlashCommandInteractionEvent event) async {
     await event.acknowledge();
-
     role = event.interaction.resolved?.roles.first;
-    await role?.delete();
+
+    if (!(await checkForMod(event))) {
+      await event.respond(MessageBuilder.content(
+          'You do not have the permissions to use this command!'));
+      return;
+    }
+
+    try {
+      await role?.delete();
+      await event.respond(MessageBuilder.embed(successEmbed(
+          'The given role was successfully deleted!',
+          event.interaction.userAuthor)));
+    } catch (err) {
+      await event.respond(MessageBuilder.embed(errorEmbed(
+          'Error in deleting the given role!', event.interaction.userAuthor)));
+    }
   }
 }

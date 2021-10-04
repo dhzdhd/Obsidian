@@ -10,7 +10,7 @@ class ModMuteInteractions {
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
         'mute',
-        'Mutes user for a certain time period.',
+        '<MOD ONLY> Mutes user for a certain time period.',
         [
           CommandOptionBuilder(
               CommandOptionType.user, 'user', 'A server member',
@@ -24,7 +24,7 @@ class ModMuteInteractions {
       ))
       ..registerSlashCommand(SlashCommandBuilder(
         'unmute',
-        'Unmutes muted user.',
+        '<MOD ONLY> Unmutes muted user.',
         [
           CommandOptionBuilder(
               CommandOptionType.user, 'user', 'A server member',

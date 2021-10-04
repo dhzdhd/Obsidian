@@ -15,7 +15,7 @@ class ModLogInteractions {
         CommandOptionBuilder(
           CommandOptionType.subCommand,
           'create',
-          '|MOD ONLY| Create a new log channel.',
+          '<MOD ONLY> Create a new log channel.',
           options: [
             CommandOptionBuilder(CommandOptionType.channel, 'channel',
                 'Channel to assign to logging.',
@@ -25,7 +25,7 @@ class ModLogInteractions {
         CommandOptionBuilder(
           CommandOptionType.subCommand,
           'delete',
-          '|MOD ONLY| Delete an existing log channel.',
+          '<MOD ONLY> Delete an existing log channel.',
           options: [
             CommandOptionBuilder(CommandOptionType.channel, 'channel',
                 'Logging channel to delete.',

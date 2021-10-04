@@ -17,7 +17,7 @@ class UtilsDbInteractions {
         CommandOptionBuilder(
           CommandOptionType.subCommand,
           'view-users',
-          '|BOT OWNER ONLY| View all user data.',
+          '<BOT OWNER ONLY> View all user data.',
           options: [
             CommandOptionBuilder(
               CommandOptionType.integer,
@@ -29,12 +29,12 @@ class UtilsDbInteractions {
         CommandOptionBuilder(
           CommandOptionType.subCommand,
           'delete-users',
-          '|BOT OWNER ONLY| Delete all user data',
+          '<BOT OWNER ONLY> Delete all user data',
         )..registerHandler(deleteUserDataSlashCommand),
         CommandOptionBuilder(
           CommandOptionType.subCommand,
           'view-log',
-          '|BOT OWNER ONLY| View all log channel data.',
+          '<BOT OWNER ONLY> View all log channel data.',
           options: [
             CommandOptionBuilder(
               CommandOptionType.integer,
@@ -46,7 +46,7 @@ class UtilsDbInteractions {
         CommandOptionBuilder(
           CommandOptionType.subCommand,
           'delete-log',
-          '|BOT OWNER ONLY| Delete all log channel data',
+          '<BOT OWNER ONLY> Delete all log channel data',
         )..registerHandler(deleteLogDataSlashCommand),
       ],
     ));

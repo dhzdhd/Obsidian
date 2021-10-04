@@ -10,7 +10,7 @@ class UtilsCommonInteractions {
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
         'invite',
-        'Send bot invite link.',
+        '<MOD ONLY> Send bot invite link.',
         [],
       )..registerHandler(inviteBotSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
