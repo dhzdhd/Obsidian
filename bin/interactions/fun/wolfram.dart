@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 
-import '../../obsidian_dart.dart' show botInteractions;
+import '../../obsidian_dart.dart' show botInteractions, dio;
 import '../../utils/constants.dart';
 
 class FunWolframInteractions {
@@ -11,7 +11,6 @@ class FunWolframInteractions {
   final shortUrl =
       'http://api.wolframalpha.com/v1/result?appid=${Tokens.WOLFRAM_ID}';
   late Map<String, String> shortParams;
-  final _dio = Dio();
 
   FunWolframInteractions() {
     botInteractions.registerSlashCommand(SlashCommandBuilder(
@@ -46,7 +45,7 @@ class FunWolframInteractions {
       String url, Map<String, String> params) async {
     late var response;
     try {
-      response = await _dio.get(url, queryParameters: params);
+      response = await dio.get(url, queryParameters: params);
     } on DioError catch (err) {
       if (err.response?.statusCode == 400) {
         return 'Sorry, the API did not find any input to interpret.';

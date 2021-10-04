@@ -3,7 +3,7 @@ import 'package:nyxx_interactions/interactions.dart';
 import 'package:dio/dio.dart';
 
 import '../../utils/constants.dart';
-import '../../obsidian_dart.dart' show botInteractions;
+import '../../obsidian_dart.dart' show botInteractions, dio;
 import '../../utils/embed.dart';
 
 class FunYoutubeInteractions {
@@ -19,10 +19,8 @@ class FunYoutubeInteractions {
       ..registerMultiselectHandler('youtube', ytOptionHandler);
   }
 
-  static const LOCATION = '(37.0902,95.7129)';
   static const YT_URL = 'https://www.googleapis.com/youtube/v3/search/';
   late Message message;
-  var dio = Dio();
   var params = {
     'key': Tokens.YT_KEY,
     'part': 'snippet',

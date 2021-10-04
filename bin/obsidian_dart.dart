@@ -1,6 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 import 'interactions/fun/basic.dart';
+import 'interactions/fun/movie.dart';
 import 'interactions/fun/wolfram.dart';
 import 'interactions/fun/youtube.dart';
 import 'interactions/mod/essential.dart';
@@ -20,10 +22,12 @@ import 'interactions/utils/roles.dart';
 
 late Nyxx bot;
 late Interactions botInteractions;
+late Dio dio;
 
 void main() async {
   Tokens.loadEnv();
   initDatabase();
+  dio = Dio();
 
   bot = Nyxx(Tokens.BOT_TOKEN, GatewayIntents.all,
       options: ClientOptions(
@@ -40,6 +44,7 @@ void main() async {
   FunBasicInteractions();
   FunWolframInteractions();
   FunYoutubeInteractions();
+  FunMovieInteractions();
 
   // Mod interactions
   ModEssentialInteractions();
