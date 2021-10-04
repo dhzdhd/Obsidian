@@ -43,13 +43,13 @@ class FunBasicInteractions {
     await event.respond(MessageBuilder.content(avatar.toString()));
   }
 
-  Future<void> rollSlashCommand(InteractionEvent event) async {
+  Future<void> rollSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
     await event.respond(
         MessageBuilder.content(':game_die: ${_random.nextInt(7) - 1}'));
   }
 
-  Future<void> flipSlashCommand(InteractionEvent event) async {
+  Future<void> flipSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
     await event.respond(MessageBuilder.content(
         ':coin: ${['Heads', 'Tails'][_random.nextInt(2)]}'));

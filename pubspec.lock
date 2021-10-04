@@ -63,7 +63,7 @@ packages:
       name: gotrue
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   http:
     dependency: "direct main"
     description:
@@ -119,28 +119,28 @@ packages:
       name: nyxx
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0-rc.15"
+    version: "2.0.2"
   nyxx_commander:
     dependency: "direct main"
     description:
       name: nyxx_commander
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0-rc.12"
+    version: "2.0.0"
   nyxx_extensions:
     dependency: "direct main"
     description:
       name: nyxx_extensions
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0-rc.9"
+    version: "2.0.0"
   nyxx_interactions:
     dependency: "direct main"
     description:
       name: nyxx_interactions
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0-rc.23"
+    version: "2.0.1"
   path:
     dependency: transitive
     description:
