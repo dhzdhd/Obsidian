@@ -23,8 +23,4 @@ dependencies:
   postgres: ^2.4.1+2
   nyxx_interactions: ^2.0.1
   math_expressions: ^2.2.0
-  supabase:
-    ^0.2.7
-    # git:
-    #     url: git://github.com/nyxx-discord/nyxx.git
-    #     path: nyxx_interactions/
+  supabase: ^0.2.7
