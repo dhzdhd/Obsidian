@@ -4,6 +4,7 @@ import 'interactions/fun/basic.dart';
 import 'interactions/fun/wolfram.dart';
 import 'interactions/fun/youtube.dart';
 import 'interactions/mod/essential.dart';
+import 'interactions/mod/log.dart';
 import 'interactions/mod/mute.dart';
 import 'interactions/mod/vc.dart';
 import 'interactions/mod/warn_ban.dart';
@@ -45,6 +46,7 @@ void main() async {
   // ModMuteInteractions();
   ModWarnBanInteractions();
   ModVcInteractions();
+  ModLogInteractions();
 
   // Utils interactions
   UtilsCommonInteractions();

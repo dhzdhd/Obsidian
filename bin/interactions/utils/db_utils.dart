@@ -6,6 +6,8 @@ import '../../utils/constraints.dart';
 import '../../utils/database.dart';
 import '../../utils/embed.dart';
 
+// TODO: confirm button for deleting data
+
 class UtilsDbInteractions {
   UtilsDbInteractions() {
     botInteractions.registerSlashCommand(SlashCommandBuilder(
@@ -14,26 +16,44 @@ class UtilsDbInteractions {
       [
         CommandOptionBuilder(
           CommandOptionType.subCommand,
-          'view',
+          'view-users',
           '|BOT OWNER ONLY| View all user data.',
           options: [
             CommandOptionBuilder(
               CommandOptionType.integer,
               'amount',
-              'Amount to records to be retrieved.',
+              'Amount of records to be retrieved.',
             )
           ],
-        )..registerHandler(viewDataSlashCommand),
+        )..registerHandler(viewUserDataSlashCommand),
         CommandOptionBuilder(
           CommandOptionType.subCommand,
-          'delete',
+          'delete-users',
           '|BOT OWNER ONLY| Delete all user data',
-        )..registerHandler(deleteDataSlashCommand)
+        )..registerHandler(deleteUserDataSlashCommand),
+        CommandOptionBuilder(
+          CommandOptionType.subCommand,
+          'view-log',
+          '|BOT OWNER ONLY| View all log channel data.',
+          options: [
+            CommandOptionBuilder(
+              CommandOptionType.integer,
+              'amount',
+              'Amount of records to be retrieved.',
+            )
+          ],
+        )..registerHandler(viewLogDataSlashCommand),
+        CommandOptionBuilder(
+          CommandOptionType.subCommand,
+          'delete-log',
+          '|BOT OWNER ONLY| Delete all log channel data',
+        )..registerHandler(deleteLogDataSlashCommand),
       ],
     ));
   }
 
-  Future<void> viewDataSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> viewUserDataSlashCommand(
+      SlashCommandInteractionEvent event) async {
     await event.acknowledge();
     late var amount;
 
@@ -58,7 +78,7 @@ class UtilsDbInteractions {
     await event.respond(MessageBuilder.content(message));
   }
 
-  Future<void> deleteDataSlashCommand(
+  Future<void> deleteUserDataSlashCommand(
       SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
@@ -76,6 +96,59 @@ class UtilsDbInteractions {
     } else {
       await event.respond(MessageBuilder.embed(errorEmbed(
           'Error in deleting user records!', event.interaction.userAuthor)));
+    }
+  }
+
+  Future<void> viewLogDataSlashCommand(
+      SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+    late var amount;
+
+    try {
+      amount = event.getArg('amount').value;
+    } catch (err) {
+      amount = null;
+    }
+
+    if (!(await checkForOwner(event))) {
+      await event.respond(MessageBuilder.content(
+          'You do not have the permissions to use this command!'));
+      return;
+    }
+
+    var message = '';
+    var response = await LogDatabase.fetch(amount: amount);
+    response.forEach((element) {
+      message += '$element\n';
+    });
+
+    await event.respond(MessageBuilder.content(message));
+  }
+
+  Future<void> deleteLogDataSlashCommand(
+      SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    if (!(await checkForOwner(event))) {
+      await event.respond(MessageBuilder.content(
+          'You do not have the permissions to use this command!'));
+      return;
+    }
+
+    var response = await LogDatabase.delete();
+
+    if (response) {
+      await event.respond(
+        MessageBuilder.embed(successEmbed(
+            'Successfully deleted log channel records',
+            event.interaction.userAuthor)),
+      );
+    } else {
+      await event.respond(
+        MessageBuilder.embed(errorEmbed(
+            'Error in deleting log channel records!',
+            event.interaction.userAuthor)),
+      );
     }
   }
 }
