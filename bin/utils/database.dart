@@ -26,19 +26,36 @@ class UserDatabase {
     }
   }
 
-  static Future<Map> fetch(int userId, int guildId) async {
-    final response = await _supabaseClient
-        .from('users')
-        .select()
-        .eq('id', '$userId$guildId')
-        .execute();
+  static Future<List> fetch(
+      {int userId = 0, int guildId = 0, int? amount}) async {
+    late final PostgrestResponse response;
 
-    return response.data[0];
+    if (userId == 0) {
+      response = await _supabaseClient.from('users').select().execute();
+    } else {
+      response = await _supabaseClient
+          .from('users')
+          .select()
+          .eq('id', '$userId$guildId')
+          .execute();
+    }
+
+    if (response.data == null) return [];
+
+    if (amount == null) {
+      return response.data;
+    } else {
+      try {
+        return (response.data as List).sublist(0, amount);
+      } catch (err) {
+        return response.data;
+      }
+    }
   }
 
   static Future<bool> update(int userId, int guildId, String type) async {
-    var viewResponse = await fetch(userId, guildId);
-    var value = int.parse(viewResponse[type].toString());
+    var viewResponse = await fetch(userId: userId, guildId: guildId);
+    var value = int.parse(viewResponse[0][type].toString());
     ++value;
 
     final updateResponse = await _supabaseClient
@@ -51,31 +68,21 @@ class UserDatabase {
     return flag;
   }
 
-  static Future<bool> delete(int userId, int guildId) async {
-    final response = await _supabaseClient
-        .from('users')
-        .delete()
-        .eq('id', '$userId$guildId')
-        .execute();
+  static Future<bool> delete([int userId = 0, int guildId = 0]) async {
+    late final PostgrestResponse response;
+
+    if (userId == 0) {
+      response = await _supabaseClient.from('users').delete().execute();
+    } else {
+      response = await _supabaseClient
+          .from('users')
+          .delete()
+          .eq('id', '$userId$guildId')
+          .execute();
+    }
 
     var flag = (response.error == null) ? true : false;
     return flag;
-  }
-
-  static Future<bool> deleteAll() async {
-    final response = await _supabaseClient.from('users').delete().execute();
-
-    var flag = (response.error == null) ? true : false;
-    return flag;
-  }
-
-  // FIXME:
-  static Future<List<Map>> viewAll(String amount) async {
-    if (amount == '0') amount = '*';
-    final response =
-        await _supabaseClient.from('users').select(amount).execute();
-
-    return response.data;
   }
 }
 

@@ -33,11 +33,15 @@ class UtilsDbInteractions {
     ));
   }
 
-  // FIXME:
   Future<void> viewDataSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    var amount = event.getArg('amount').value ?? 0;
-    amount = amount.toString();
+    late var amount;
+
+    try {
+      amount = event.getArg('amount').value;
+    } catch (err) {
+      amount = null;
+    }
 
     if (!(await checkForOwner(event))) {
       await event.respond(MessageBuilder.content(
@@ -45,8 +49,13 @@ class UtilsDbInteractions {
       return;
     }
 
-    var response = await UserDatabase.viewAll(amount);
-    await event.respond(MessageBuilder.content(response.toString()));
+    var message = '';
+    var response = await UserDatabase.fetch(amount: amount);
+    response.forEach((element) {
+      message += '$element\n';
+    });
+
+    await event.respond(MessageBuilder.content(message));
   }
 
   Future<void> deleteDataSlashCommand(
@@ -59,7 +68,7 @@ class UtilsDbInteractions {
       return;
     }
 
-    var response = await UserDatabase.deleteAll();
+    var response = await UserDatabase.delete();
 
     if (response) {
       await event.respond(MessageBuilder.embed(successEmbed(
