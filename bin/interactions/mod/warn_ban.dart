@@ -1,5 +1,3 @@
-import 'package:postgres/postgres.dart';
-
 import '../../obsidian_dart.dart';
 import 'package:nyxx_interactions/interactions.dart';
 import 'package:nyxx/nyxx.dart';

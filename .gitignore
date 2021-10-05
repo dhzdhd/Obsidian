@@ -8,3 +8,5 @@ build/
 *.env*
 /.idea/
 /.vscode/
+
+lavalink_server/logs/

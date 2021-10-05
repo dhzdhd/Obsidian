@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_lavalink/lavalink.dart';
 import 'interactions/fun/basic.dart';
 import 'interactions/fun/movie.dart';
+import 'interactions/fun/music.dart';
 import 'interactions/fun/wolfram.dart';
 import 'interactions/fun/youtube.dart';
 import 'interactions/mod/essential.dart';
@@ -23,6 +25,7 @@ import 'interactions/utils/roles.dart';
 late Nyxx bot;
 late Interactions botInteractions;
 late Dio dio;
+late Cluster cluster;
 
 void main() async {
   Tokens.loadEnv();
@@ -40,11 +43,18 @@ void main() async {
 
   botInteractions = Interactions(bot);
 
+  cluster = Cluster(bot, Snowflake(Tokens.BOT_ID));
+  await cluster.addNode(NodeOptions(
+    host: '0.0.0.0',
+    port: 2333,
+  ));
+
   // Fun interactions
   FunBasicInteractions();
   FunWolframInteractions();
   FunYoutubeInteractions();
   FunMovieInteractions();
+  FunMusicInteractions();
 
   // Mod interactions
   ModEssentialInteractions();

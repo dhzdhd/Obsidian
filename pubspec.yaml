@@ -16,11 +16,11 @@ dev_dependencies:
 dependencies:
   dio: ^4.0.0
   dotenv: ^3.0.0
-  http: ^0.13.3
-  nyxx: ^2.0.2
+  http: ^0.13.4
+  nyxx: ^2.0.3
   nyxx_commander: ^2.0.0
   nyxx_extensions: ^2.0.0
-  postgres: ^2.4.1+2
   nyxx_interactions: ^2.0.1
   math_expressions: ^2.2.0
+  nyxx_lavalink: ^2.0.0
   supabase: ^0.2.7

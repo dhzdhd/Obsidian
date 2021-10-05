@@ -6,6 +6,7 @@ class Tokens {
 
   static String BOT_TOKEN = '';
   static String BOT_OWNER = '';
+  static String BOT_ID = '';
 
   static late String SUPABASE_URL;
   static late String SUPABASE_KEY;
@@ -20,6 +21,7 @@ class Tokens {
 
     BOT_TOKEN = env['BOT_TOKEN'].toString();
     BOT_OWNER = env['BOT_OWNER'].toString();
+    BOT_ID = env['BOT_ID'].toString();
 
     SUPABASE_URL = env['SUPABASE_URL'].toString();
     SUPABASE_KEY = env['SUPABASE_KEY'].toString();
