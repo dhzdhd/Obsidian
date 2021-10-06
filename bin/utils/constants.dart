@@ -55,6 +55,7 @@ class Emojis {
   static const String QUESTION = '<:question:894232833005092894>';
   static const String STAFF = '<:staff:894230173170434098>';
   static const String MOD = '<:modshield:894230053620178954>';
+  static const String MUSIC = '<:Spotify_Cursed:895153940461678632>';
 }
 
 class Names {

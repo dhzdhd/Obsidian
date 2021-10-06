@@ -43,15 +43,26 @@ EmbedBuilder errorEmbed(String desc, User? author) {
     });
 }
 
-EmbedBuilder auditEmbed(
-    String title, String desc, Member author, String _type) {
+EmbedBuilder auditEmbed(String title, String desc, User? author, String _type) {
   return EmbedBuilder()
     ..title = '${Emojis.STAFF} $title'
     ..description = desc
     ..color = Colors.AUDIT_COLORS[_type]
     ..timestamp = DateTime.now()
     ..addFooter((footer) {
-      footer.text = '${Names.AUDIT_EMBED_FOOTER[_type]} ${author.nickname}';
-      footer.iconUrl = author.user.getFromCache()?.avatarURL();
+      footer.text = '${Names.AUDIT_EMBED_FOOTER[_type]} ${author?.username}';
+      footer.iconUrl = author?.avatarURL();
+    });
+}
+
+EmbedBuilder musicEmbed(String title, String desc, User? author) {
+  return EmbedBuilder()
+    ..title = '${Emojis.MUSIC} $title'
+    ..description = desc
+    ..color = DiscordColor.violet
+    ..timestamp = DateTime.now()
+    ..addFooter((footer) {
+      footer.text = 'Requested by ${author?.username}';
+      footer.iconUrl = author?.avatarURL();
     });
 }

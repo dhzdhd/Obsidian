@@ -1,7 +1,9 @@
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_lavalink/lavalink.dart';
 
 import '../../obsidian_dart.dart';
+import '../../utils/embed.dart';
 
 class FunMusicInteractions {
   FunMusicInteractions() {
@@ -20,7 +22,22 @@ class FunMusicInteractions {
             CommandOptionBuilder(CommandOptionType.channel, 'voice-channel',
                 'The voice channel the music should be played in.')
           ],
-        )..registerHandler(playMusicSlashCommand)
+        )..registerHandler(playMusicSlashCommand),
+        CommandOptionBuilder(
+          CommandOptionType.subCommand,
+          'stop',
+          'Stop playing music and clear queue.',
+        )..registerHandler(stopMusicSlashCommand),
+        CommandOptionBuilder(
+          CommandOptionType.subCommand,
+          'pause',
+          'Pause currently playing music.',
+        )..registerHandler(pauseMusicSlashCommand),
+        CommandOptionBuilder(
+          CommandOptionType.subCommand,
+          'resume',
+          'Resume paused music.',
+        )..registerHandler(resumeMusicSlashCommand),
       ],
     ));
   }
@@ -48,10 +65,51 @@ class FunMusicInteractions {
         cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
     vc.connect(selfDeafen: true);
 
-    final searchResults = await node.autoSearch(title);
+    final searchResults = await node.searchTracks(title);
+    print(searchResults.tracks.toString());
 
     node
         .play(event.interaction.guild?.id as Snowflake, searchResults.tracks[0])
         .queue();
+
+    await event.respond(MessageBuilder.embed(musicEmbed(
+        'Play', 'Playing song: $title', event.interaction.userAuthor)));
+  }
+
+  Future<void> resumeMusicSlashCommand(
+      SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final node =
+        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    node.resume(event.interaction.guild?.getFromCache()?.id as Snowflake);
+
+    await event.respond(MessageBuilder.embed(
+        musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
+  }
+
+  Future<void> pauseMusicSlashCommand(
+      SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final node =
+        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    node.pause(event.interaction.guild?.getFromCache()?.id as Snowflake);
+
+    await event.respond(MessageBuilder.embed(
+        musicEmbed('Pause', 'Paused music.', event.interaction.userAuthor)));
+  }
+
+  Future<void> stopMusicSlashCommand(SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final node =
+        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    node.stop(event.interaction.guild?.getFromCache()?.id as Snowflake);
+
+    await event.respond(MessageBuilder.embed(musicEmbed(
+        'Stop',
+        'Stopped music and removed songs from the queue.',
+        event.interaction.userAuthor)));
   }
 }
