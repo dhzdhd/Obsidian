@@ -2,15 +2,25 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 import 'package:nyxx_lavalink/lavalink.dart';
 
-import '../../obsidian_dart.dart';
+import '../../obsidian_dart.dart' show cluster, botInteractions, bot;
 import '../../utils/embed.dart';
 
 class FunMusicInteractions {
   FunMusicInteractions() {
+    initEvents();
     botInteractions.registerSlashCommand(SlashCommandBuilder(
       'music',
       'Music group of commands.',
       [
+        CommandOptionBuilder(
+          CommandOptionType.subCommand,
+          'join',
+          'Make the bot join a voice channel',
+          options: [
+            CommandOptionBuilder(CommandOptionType.channel, 'voice-channel',
+                'The voice channel the bot should join.')
+          ],
+        )..registerHandler(joinMusicSlashCommand),
         CommandOptionBuilder(
           CommandOptionType.subCommand,
           'play',
@@ -42,35 +52,40 @@ class FunMusicInteractions {
     ));
   }
 
+  Future<void> initEvents() async {
+    //
+    bot.onVoiceStateUpdate.listen((event) async {});
+  }
+
+  Future<void> joinMusicSlashCommand(SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
+    node.resume(event.interaction.guild!.getFromCache()!.id);
+
+    await event.respond(MessageBuilder.embed(
+        musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
+  }
+
+  // ! Add channel input support
   Future<void> playMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
+
     late VoiceGuildChannel vc;
+    final guildId = event.interaction.guild!.id;
     var title = event.getArg('title').value.toString();
+    // var channel = event.interaction.resolved?.channels.first;
 
-    var channel = event.interaction.resolved?.channels.first;
-    print(channel.toString());
+    vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
+        as VoiceGuildChannel;
 
-    try {
-      var channel = event.interaction.resolved?.channels.first;
-      if (channel?.type != ChannelType.voice) {
-        throw 'Not a voice channel!';
-      }
-      vc = channel as VoiceGuildChannel;
-    } catch (err) {
-      vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
-          as VoiceGuildChannel;
-    }
-
-    final node =
-        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    final node = cluster.getOrCreatePlayerNode(guildId);
     vc.connect(selfDeafen: true);
 
-    final searchResults = await node.searchTracks(title);
-    print(searchResults.tracks.toString());
+    final searchResults = await node.autoSearch(title);
+    print(searchResults.tracks[0].info?.title);
 
-    node
-        .play(event.interaction.guild?.id as Snowflake, searchResults.tracks[0])
-        .queue();
+    node.play(guildId, searchResults.tracks[0]).queue();
 
     await event.respond(MessageBuilder.embed(musicEmbed(
         'Play', 'Playing song: $title', event.interaction.userAuthor)));

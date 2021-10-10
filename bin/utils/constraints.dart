@@ -21,7 +21,7 @@ Future<bool> checkForAdmin(SlashCommandInteractionEvent event) async {
   return false;
 }
 
-Future<bool> checkForMod(SlashCommandInteractionEvent event) async {
+Future<bool> checkForMod(InteractionEvent event) async {
   if ((await event.interaction.memberAuthor?.effectivePermissions)
           ?.manageGuild ??
       false) {

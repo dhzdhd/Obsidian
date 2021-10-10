@@ -8,6 +8,7 @@ import 'interactions/fun/music.dart';
 import 'interactions/fun/wolfram.dart';
 import 'interactions/fun/youtube.dart';
 import 'interactions/mod/essential.dart';
+import 'interactions/mod/events.dart';
 import 'interactions/mod/log.dart';
 import 'interactions/mod/mute.dart';
 import 'interactions/mod/vc.dart';
@@ -45,7 +46,7 @@ void main() async {
 
   cluster = Cluster(bot, Snowflake(Tokens.BOT_ID));
   await cluster.addNode(NodeOptions(
-    host: '0.0.0.0',
+    host: 'localhost',
     port: 2333,
   ));
 
@@ -57,6 +58,7 @@ void main() async {
   FunMusicInteractions();
 
   // Mod interactions
+  ModEventsInteractions();
   ModEssentialInteractions();
   // ModMuteInteractions();
   ModWarnBanInteractions();

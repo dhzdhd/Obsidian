@@ -40,6 +40,7 @@ class Colors {
     'msg_delete': DiscordColor.fromRgb(198, 120, 221),
     'msg_edit': DiscordColor.fromRgb(97, 175, 239),
     'say_cmd': DiscordColor.fromRgb(26, 179, 246),
+    'member': DiscordColor.blurple
   };
 }
 
@@ -71,5 +72,6 @@ class Names {
     'msg_delete': 'Message deleted by',
     'msg_edit': 'Message edited by',
     'say_msg': 'Command invoked by',
+    'member': 'Command invoked by'
   };
 }

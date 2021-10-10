@@ -6,7 +6,7 @@
 build/
 
 *.env*
-/.idea/
+.idea/
 /.vscode/
 
 lavalink_server/logs/
