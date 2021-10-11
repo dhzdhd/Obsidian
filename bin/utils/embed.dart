@@ -59,7 +59,7 @@ EmbedBuilder musicEmbed(String title, String desc, User? author) {
   return EmbedBuilder()
     ..title = '${Emojis.MUSIC} $title'
     ..description = desc
-    ..color = DiscordColor.violet
+    ..color = DiscordColor.sapGreen
     ..timestamp = DateTime.now()
     ..addFooter((footer) {
       footer.text = 'Requested by ${author?.username}';

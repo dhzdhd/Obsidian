@@ -8,63 +8,88 @@ import '../../utils/embed.dart';
 class FunMusicInteractions {
   FunMusicInteractions() {
     initEvents();
-    botInteractions.registerSlashCommand(SlashCommandBuilder(
-      'music',
-      'Music group of commands.',
-      [
-        CommandOptionBuilder(
-          CommandOptionType.subCommand,
-          'join',
-          'Make the bot join a voice channel',
-          options: [
-            CommandOptionBuilder(CommandOptionType.channel, 'voice-channel',
-                'The voice channel the bot should join.')
-          ],
-        )..registerHandler(joinMusicSlashCommand),
-        CommandOptionBuilder(
-          CommandOptionType.subCommand,
-          'play',
-          'Play some music.',
-          options: [
-            CommandOptionBuilder(CommandOptionType.string, 'title',
-                'Title of song to be played.',
-                required: true),
-            CommandOptionBuilder(CommandOptionType.channel, 'voice-channel',
-                'The voice channel the music should be played in.')
-          ],
-        )..registerHandler(playMusicSlashCommand),
-        CommandOptionBuilder(
-          CommandOptionType.subCommand,
-          'stop',
-          'Stop playing music and clear queue.',
-        )..registerHandler(stopMusicSlashCommand),
-        CommandOptionBuilder(
-          CommandOptionType.subCommand,
-          'pause',
-          'Pause currently playing music.',
-        )..registerHandler(pauseMusicSlashCommand),
-        CommandOptionBuilder(
-          CommandOptionType.subCommand,
-          'resume',
-          'Resume paused music.',
-        )..registerHandler(resumeMusicSlashCommand),
-      ],
-    ));
+    botInteractions
+      ..registerSlashCommand(SlashCommandBuilder(
+        'music',
+        'Music group of commands.',
+        [
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'join',
+            'Make the bot join a voice channel',
+            options: [
+              CommandOptionBuilder(CommandOptionType.channel, 'voice-channel',
+                  'The voice channel the bot should join.')
+            ],
+          )..registerHandler(joinMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'play',
+            'Play some music.',
+            options: [
+              CommandOptionBuilder(CommandOptionType.string, 'title',
+                  'Title of song to be played.',
+                  required: true),
+              CommandOptionBuilder(CommandOptionType.channel, 'voice-channel',
+                  'The voice channel the music should be played in.')
+            ],
+          )..registerHandler(playMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'stop',
+            'Stop playing music and clear queue.',
+          )..registerHandler(stopMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'pause',
+            'Pause currently playing music.',
+          )..registerHandler(pauseMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'resume',
+            'Resume paused music.',
+          )..registerHandler(resumeMusicSlashCommand),
+        ],
+      ))
+      ..registerButtonHandler('music', playMusicButtonHandler);
   }
 
-  Future<void> initEvents() async {
-    //
-    bot.onVoiceStateUpdate.listen((event) async {});
+  void initEvents() {
+    // bot.onVoiceStateUpdate.listen((event) async {
+    //   print(event.raw);
+    //   print(event.state.channel);
+    // });
+
+    // bot.onVoiceServerUpdate.listen((event) async {
+    //   print(event);
+    // });
   }
 
   Future<void> joinMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
+    final channel = event.interaction.resolved?.channels.first;
+    final c = event.getArg('voice-channel').value;
+    print(c);
 
-    final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
-    node.resume(event.interaction.guild!.getFromCache()!.id);
+    late VoiceGuildChannel vc;
+
+    if (channel != null && channel.type == ChannelType.voice) {
+      vc = channel as VoiceGuildChannel;
+    } else if (channel == null) {
+      vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
+          as VoiceGuildChannel;
+    } else {
+      await event.respond(MessageBuilder.embed(
+          errorEmbed('Error', event.interaction.userAuthor)));
+      return;
+    }
+
+    vc.connect();
 
     await event.respond(MessageBuilder.embed(
-        musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
+      musicEmbed('Join', 'Joined voice channel: ${event.interaction.channel}',
+          event.interaction.userAuthor),
+    ));
   }
 
   // ! Add channel input support
@@ -87,8 +112,10 @@ class FunMusicInteractions {
 
     node.play(guildId, searchResults.tracks[0]).queue();
 
-    await event.respond(MessageBuilder.embed(musicEmbed(
-        'Play', 'Playing song: $title', event.interaction.userAuthor)));
+    await event.respond(
+      MessageBuilder.embed(musicEmbed(
+          'Play', 'Playing song: $title', event.interaction.userAuthor)),
+    );
   }
 
   Future<void> resumeMusicSlashCommand(
@@ -126,5 +153,9 @@ class FunMusicInteractions {
         'Stop',
         'Stopped music and removed songs from the queue.',
         event.interaction.userAuthor)));
+  }
+
+  Future<void> playMusicButtonHandler(ButtonInteractionEvent event) async {
+    await event.acknowledge();
   }
 }

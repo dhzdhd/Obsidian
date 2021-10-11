@@ -57,7 +57,6 @@ class ModEventsInteractions {
       final response = await LogDatabase.fetch(guildId: guildId);
 
       if (response.isNotEmpty) {
-        print(response == []);
         final channelId = response[0]['channel'];
         final channel =
             (await bot.fetchChannel(Snowflake(channelId))) as TextChannel;
