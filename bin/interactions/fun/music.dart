@@ -2,7 +2,7 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 import 'package:nyxx_lavalink/lavalink.dart';
 
-import '../../obsidian_dart.dart' show cluster, botInteractions, bot;
+import '../../obsidian_dart.dart' show cluster, botInteractions;
 import '../../utils/embed.dart';
 
 class FunMusicInteractions {
@@ -36,9 +36,19 @@ class FunMusicInteractions {
           )..registerHandler(playMusicSlashCommand),
           CommandOptionBuilder(
             CommandOptionType.subCommand,
-            'stop',
-            'Stop playing music and clear queue.',
-          )..registerHandler(stopMusicSlashCommand),
+            'skip',
+            'Skip the currently playing music.',
+          )..registerHandler(skipMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'repeat',
+            'Repeat the currently playing music.',
+          )..registerHandler(repeatMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'resume',
+            'Resume paused music.',
+          )..registerHandler(resumeMusicSlashCommand),
           CommandOptionBuilder(
             CommandOptionType.subCommand,
             'pause',
@@ -46,12 +56,12 @@ class FunMusicInteractions {
           )..registerHandler(pauseMusicSlashCommand),
           CommandOptionBuilder(
             CommandOptionType.subCommand,
-            'resume',
-            'Resume paused music.',
-          )..registerHandler(resumeMusicSlashCommand),
+            'stop',
+            'Stop playing music and clear queue.',
+          )..registerHandler(stopMusicSlashCommand),
         ],
       ))
-      ..registerButtonHandler('music', playMusicButtonHandler);
+      ..registerMultiselectHandler('music', musicOptionHandler);
   }
 
   void initEvents() {
@@ -67,9 +77,8 @@ class FunMusicInteractions {
 
   Future<void> joinMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    final channel = event.interaction.resolved?.channels.first;
-    final c = event.getArg('voice-channel').value;
-    print(c);
+    // final channel = event.interaction.resolved?.channels.first;
+    final channel = event.getArg('voice-channel').value as PartialChannel?;
 
     late VoiceGuildChannel vc;
 
@@ -79,8 +88,9 @@ class FunMusicInteractions {
       vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
           as VoiceGuildChannel;
     } else {
-      await event.respond(MessageBuilder.embed(
-          errorEmbed('Error', event.interaction.userAuthor)));
+      await event.respond(MessageBuilder.embed(errorEmbed(
+          'The selected channel is not a voice channel!',
+          event.interaction.userAuthor)));
       return;
     }
 
@@ -112,10 +122,49 @@ class FunMusicInteractions {
 
     node.play(guildId, searchResults.tracks[0]).queue();
 
-    await event.respond(
+    await event.sendFollowup(
       MessageBuilder.embed(musicEmbed(
           'Play', 'Playing song: $title', event.interaction.userAuthor)),
     );
+
+    final componentMessageBuilder = ComponentMessageBuilder();
+    final componentRow = ComponentRowBuilder()
+      ..addComponent(MultiselectBuilder('music', [
+        MultiselectOptionBuilder('repeat', 'repeat'),
+        MultiselectOptionBuilder('backward', 'backward'),
+        MultiselectOptionBuilder('pause', 'pause'),
+        MultiselectOptionBuilder('resume', 'resume'),
+        MultiselectOptionBuilder('forward', 'forward'),
+        MultiselectOptionBuilder('stop', 'stop'),
+      ]));
+    componentMessageBuilder.addComponentRow(componentRow);
+
+    await event.respond(componentMessageBuilder);
+  }
+
+  // !
+  Future<void> skipMusicSlashCommand(SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final node =
+        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    node.resume(event.interaction.guild!.getFromCache()!.id);
+
+    await event.respond(MessageBuilder.embed(
+        musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
+  }
+
+  // !
+  Future<void> repeatMusicSlashCommand(
+      SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final node =
+        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    node.resume(event.interaction.guild!.getFromCache()!.id);
+
+    await event.respond(MessageBuilder.embed(
+        musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
   }
 
   Future<void> resumeMusicSlashCommand(
@@ -124,7 +173,7 @@ class FunMusicInteractions {
 
     final node =
         cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
-    node.resume(event.interaction.guild?.getFromCache()?.id as Snowflake);
+    node.resume(event.interaction.guild!.getFromCache()!.id);
 
     await event.respond(MessageBuilder.embed(
         musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
@@ -136,7 +185,7 @@ class FunMusicInteractions {
 
     final node =
         cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
-    node.pause(event.interaction.guild?.getFromCache()?.id as Snowflake);
+    node.pause(event.interaction.guild!.getFromCache()!.id);
 
     await event.respond(MessageBuilder.embed(
         musicEmbed('Pause', 'Paused music.', event.interaction.userAuthor)));
@@ -147,7 +196,7 @@ class FunMusicInteractions {
 
     final node =
         cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
-    node.stop(event.interaction.guild?.getFromCache()?.id as Snowflake);
+    node.stop(event.interaction.guild!.getFromCache()!.id);
 
     await event.respond(MessageBuilder.embed(musicEmbed(
         'Stop',
@@ -155,7 +204,53 @@ class FunMusicInteractions {
         event.interaction.userAuthor)));
   }
 
-  Future<void> playMusicButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> musicOptionHandler(MultiselectInteractionEvent event) async {
     await event.acknowledge();
+    final value = event.interaction.values.first;
+    final guildId = event.interaction.guild!.id;
+
+    final node =
+        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    final player = node.createPlayer(guildId);
+
+    switch (value) {
+      case 'repeat':
+        {
+          node.pause(guildId);
+          player.queue.add(player.nowPlaying!);
+          break;
+        }
+      case 'backward':
+        {
+          node.seek(guildId, Duration.zero);
+          break;
+        }
+      case 'pause':
+        {
+          node.pause(guildId);
+          break;
+        }
+      case 'resume':
+        {
+          node.resume(guildId);
+          break;
+        }
+      case 'forward':
+        {
+          node.skip(guildId);
+          break;
+        }
+      case 'stop':
+        {
+          node.stop(guildId);
+
+          final componentMessageBuilder = ComponentMessageBuilder();
+          final componentRow = ComponentRowBuilder();
+          componentMessageBuilder.addComponentRow(componentRow);
+
+          await event.editOriginalResponse(componentMessageBuilder);
+          break;
+        }
+    }
   }
 }

@@ -21,7 +21,7 @@ Obsidian is a multipurpose discord bot made using the nyxx discord API wrapper i
 
 - (Optional) Install and run Lavalink server for music
 
-  - Install [Java JDK 13](https://www.oracle.com/java/technologies/javase/jdk13-archive-downloads.html). JDK 11 or 14 are also fine but they have bugs with lavalink. A minimum of JDK 11 is required.
+  - Install latest Java JDK
 
   - Add java-JDK-13 to PATH environment variable as JAVA_HOME
 
