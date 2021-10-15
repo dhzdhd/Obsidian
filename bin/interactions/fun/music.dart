@@ -142,26 +142,25 @@ class FunMusicInteractions {
     await event.respond(componentMessageBuilder);
   }
 
-  // !
   Future<void> skipMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node =
         cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
-    node.resume(event.interaction.guild!.getFromCache()!.id);
+    node.skip(event.interaction.guild!.getFromCache()!.id);
 
     await event.respond(MessageBuilder.embed(
-        musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
+        musicEmbed('Skip', 'Skipped music.', event.interaction.userAuthor)));
   }
 
-  // !
   Future<void> repeatMusicSlashCommand(
       SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final node =
-        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
-    node.resume(event.interaction.guild!.getFromCache()!.id);
+    final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
+    final player = node.createPlayer(event.interaction.guild!.id);
+
+    player.queue.add(player.nowPlaying!);
 
     await event.respond(MessageBuilder.embed(
         musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
@@ -216,7 +215,6 @@ class FunMusicInteractions {
     switch (value) {
       case 'repeat':
         {
-          node.pause(guildId);
           player.queue.add(player.nowPlaying!);
           break;
         }
