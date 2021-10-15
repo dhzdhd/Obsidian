@@ -19,11 +19,11 @@ jobs:
         uses: fifsky/ssh-action@v0.0.6
         with:
             command: |
-              cd /dev/Obsidian/
               ls -a
             host: ${{ secrets.HOST }}
             user: dhzdhd
-            key: ${{ secrets.PRIVATE_KEY }}            
+            key: ${{ secrets.PRIVATE_KEY }}
+            args: "-tt"        
 
       - name: Run a one-line script
         run: echo Hello, world!
