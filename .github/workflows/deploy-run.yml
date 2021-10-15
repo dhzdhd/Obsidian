@@ -21,10 +21,12 @@ jobs:
             command: |
               cd ~/dev/Obsidian/lavalink_server
               java -jar Lavalink.jar
+              exit 1
 
               cd ..
               dart pub get
               dart run
+              exit 1
 
             host: ${{ secrets.HOST }}
             user: dhzdhd
