@@ -15,21 +15,31 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # - uses: actions/checkout@v2
   
-      - name: Remote SSH Commands
+      - name: Start lavalink server and bot
         uses: fifsky/ssh-action@v0.0.6
         with:
             command: |
-              cd ~/dev/Obsidian
-              ls -a
+              cd ~/dev/Obsidian/lavalink_server
+              java -jar Lavalink.jar
+
+              cd ..
+              dart pub get
+              dart run
+
             host: ${{ secrets.HOST }}
             user: dhzdhd
             key: ${{ secrets.PRIVATE_KEY }}
-            args: "-tt"        
+            args: "-tt"
 
-      - name: Run a one-line script
-        run: echo Hello, world!
+      # - name: Start bot      
+      #   uses: fifsky/ssh-action@v0.0.6 
+      #   with:
+      #       command: |
+      #         cd ~/dev/Obsidian
+      #         dart pub get
+      #         dart run
 
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      #       host: ${{ secrets.HOST }}
+      #       user: dhzdhd
+      #       key: ${{ secrets.PRIVATE_KEY }}
+      #       args: "-tt"
