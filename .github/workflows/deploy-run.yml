@@ -15,14 +15,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # - uses: actions/checkout@v2
   
-      - name: Start lavalink server and bot
+      - name: Pull latest changes to stable branch
         uses: fifsky/ssh-action@v0.0.6
         with:
             command: |
               cd ~/dev/Obsidian/
               git switch stable
               git pull
-              exit 1
 
             host: ${{ secrets.HOST }}
             user: dhzdhd
