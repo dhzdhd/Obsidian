@@ -19,29 +19,12 @@ jobs:
         uses: fifsky/ssh-action@v0.0.6
         with:
             command: |
-              cd ~/dev/Obsidian/lavalink_server
-              java -jar Lavalink.jar
-              exit 1
-
-              cd ..
-              dart pub get
-              dart run
+              cd ~/dev/Obsidian/
+              git switch -c stable
+              git pull
               exit 1
 
             host: ${{ secrets.HOST }}
             user: dhzdhd
             key: ${{ secrets.PRIVATE_KEY }}
             args: "-tt"
-
-      # - name: Start bot      
-      #   uses: fifsky/ssh-action@v0.0.6 
-      #   with:
-      #       command: |
-      #         cd ~/dev/Obsidian
-      #         dart pub get
-      #         dart run
-
-      #       host: ${{ secrets.HOST }}
-      #       user: dhzdhd
-      #       key: ${{ secrets.PRIVATE_KEY }}
-      #       args: "-tt"

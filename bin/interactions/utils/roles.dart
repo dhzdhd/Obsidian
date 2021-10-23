@@ -10,6 +10,8 @@ import '../../utils/embed.dart';
 class UtilsRolesInteractions {
   late Message? message;
   late Role? role;
+  late EmbedBuilder embed;
+  List roles = [];
 
   UtilsRolesInteractions() {
     botInteractions
@@ -54,7 +56,7 @@ class UtilsRolesInteractions {
       return;
     }
 
-    final addRoleEmbed = EmbedBuilder()
+    embed = EmbedBuilder()
       ..title = 'Add the below role to yourself - ${role?.name}'
       ..color = DiscordColor.aquamarine
       ..timestamp = DateTime.now()
@@ -64,7 +66,7 @@ class UtilsRolesInteractions {
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
 
-    message = await event.sendFollowup(MessageBuilder.embed(addRoleEmbed));
+    message = await event.sendFollowup(MessageBuilder.embed(embed));
 
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
@@ -85,23 +87,24 @@ class UtilsRolesInteractions {
     try {
       await event.interaction.memberAuthor?.addRole(role as SnowflakeEntity);
     } catch (err) {
-      await event.respond(
+      await event.interaction.userAuthor?.sendMessage(
         MessageBuilder.content('You already have the role - ${role?.name}!'),
-        hidden: true,
       );
+      return;
     }
 
-    var oldEmbed = (await event.getOriginalResponse()).embeds[0].toBuilder();
-    print(oldEmbed);
-    var oldField = oldEmbed.fields[0];
+    var oldField = embed.fields.first;
     print(oldField);
+
+    roles.add(event.interaction.userAuthor?.mention);
+    var content = '';
+    roles.forEach((element) {
+      content += '${element.toString()}';
+    });
+
     await event.editOriginalResponse(
       MessageBuilder.embed(
-        oldEmbed
-          ..replaceField(
-              name: oldField.name,
-              content: oldField.content +=
-                  ' ${event.interaction.userAuthor?.mention}'),
+        embed..replaceField(name: oldField.name, content: content),
       ),
     );
 
@@ -114,7 +117,29 @@ class UtilsRolesInteractions {
   Future<void> removeRoleButtonHandler(ButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
 
-    await event.interaction.memberAuthor?.removeRole(role as SnowflakeEntity);
+    try {
+      await event.interaction.memberAuthor?.removeRole(role as SnowflakeEntity);
+    } catch (err) {
+      await event.interaction.userAuthor?.sendMessage(
+        MessageBuilder.content('You already have the role - ${role?.name}!'),
+      );
+      return;
+    }
+
+    var oldField = embed.fields.first;
+    print(oldField);
+
+    roles.remove(event.interaction.userAuthor?.mention);
+    var content = '';
+    roles.forEach((element) {
+      content += '${element.toString()}';
+    });
+
+    await event.editOriginalResponse(
+      MessageBuilder.embed(
+        embed..replaceField(name: oldField.name, content: content),
+      ),
+    );
 
     await event.interaction.userAuthor?.sendMessage(
       MessageBuilder.embed(successEmbed(
@@ -127,8 +152,9 @@ class UtilsRolesInteractions {
     await event.acknowledge();
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.embed(errorEmbed(
-        'You do not have the permissions to use this command!',
+      await event.interaction.userAuthor
+          ?.sendMessage(MessageBuilder.embed(errorEmbed(
+        'You do not have the permissions to use this button!',
         event.interaction.userAuthor,
       )));
       return;

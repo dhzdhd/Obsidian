@@ -2,7 +2,7 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 import 'package:nyxx_lavalink/lavalink.dart';
 
-import '../../obsidian_dart.dart' show cluster, botInteractions;
+import '../../obsidian_dart.dart' show cluster, botInteractions, bot;
 import '../../utils/embed.dart';
 
 class FunMusicInteractions {
@@ -65,10 +65,11 @@ class FunMusicInteractions {
   }
 
   void initEvents() {
-    // bot.onVoiceStateUpdate.listen((event) async {
-    //   print(event.raw);
-    //   print(event.state.channel);
-    // });
+    bot.onVoiceStateUpdate.listen((event) async {
+      // if (event.state.guild?.getFromCache()?.voiceStates.count == 1) {
+      print(event.state.user.getFromCache()!.username);
+      // }
+    });
 
     // bot.onVoiceServerUpdate.listen((event) async {
     //   print(event);
@@ -97,7 +98,7 @@ class FunMusicInteractions {
     vc.connect();
 
     await event.respond(MessageBuilder.embed(
-      musicEmbed('Join', 'Joined voice channel: ${event.interaction.channel}',
+      musicEmbed('Join', 'Joined voice channel: ${vc.name}',
           event.interaction.userAuthor),
     ));
   }
