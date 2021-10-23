@@ -20,7 +20,7 @@ jobs:
         with:
             command: |
               cd ~/dev/Obsidian/
-              git switch -c stable
+              git switch stable
               git pull
               exit 1
 
