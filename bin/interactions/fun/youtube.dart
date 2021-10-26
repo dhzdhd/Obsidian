@@ -9,13 +9,15 @@ import '../../utils/embed.dart';
 class FunYoutubeInteractions {
   FunYoutubeInteractions() {
     botInteractions
-      ..registerSlashCommand(
-          SlashCommandBuilder('youtube', 'Search for a youtube video.', [
-        CommandOptionBuilder(
-            CommandOptionType.string, 'query', 'The video name.',
-            required: true)
-      ])
-            ..registerHandler(ytSlashCommand))
+      ..registerSlashCommand(SlashCommandBuilder(
+        'youtube',
+        'Search for a youtube video.',
+        [
+          CommandOptionBuilder(
+              CommandOptionType.string, 'query', 'The video name.',
+              required: true)
+        ],
+      )..registerHandler(ytSlashCommand))
       ..registerMultiselectHandler('youtube', ytOptionHandler);
   }
 

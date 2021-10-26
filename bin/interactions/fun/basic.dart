@@ -5,9 +5,9 @@ import 'package:nyxx_interactions/interactions.dart';
 import '../../obsidian_dart.dart' show botInteractions;
 import '../../utils/constants.dart';
 
-final _random = Random();
-
 class FunBasicInteractions {
+  final _random = Random();
+
   FunBasicInteractions() {
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
@@ -40,13 +40,13 @@ class FunBasicInteractions {
             .avatarURL(format: 'png', size: 256) ??
         event.interaction.userAuthor?.avatarURL(format: 'png', size: 256);
 
-    await event.respond(MessageBuilder.content(avatar.toString()));
+    await event.respond(MessageBuilder.content(avatar!));
   }
 
   Future<void> rollSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
     await event.respond(
-        MessageBuilder.content(':game_die: ${_random.nextInt(7) - 1}'));
+        MessageBuilder.content(':game_die: ${_random.nextInt(6) + 1}'));
   }
 
   Future<void> flipSlashCommand(SlashCommandInteractionEvent event) async {
@@ -63,7 +63,7 @@ class FunBasicInteractions {
     final channel = event.interaction.channel.getFromCache();
 
     final firstMessage = '''
-He won't be missed
+They won't be missed
 Gone and forgotten
 ${user?.avatarURL(format: 'png', size: 128)}
     ''';

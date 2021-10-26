@@ -20,7 +20,8 @@ jobs:
         with:
             command: |
               cd ~/dev/Obsidian/
-              git switch stable
+              git pull
+              git checkout stable
               git pull
 
             host: ${{ secrets.HOST }}
