@@ -16,7 +16,7 @@ class ModEventsInteractions {
 
       final response = await LogDatabase.fetch(guildId: guild.id.id);
 
-      if (response != []) {
+      if (response.isNotEmpty) {
         final channelId = response[0]['channel'];
         final channel = bot.fetchChannel(channelId) as TextGuildChannel;
 
@@ -35,7 +35,7 @@ class ModEventsInteractions {
 
       final response = await LogDatabase.fetch(guildId: guild.id.id);
 
-      if (response != []) {
+      if (response.isNotEmpty) {
         final channelId = response[0]['channel'];
         final channel = bot.fetchChannel(channelId) as TextGuildChannel;
 
@@ -48,24 +48,48 @@ class ModEventsInteractions {
       }
     });
 
-    // TODO: get channel name for embed title
     bot.onMessageDelete.listen((event) async {
-      final channel = event.channel.getFromCache()! as GuildChannel;
+      final channel = event.channel.getFromCache()! as TextGuildChannel;
       final message = event.message!;
       final guildId = channel.guild.id.id;
+
+      if (message.author.bot) return;
 
       final response = await LogDatabase.fetch(guildId: guildId);
 
       if (response.isNotEmpty) {
         final channelId = response[0]['channel'];
-        final channel =
-            (await bot.fetchChannel(Snowflake(channelId))) as TextChannel;
+        final logChannel =
+            (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
 
-        await channel.sendMessage(MessageBuilder.embed(auditEmbed(
-          'Message deleted in channel: ${channel.toString()})}',
+        await logChannel.sendMessage(MessageBuilder.embed(auditEmbed(
+          'Message deleted in channel: ${channel.name}',
           message.content,
           message.author as User,
           'msg_delete',
+        )));
+      }
+    });
+
+    bot.onMessageUpdate.listen((event) async {
+      final channel = event.channel.getFromCache()! as TextGuildChannel;
+      final message = event.updatedMessage!;
+      final guildId = channel.guild.id.id;
+
+      if (message.author.bot) return;
+
+      final response = await LogDatabase.fetch(guildId: guildId);
+
+      if (response.isNotEmpty) {
+        final channelId = response[0]['channel'];
+        final logChannel =
+            (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
+
+        await logChannel.sendMessage(MessageBuilder.embed(auditEmbed(
+          'Message edited in channel: ${channel.name}',
+          message.content,
+          message.author as User,
+          'msg_edit',
         )));
       }
     });
