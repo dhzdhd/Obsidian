@@ -8,7 +8,7 @@ import '../../utils/embed.dart';
 
 class FunYoutubeInteractions {
   static const YT_URL = 'https://www.googleapis.com/youtube/v3/search/';
-  late Message message;
+  Map<int, Message> messageMap = {};
   var params = {
     'key': Tokens.YT_KEY,
     'part': 'snippet',
@@ -31,32 +31,22 @@ class FunYoutubeInteractions {
       ..registerMultiselectHandler('youtube', ytOptionHandler);
   }
 
-  Future<void> ytOptionHandler(MultiselectInteractionEvent event) async {
-    await event.acknowledge();
-
-    await event.sendFollowup(MessageBuilder.content(
-      'https://www.youtube.com/watch?v=${event.interaction.values.first}',
-    ));
-
-    await message.delete();
-  }
-
   Future<void> ytSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     var vidIdList = [];
+    late final List videoList;
+    late final EmbedBuilder errEmbed;
+
     final query = await event.getArg('query').value;
     params['q'] = query;
 
-    late final videoList;
-    late final errEmbed;
-
     try {
-      var response = await dio.get(YT_URL, queryParameters: params);
+      final response = await dio.get(YT_URL, queryParameters: params);
       videoList = response.data['items'];
       var _ = videoList[0];
     } on DioError catch (err) {
-      var code = err.response?.statusCode;
+      final code = err.response?.statusCode;
       if (code == 403) {
         errEmbed = errorEmbed(
             'YT API Quota finished. Sorry for the inconvenience.',
@@ -85,7 +75,7 @@ class FunYoutubeInteractions {
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
 
-    for (var _ = 0; _ < 5; _++) {
+    for (var _ = 0; _ < videoList.length; _++) {
       ytEmbed.addField(
           name: '${_ + 1}) ${videoList[_]['snippet']['title']}',
           content:
@@ -94,19 +84,30 @@ class FunYoutubeInteractions {
       vidIdList.add(videoList[_]['id']['videoId']);
     }
 
-    message = await event.sendFollowup(MessageBuilder.embed(ytEmbed));
+    final message = await event.sendFollowup(MessageBuilder.embed(ytEmbed));
+    messageMap[message.id.id] = message;
 
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(MultiselectBuilder(
         'youtube',
         [
-          for (var _ = 0; _ < 5; _++)
+          for (var _ = 0; _ < vidIdList.length; _++)
             MultiselectOptionBuilder('Option ${_ + 1}', vidIdList[_])
         ],
       ));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);
+  }
+
+  Future<void> ytOptionHandler(MultiselectInteractionEvent event) async {
+    await event.acknowledge();
+
+    await event.sendFollowup(MessageBuilder.content(
+      'https://www.youtube.com/watch?v=${event.interaction.values.first}',
+    ));
+
+    await messageMap[event.interaction.message!.id.id]!.delete();
   }
 }
