@@ -7,6 +7,16 @@ import '../../obsidian_dart.dart' show botInteractions, dio;
 import '../../utils/embed.dart';
 
 class FunYoutubeInteractions {
+  static const YT_URL = 'https://www.googleapis.com/youtube/v3/search/';
+  late Message message;
+  var params = {
+    'key': Tokens.YT_KEY,
+    'part': 'snippet',
+    'maxResults': 5,
+    'videoEmbeddable': 'true',
+    'type': 'video',
+  };
+
   FunYoutubeInteractions() {
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
@@ -20,16 +30,6 @@ class FunYoutubeInteractions {
       )..registerHandler(ytSlashCommand))
       ..registerMultiselectHandler('youtube', ytOptionHandler);
   }
-
-  static const YT_URL = 'https://www.googleapis.com/youtube/v3/search/';
-  late Message message;
-  var params = {
-    'key': Tokens.YT_KEY,
-    'part': 'snippet',
-    'maxResults': 5,
-    'videoEmbeddable': 'true',
-    'type': 'video',
-  };
 
   Future<void> ytOptionHandler(MultiselectInteractionEvent event) async {
     await event.acknowledge();
