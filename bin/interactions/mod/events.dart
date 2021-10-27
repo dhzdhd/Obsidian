@@ -1,6 +1,7 @@
 import 'package:nyxx/nyxx.dart';
 
 import '../../obsidian_dart.dart' show bot;
+import '../../utils/constants.dart';
 import '../../utils/database.dart' show LogDatabase;
 import '../../utils/embed.dart';
 
@@ -92,6 +93,30 @@ class ModEventsInteractions {
           'msg_edit',
         )));
       }
+    });
+
+    bot.onGuildBanAdd.listen((event) {});
+
+    bot.onDmReceived.listen((event) async {
+      final owner = await bot.fetchUser(Snowflake(Tokens.BOT_OWNER));
+      final user = event.message.author as User;
+
+      if (user == bot.self) return;
+
+      await owner.sendMessage(MessageBuilder.embed(
+        EmbedBuilder()
+          ..title = 'DM recieved!'
+          ..description = '''
+          Author: ${user.mention}
+          Message:\n ${event.message.content}
+          '''
+          ..color = DiscordColor.goldenrod
+          ..timestamp = DateTime.now()
+          ..addFooter((footer) {
+            footer.text = 'Message sent by ${user.username}';
+            footer.iconUrl = user.avatarURL();
+          }),
+      ));
     });
   }
 }
