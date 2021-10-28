@@ -30,7 +30,25 @@ class FunBasicInteractions {
               CommandOptionType.user, 'user', 'A server member.',
               required: true)
         ],
-      )..registerHandler(ripUserSlashCommand));
+      )..registerHandler(ripUserSlashCommand))
+      ..registerSlashCommand(SlashCommandBuilder(
+        'google',
+        'Get a google search link for the given query.',
+        [
+          CommandOptionBuilder(
+              CommandOptionType.string, 'query', 'The query to be googled.',
+              required: true)
+        ],
+      )..registerHandler(googleSlashCommand))
+      ..registerSlashCommand(SlashCommandBuilder(
+        'dictionary',
+        'Get the definition of the given word.',
+        [
+          CommandOptionBuilder(CommandOptionType.string, 'word',
+              'The word whose definition you want to get.',
+              required: true)
+        ],
+      )..registerHandler(dictSlashCommand));
   }
 
   Future<void> avatarSlashCommand(SlashCommandInteractionEvent event) async {
@@ -59,8 +77,8 @@ class FunBasicInteractions {
     await event.acknowledge();
 
     final user = event.interaction.resolved?.users.first;
-    final year = DateTime.now().year;
     final channel = event.interaction.channel.getFromCache();
+    final year = DateTime.now().year;
 
     final firstMessage = '''
 They won't be missed
@@ -75,5 +93,17 @@ ${user?.avatarURL(format: 'png', size: 128)}
     await event.respond(MessageBuilder.content(Emojis.RIP));
     await channel?.sendMessage(MessageBuilder.content(firstMessage));
     await channel?.sendMessage(MessageBuilder.content(secondMessage));
+  }
+
+  Future<void> googleSlashCommand(SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final query = event.getArg('query').value;
+  }
+
+  Future<void> dictSlashCommand(SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final word = event.getArg('word').value;
   }
 }

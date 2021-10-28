@@ -25,10 +25,11 @@
 
 ## Mod
 
-- [ ] essential.dart
-  - [ ] purge
-  - [ ] censor
+- [ ] clone.dart
   - [ ] clone
+- [ ] essential.dart
+  - [x] purge
+  - [x] censor
 - [ ] events.dart
   - [ ] on-guild-join
   - [ ] on-guild-leave
