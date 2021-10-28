@@ -74,10 +74,11 @@ class ModEventsInteractions {
 
     bot.onMessageUpdate.listen((event) async {
       final channel = event.channel.getFromCache()! as TextGuildChannel;
-      final message = event.updatedMessage!;
+      final oldMessage = await event.channel.fetchMessage(event.messageId);
+      final updatedMessage = event.updatedMessage!;
       final guildId = channel.guild.id.id;
 
-      if (message.author.bot) return;
+      if (updatedMessage.author.bot) return;
 
       final response = await LogDatabase.fetch(guildId: guildId);
 
@@ -88,8 +89,11 @@ class ModEventsInteractions {
 
         await logChannel.sendMessage(MessageBuilder.embed(auditEmbed(
           'Message edited in channel: ${channel.name}',
-          message.content,
-          message.author as User,
+          '''
+          **Old:**\n${oldMessage.content}
+          **New:**\n${updatedMessage.content}
+          ''',
+          oldMessage.author as User,
           'msg_edit',
         )));
       }

@@ -7,6 +7,8 @@
   - [x] roll
   - [x] flip
   - [x] rip
+  - [ ] dict
+  - [ ] google
 - [x] movie.dart
   - [x] movie
 - [ ] music.dart
@@ -17,12 +19,22 @@
 - [x] youtube.dart
   - [x] youtube
 
+------
+
+- [ ] Add dict and google command
+
 ## Mod
 
 - [ ] essential.dart
   - [ ] purge
   - [ ] censor
+  - [ ] clone
 - [ ] events.dart
+  - [ ] on-guild-join
+  - [ ] on-guild-leave
+  - [ ] on-delete
+  - [ ] on-edit (Old message can't be fetched)
+  - [ ] on-bot-dm
 - [ ] log.dart
 - [ ] mute.dart
 - [ ] vc.dart
@@ -31,6 +43,7 @@
 ------
 
 - [ ] Add audit logging support to all mod commands
+- [ ] Add clone command
 
 ## Utils
 

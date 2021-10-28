@@ -44,18 +44,23 @@ class ModEssentialInteractions {
     }
 
     if (amount < 2 || amount > 100) {
-      await event.respond(
-        MessageBuilder.embed(errorEmbed(
-            'Amount must be at least 2 and at most 100',
-            event.interaction.userAuthor)),
-        hidden: true,
-      );
+      await event.respond(MessageBuilder.embed(errorEmbed(
+          'Amount must be at least 2 and at most 100.',
+          event.interaction.userAuthor)));
       return;
     }
 
     final toDelete =
         await channel?.downloadMessages(limit: amount).toList() ?? [];
-    await channel?.bulkRemoveMessages(toDelete);
+
+    try {
+      await channel?.bulkRemoveMessages(toDelete);
+    } catch (err) {
+      await event.respond(MessageBuilder.embed(errorEmbed(
+          'You can only bulk delete messages that are under 14 days old.',
+          event.interaction.userAuthor)));
+      return;
+    }
 
     await event.respond(MessageBuilder.embed(
       successEmbed(
@@ -64,18 +69,27 @@ class ModEssentialInteractions {
   }
 
   Future<void> censorSlashCommand(SlashCommandInteractionEvent event) async {
-    await event.acknowledge();
+    await event.acknowledge(hidden: true);
     final amount = event.getArg('amount').value;
     final keyword = event.getArg('keyword').value;
+    final channel = event.interaction.channel.getFromCache();
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.content(
-          'You do not have the permissions to use this command!'));
+      await event.respond(MessageBuilder.embed(
+        errorEmbed('You do not have the permissions to use this command!',
+            event.interaction.userAuthor),
+      ));
+      return;
+    }
+
+    if (amount < 2 || amount > 100) {
+      await event.respond(MessageBuilder.embed(errorEmbed(
+          'Amount must be at least 2 and at most 100.',
+          event.interaction.userAuthor)));
       return;
     }
 
     List<Message> toDelete = [];
-    final channel = event.interaction.channel.getFromCache();
     final messageList = await channel?.downloadMessages(limit: amount).toList()
         as Iterable<Message>;
     messageList.forEach((element) {
@@ -87,10 +101,15 @@ class ModEssentialInteractions {
     try {
       await channel?.bulkRemoveMessages(toDelete);
     } catch (err) {
-      await event.respond(
-        MessageBuilder.content('Amount must be at least 2 and at most 100'),
-        hidden: true,
-      );
+      await event.respond(MessageBuilder.embed(errorEmbed(
+          'You can only bulk delete messages that are under 14 days old.',
+          event.interaction.userAuthor)));
+      return;
     }
+
+    await event.respond(MessageBuilder.embed(
+      successEmbed('Deleted **${toDelete.length}** messages',
+          event.interaction.userAuthor),
+    ));
   }
 }
