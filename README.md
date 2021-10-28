@@ -8,6 +8,8 @@ Obsidian is a multipurpose discord bot made using the nyxx discord API wrapper i
 2) Fun
 3) Utilities
 
+**Read TODO.md for a list of commands and the completeness of each.**
+
 ## Dev Installation
 
 - Downloading the repository
