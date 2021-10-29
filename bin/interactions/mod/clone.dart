@@ -11,7 +11,7 @@ class ModCloneInteractions {
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
         'clone',
-        'Clone a channel and delete the original.',
+        '<MOD ONLY> Clone a channel and delete the original.',
         [
           CommandOptionBuilder(
             CommandOptionType.channel,
@@ -28,8 +28,10 @@ class ModCloneInteractions {
   Future<void> cloneSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
 
-    final channel = event.getArg('channel').value as TextGuildChannel? ??
-        event.interaction.channel.getFromCache() as TextGuildChannel;
+    // !
+    final channel =
+        event.interaction.resolved?.channels.first as TextGuildChannel ??
+            event.interaction.channel.getFromCache() as TextGuildChannel;
     final author = event.interaction.userAuthor!;
 
     final message = await event.sendFollowup(MessageBuilder.embed(

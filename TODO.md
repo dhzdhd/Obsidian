@@ -7,8 +7,10 @@
   - [x] roll
   - [x] flip
   - [x] rip
-  - [ ] dict
   - [ ] google
+  - [ ] xkcd
+- [ ] dict.dart
+  - [ ] dict
 - [x] movie.dart
   - [x] movie
 - [ ] music.dart

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 import '../../obsidian_dart.dart' show botInteractions;
@@ -39,16 +40,7 @@ class FunBasicInteractions {
               CommandOptionType.string, 'query', 'The query to be googled.',
               required: true)
         ],
-      )..registerHandler(googleSlashCommand))
-      ..registerSlashCommand(SlashCommandBuilder(
-        'dictionary',
-        'Get the definition of the given word.',
-        [
-          CommandOptionBuilder(CommandOptionType.string, 'word',
-              'The word whose definition you want to get.',
-              required: true)
-        ],
-      )..registerHandler(dictSlashCommand));
+      )..registerHandler(googleSlashCommand));
   }
 
   Future<void> avatarSlashCommand(SlashCommandInteractionEvent event) async {
@@ -99,11 +91,21 @@ ${user?.avatarURL(format: 'png', size: 128)}
     await event.acknowledge();
 
     final query = event.getArg('query').value;
-  }
+    final author = event.interaction.userAuthor!;
 
-  Future<void> dictSlashCommand(SlashCommandInteractionEvent event) async {
-    await event.acknowledge();
-
-    final word = event.getArg('word').value;
+    await event.respond(MessageBuilder.embed(
+      EmbedBuilder()
+        ..title = 'Google search: $query'
+        ..description =
+            'https://www.google.com/search?q=${query.trim().replaceAll(' ', '+')}'
+        ..thumbnailUrl =
+            'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-vector-graphic-pixabay-15.png'
+        ..color = DiscordColor.flutterBlue
+        ..timestamp = DateTime.now()
+        ..addFooter((footer) {
+          footer.text = 'Message sent by ${author.username}';
+          footer.iconUrl = author.avatarURL();
+        }),
+    ));
   }
 }

@@ -3,6 +3,7 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 import 'package:nyxx_lavalink/lavalink.dart';
 import 'interactions/fun/basic.dart';
+import 'interactions/fun/dict.dart';
 import 'interactions/fun/movie.dart';
 import 'interactions/fun/music.dart';
 import 'interactions/fun/wolfram.dart';
@@ -53,6 +54,7 @@ void main() async {
 
   // Fun interactions
   FunBasicInteractions();
+  FunDictInteractions();
   FunWolframInteractions();
   FunYoutubeInteractions();
   FunMovieInteractions();

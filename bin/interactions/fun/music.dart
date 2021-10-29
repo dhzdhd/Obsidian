@@ -7,7 +7,7 @@ import '../../utils/embed.dart';
 
 class FunMusicInteractions {
   FunMusicInteractions() {
-    initEvents();
+    // initEvents();
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
         'music',
