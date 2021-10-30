@@ -3,6 +3,8 @@ import 'package:nyxx_interactions/interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/constants.dart';
+import '../../utils/constraints.dart';
+import '../../utils/embed.dart';
 
 class ModCloneInteractions {
   var cloneDict = {};
@@ -26,17 +28,24 @@ class ModCloneInteractions {
   }
 
   Future<void> cloneSlashCommand(SlashCommandInteractionEvent event) async {
-    await event.acknowledge(hidden: true);
+    await event.acknowledge();
 
-    // !
+    if (!(await checkForMod(event))) {
+      await event.respond(MessageBuilder.embed(
+        errorEmbed('You do not have the permissions to use this command!',
+            event.interaction.userAuthor),
+      ));
+      return;
+    }
+
+    // ! Add support for channel args
     final channel =
-        event.interaction.resolved?.channels.first as TextGuildChannel ??
-            event.interaction.channel.getFromCache() as TextGuildChannel;
+        event.interaction.channel.getFromCache() as TextGuildChannel;
     final author = event.interaction.userAuthor!;
 
     final message = await event.sendFollowup(MessageBuilder.embed(
       EmbedBuilder()
-        ..title = 'Clone ${channel.name}'
+        ..title = 'Clone channel'
         ..description = 'Are you sure you want to clone **${channel.name}**?'
         ..color = Colors.AUDIT_COLORS['mod']
         ..timestamp = DateTime.now()
@@ -64,27 +73,25 @@ class ModCloneInteractions {
 
     final TextGuildChannel channel =
         cloneDict[event.interaction.message!.id.id];
+    cloneDict.remove(event.interaction.message!.id.id);
 
-    // final perms = channel.permissionOverrides;
-    // final name = channel.name;
-    // final topic = channel.topic;
-    // final position = channel.position;
-    final category = channel.parentChannel?.getFromCache()?.id;
-    // final nsfw = channel.isNsfw;
-    final overrides = PermissionOverrideBuilder.of(SnowflakeEntity(channel.id));
+    final perms = channel.permissionOverrides;
+    final category = channel.parentChannel!.getFromCache()!.id;
+    // final overrides = PermissionOverrideBuilder.of(SnowflakeEntity(channel.id));
 
     await channel.delete();
 
-    await event.interaction.guild!.getFromCache()!.createChannel(
-          ChannelBuilder()
-            ..type = ChannelType.text
-            ..name = channel.name
-            ..topic = channel.topic
-            ..position = channel.position
-            ..parentChannel = SnowflakeEntity(category!)
-            ..nsfw = channel.isNsfw
-            ..overrides = [overrides],
-        );
+    await event.interaction.guild!
+        .getFromCache()!
+        .createChannel(ChannelBuilder()
+              ..type = ChannelType.text
+              ..name = channel.name
+              ..topic = channel.topic
+              ..position = channel.position
+              // ..parentChannel = SnowflakeEntity(category)
+              ..nsfw = channel.isNsfw
+            // ..overrides = [overrides],
+            );
   }
 
   Future<void> cloneButtonRejectHandler(ButtonInteractionEvent event) async {

@@ -7,10 +7,11 @@
   - [x] roll
   - [x] flip
   - [x] rip
-  - [ ] google
+  - [x] google
   - [ ] xkcd
 - [ ] dict.dart
-  - [ ] dict
+  - [ ] oxford
+  - [ ] urban
 - [x] movie.dart
   - [x] movie
 - [ ] music.dart
@@ -32,6 +33,7 @@
 - [ ] essential.dart
   - [x] purge
   - [x] censor
+  - [ ] slowmode
 - [ ] events.dart
   - [ ] on-guild-join
   - [ ] on-guild-leave

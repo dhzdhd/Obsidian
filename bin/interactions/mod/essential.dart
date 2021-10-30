@@ -27,7 +27,19 @@ class ModEssentialInteractions {
               'Index from latest message of messages to be deleted.',
               required: true)
         ],
-      )..registerHandler(censorSlashCommand));
+      )..registerHandler(censorSlashCommand))
+      ..registerSlashCommand(SlashCommandBuilder(
+        'slowmode',
+        'Set a slowmode time for a particular channel.',
+        [
+          CommandOptionBuilder(CommandOptionType.channel, 'channel',
+              'The channel where the slowmode should be set.',
+              channelTypes: [ChannelType.text]),
+          CommandOptionBuilder(CommandOptionType.integer, 'amount',
+              'The slowmode amount. 0 means removal of slowmode.',
+              required: true)
+        ],
+      )..registerHandler(slowmodeSlashCommand));
   }
 
   Future<void> purgeSlashCommand(SlashCommandInteractionEvent event) async {
@@ -111,5 +123,20 @@ class ModEssentialInteractions {
       successEmbed('Deleted **${toDelete.length}** messages',
           event.interaction.userAuthor),
     ));
+  }
+
+  Future<void> slowmodeSlashCommand(SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    if (!(await checkForMod(event))) {
+      await event.respond(MessageBuilder.embed(
+        errorEmbed('You do not have the permissions to use this command!',
+            event.interaction.userAuthor),
+      ));
+      return;
+    }
+
+    final channel = event.interaction.resolved?.channels.first as TextChannel;
+    final amount = event.getArg('amount');
   }
 }
