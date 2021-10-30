@@ -32,12 +32,12 @@ class ModEssentialInteractions {
         'slowmode',
         'Set a slowmode time for a particular channel.',
         [
-          CommandOptionBuilder(CommandOptionType.channel, 'channel',
-              'The channel where the slowmode should be set.',
-              channelTypes: [ChannelType.text]),
           CommandOptionBuilder(CommandOptionType.integer, 'amount',
               'The slowmode amount. 0 means removal of slowmode.',
-              required: true)
+              required: true),
+          CommandOptionBuilder(CommandOptionType.channel, 'channel',
+              'The channel where the slowmode should be set.',
+              channelTypes: [ChannelType.text])
         ],
       )..registerHandler(slowmodeSlashCommand));
   }

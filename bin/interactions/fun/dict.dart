@@ -66,9 +66,11 @@ class FunDictInteractions {
 
     try {
       response = await _dio.get('$dictUrl${word.replaceAll(' ', '+')}');
-    } on DioError catch (err) {
-      await event
-          .respond(MessageBuilder.embed(errorEmbed('${err.message}', author)));
+    } on DioError catch (_) {
+      await event.respond(MessageBuilder.embed(errorEmbed(
+        'The API could not understand the query!\nPlease try again with a different word.',
+        author,
+      )));
       return;
     }
 
@@ -91,9 +93,11 @@ class FunDictInteractions {
     try {
       response = await _dio.get('$urbanUrl${word.replaceAll(' ', '+')}');
       raw = response.data['list'][0];
-    } on DioError catch (err) {
-      await event
-          .respond(MessageBuilder.embed(errorEmbed('${err.message}', author)));
+    } on Error catch (_) {
+      await event.respond(MessageBuilder.embed(errorEmbed(
+        'The API could not understand the query!\nPlease try again with a different word.',
+        author,
+      )));
       return;
     }
 
