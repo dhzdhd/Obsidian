@@ -9,9 +9,9 @@
   - [x] rip
   - [x] google
   - [ ] xkcd
-- [ ] dict.dart
-  - [ ] oxford
-  - [ ] urban
+- [x] dict.dart
+  - [x] oxford
+  - [x] urban
 - [x] movie.dart
   - [x] movie
 - [ ] music.dart
