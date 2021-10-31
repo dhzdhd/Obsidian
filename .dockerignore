@@ -1,0 +1,6 @@
+.env
+.packages
+.idea/
+.dart_tool/
+azure_vps/
+lavalink_server/logs/
