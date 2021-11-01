@@ -1,6 +1,6 @@
 server:
   port: 2333
-  address: 0.0.0.0
+  address: "127.0.0.1"
 lavalink:
   server:
     password: "youshallnotpass"
@@ -32,7 +32,7 @@ metrics:
 
 sentry:
   dsn: ""
-  environment: ""
+  # environment: ""
 #  tags:
 #    some_key: some_value
 #    another_key: another_value
@@ -40,7 +40,7 @@ sentry:
 logging:
   file:
     max-history: 30
-    max-size: 1GB
+    max-size: 500MB
   path: ./logs/
 
   level:

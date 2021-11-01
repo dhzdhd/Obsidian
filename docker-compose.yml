@@ -1,15 +1,21 @@
 version: '3'
+
 services:
   lavalink:
+    container_name: lavalink
     image: fredboat/lavalink:dev
+    network_mode: host
     ports:
-      - "2333:2333"
+      - 2333:2333
+    volumes:
+      - ./lavalink_server/application.yml:/opt/Lavalink/application.yml
 
   bot:
+    container_name: obsidian
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: obsidian
+    network_mode: host
     init: true
 
     restart: on-failure

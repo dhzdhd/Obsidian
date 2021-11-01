@@ -2,7 +2,6 @@
 FROM dart:stable
 
 # Resolve app dependencies.
-WORKDIR /app
 COPY pubspec.* ./
 RUN dart pub get
 
