@@ -16,7 +16,7 @@ services:
       context: .
       dockerfile: Dockerfile
     network_mode: host
-    init: true
+    # init: true
     restart: on-failure
 
     env_file: 

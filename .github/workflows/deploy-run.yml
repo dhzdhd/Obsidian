@@ -20,10 +20,11 @@ jobs:
         with:
             command: |
               cd ~/dev/Obsidian/
+
+              docker-compose -f docker-compose.yml down
+
               git pull
 
-              ls
-              docker ps -a
               docker-compose -f docker-compose.yml up --build -d
 
             host: ${{ secrets.HOST }}
