@@ -1,4 +1,4 @@
-# Specify the Dart SDK base image version using dart:<version> (ex: dart:2.12)
+# Specify the Dart SDK base image version using dart:<version>
 FROM dart:stable
 
 # Resolve app dependencies.

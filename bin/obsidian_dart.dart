@@ -48,7 +48,7 @@ void main() async {
 
   cluster = Cluster(bot, Snowflake(Tokens.BOT_ID));
   await cluster.addNode(NodeOptions(
-    host: 'localhost',
+    host: '127.0.0.1',
     port: 2333,
   ));
 
