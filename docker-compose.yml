@@ -1,0 +1,19 @@
+version: '3'
+services:
+  lavalink:
+    image: fredboat/lavalink:dev
+    ports:
+      - "127.0.0.1:2333:2333"
+
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: obsidian
+    init: true
+
+    restart: on-failure
+
+    depends_on:
+      - lavalink
+

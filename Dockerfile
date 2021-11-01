@@ -1,9 +1,16 @@
-FROM Fedora
+# Specify the Dart SDK base image version using dart:<version> (ex: dart:2.12)
+FROM dart:stable
 
-RUN dnf update
-RUN dnf install dart
-RUN dnf install java
+# Resolve app dependencies.
+WORKDIR /app
+COPY pubspec.* ./
+RUN dart pub get
 
-COPY . /opt/source
+# Copy app source code.
+COPY . .
 
-ENTRYPOINT BOT=/opt/source/bin/obsidian_dart.dart dart run
+# Ensure packages are still up-to-date if anything has changed
+RUN dart pub get --offline
+
+ENTRYPOINT ["dart"]
+CMD ["run"]

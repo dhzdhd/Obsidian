@@ -21,8 +21,6 @@ jobs:
             command: |
               cd ~/dev/Obsidian/
               git pull
-              git checkout stable
-              git pull
 
             host: ${{ secrets.HOST }}
             user: dhzdhd

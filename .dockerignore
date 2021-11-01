@@ -1,6 +1,13 @@
-.env
 .packages
 .idea/
 .dart_tool/
 azure_vps/
 lavalink_server/logs/
+
+Dockerfile
+build/
+.dart_tool/
+.git/
+.github/
+.gitignore
+.packages

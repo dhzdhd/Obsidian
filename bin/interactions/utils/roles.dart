@@ -149,7 +149,7 @@ class UtilsRolesInteractions {
   }
 
   Future<void> cancelButtonHandler(ButtonInteractionEvent event) async {
-    await event.acknowledge();
+    await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {
       await event.interaction.userAuthor

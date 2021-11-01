@@ -33,7 +33,7 @@ class ModEssentialInteractions {
         'Set a slowmode time for a particular channel.',
         [
           CommandOptionBuilder(CommandOptionType.integer, 'amount',
-              'The slowmode amount. 0 means removal of slowmode.',
+              'The slowmode amount. 0 implies removal of slowmode.',
               required: true),
           CommandOptionBuilder(CommandOptionType.channel, 'channel',
               'The channel where the slowmode should be set.',
@@ -136,7 +136,15 @@ class ModEssentialInteractions {
       return;
     }
 
-    final channel = event.interaction.resolved?.channels.first as TextChannel;
-    final amount = event.getArg('amount');
+    final channel =
+        event.interaction.resolved?.channels.first as TextGuildChannel? ??
+            event.interaction.channel.getFromCache()! as TextGuildChannel;
+    final amount = event.getArg('amount').value;
+
+    await channel.edit(ChannelBuilder()..rateLimitPerUser = amount);
+
+    await event.respond(MessageBuilder.embed(successEmbed(
+        'Successfully set channel slowmode to **$amount** seconds.',
+        event.interaction.userAuthor)));
   }
 }
