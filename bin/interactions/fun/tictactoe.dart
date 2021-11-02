@@ -13,7 +13,5 @@ class FunTttInteractions {
 
   Future<void> tttSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
-
-    final a = 0;
   }
 }

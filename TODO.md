@@ -10,7 +10,7 @@
   - [x] google
   - [ ] xkcd
 - [x] dict.dart
-  - [x] oxford
+  - [ ] oxford
   - [x] urban
 - [x] movie.dart
   - [x] movie
@@ -24,7 +24,7 @@
 
 ------
 
-- [ ] Add dict and google command
+- [ ] Problems with oxford dict, probably absence of examples in some queries.
 
 ## Mod
 
