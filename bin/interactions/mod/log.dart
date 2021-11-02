@@ -26,11 +26,6 @@ class ModLogInteractions {
           CommandOptionType.subCommand,
           'delete',
           '<MOD ONLY> Delete an existing log channel.',
-          options: [
-            CommandOptionBuilder(CommandOptionType.channel, 'channel',
-                'Logging channel to delete.',
-                required: true)
-          ],
         )..registerHandler(deleteLogSlashCommand)
       ],
     ));
