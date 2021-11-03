@@ -82,7 +82,10 @@ class ModCloneInteractions {
     final channel = cloneDict[event.interaction.message!.id.id]!;
     cloneDict.remove(event.interaction.message!.id.id);
 
-    // final category = channel.parentChannel!.id;
+    final overrides = channel.permissionOverrides.map((element) {
+      return PermissionOverrideBuilder.of(SnowflakeEntity(element.id));
+    }).toList();
+
     await channel.delete();
 
     await event.interaction.guild?.getFromCache()?.createChannel(
@@ -91,6 +94,9 @@ class ModCloneInteractions {
             ..name = channel.name
             ..topic = channel.topic
             ..position = channel.position
+            ..parentChannel =
+                SnowflakeEntity(channel.parentChannel!.getFromCache()!.id)
+            // ..overrides = overrides
             ..nsfw = channel.isNsfw,
         );
   }

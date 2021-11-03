@@ -42,7 +42,7 @@ packages:
       name: dio
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.0"
+    version: "4.0.1"
   dotenv:
     dependency: "direct main"
     description:
@@ -105,42 +105,42 @@ packages:
       name: mime
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   nyxx:
     dependency: "direct main"
     description:
       name: nyxx
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.1.1"
   nyxx_commander:
     dependency: "direct main"
     description:
       name: nyxx_commander
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   nyxx_extensions:
     dependency: "direct main"
     description:
       name: nyxx_extensions
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   nyxx_interactions:
     dependency: "direct main"
     description:
       name: nyxx_interactions
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   nyxx_lavalink:
     dependency: "direct main"
     description:
       name: nyxx_lavalink
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   path:
     dependency: transitive
     description:
@@ -182,7 +182,7 @@ packages:
       name: storage_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.5"
+    version: "0.0.6+1"
   stream_channel:
     dependency: transitive
     description:
@@ -203,7 +203,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.7"
+    version: "0.2.8"
   term_glyph:
     dependency: transitive
     description:
