@@ -63,9 +63,9 @@ class FunMusicInteractions {
     //       (event.state.channel!.getFromCache() as VoiceGuildChannel).userLimit);
     // });
 
-    bot.onVoiceServerUpdate.listen((event) async {
-      print(event.raw);
-    });
+    // bot.onVoiceServerUpdate.listen((event) async {
+    //   print(event.raw);
+    // });
   }
 
   // ! Add channel input support
