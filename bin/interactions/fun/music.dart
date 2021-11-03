@@ -8,7 +8,7 @@ import '../../utils/embed.dart';
 
 class FunMusicInteractions {
   FunMusicInteractions() {
-    // initEvents();
+    initEvents();
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
         'music',
@@ -57,14 +57,14 @@ class FunMusicInteractions {
   }
 
   void initEvents() {
-    bot.onVoiceStateUpdate.listen((event) async {
-      // if (event.state.guild?.getFromCache()?.voiceStates.count == 1) {
-      print(event.state.user.getFromCache()!.username);
-      // }
-    });
+    // bot.onVoiceStateUpdate.listen((event) async {
+    //   print(event.raw);
+    //   print(
+    //       (event.state.channel!.getFromCache() as VoiceGuildChannel).userLimit);
+    // });
 
     // bot.onVoiceServerUpdate.listen((event) async {
-    //   print(event);
+    //   print(event.raw);
     // });
   }
 
@@ -85,13 +85,13 @@ class FunMusicInteractions {
 
     final searchResults = await node.autoSearch(title);
     final track = searchResults.tracks[0];
-    final trackInfo = track.info;
+    final trackInfo = track.info!;
 
     node.play(guildId, track).queue();
 
     await event.sendFollowup(
       MessageBuilder.embed(musicEmbed(
-        'Play | ${trackInfo!.title}',
+        'Play | ${trackInfo.title}',
         '''
         Artist: ${trackInfo.author}
         Duration: ${(trackInfo.length / 60000).roundToDouble()} minutes
