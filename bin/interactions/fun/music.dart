@@ -3,6 +3,7 @@ import 'package:nyxx_interactions/interactions.dart';
 import 'package:nyxx_lavalink/lavalink.dart';
 
 import '../../obsidian_dart.dart' show cluster, botInteractions, bot;
+import '../../utils/constants.dart';
 import '../../utils/embed.dart';
 
 class FunMusicInteractions {
@@ -13,15 +14,6 @@ class FunMusicInteractions {
         'music',
         'Music group of commands.',
         [
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'join',
-            'Make the bot join a voice channel',
-            options: [
-              CommandOptionBuilder(CommandOptionType.channel, 'voice-channel',
-                  'The voice channel the bot should join.')
-            ],
-          )..registerHandler(joinMusicSlashCommand),
           CommandOptionBuilder(
             CommandOptionType.subCommand,
             'play',
@@ -76,33 +68,6 @@ class FunMusicInteractions {
     // });
   }
 
-  Future<void> joinMusicSlashCommand(SlashCommandInteractionEvent event) async {
-    await event.acknowledge();
-    // final channel = event.interaction.resolved?.channels.first;
-    final channel = event.getArg('voice-channel').value as PartialChannel?;
-
-    late VoiceGuildChannel vc;
-
-    if (channel != null && channel.type == ChannelType.voice) {
-      vc = channel as VoiceGuildChannel;
-    } else if (channel == null) {
-      vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
-          as VoiceGuildChannel;
-    } else {
-      await event.respond(MessageBuilder.embed(errorEmbed(
-          'The selected channel is not a voice channel!',
-          event.interaction.userAuthor)));
-      return;
-    }
-
-    vc.connect();
-
-    await event.respond(MessageBuilder.embed(
-      musicEmbed('Join', 'Joined voice channel: ${vc.name}',
-          event.interaction.userAuthor),
-    ));
-  }
-
   // ! Add channel input support
   Future<void> playMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
@@ -119,24 +84,45 @@ class FunMusicInteractions {
     vc.connect(selfDeafen: true);
 
     final searchResults = await node.autoSearch(title);
-    print(searchResults.tracks[0].info?.title);
+    final track = searchResults.tracks[0];
+    final trackInfo = track.info;
 
-    node.play(guildId, searchResults.tracks[0]).queue();
+    node.play(guildId, track).queue();
 
     await event.sendFollowup(
       MessageBuilder.embed(musicEmbed(
-          'Play', 'Playing song: $title', event.interaction.userAuthor)),
+        'Play | ${trackInfo!.title}',
+        '''
+        Artist: ${trackInfo.author}
+        Duration: ${(trackInfo.length / 60000).roundToDouble()} minutes
+        URL: ${trackInfo.uri}
+        ''',
+        event.interaction.userAuthor,
+      )..thumbnailUrl =
+          'https://img.youtube.com/vi/${trackInfo.identifier}/maxresdefault.jpg'),
     );
 
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(MultiselectBuilder('music', [
-        MultiselectOptionBuilder('repeat', 'repeat'),
-        MultiselectOptionBuilder('backward', 'backward'),
-        MultiselectOptionBuilder('pause', 'pause'),
-        MultiselectOptionBuilder('resume', 'resume'),
-        MultiselectOptionBuilder('forward', 'forward'),
-        MultiselectOptionBuilder('stop', 'stop'),
+        MultiselectOptionBuilder('Pause', 'pause')
+          ..description = 'Pause the current playing track'
+          ..emoji = UnicodeEmoji('⏸️'),
+        MultiselectOptionBuilder('Resume', 'resume')
+          ..description = 'Resume the currently paused track'
+          ..emoji = UnicodeEmoji('▶️'),
+        MultiselectOptionBuilder('Backward', 'backward')
+          ..description = 'Go to the start of the track'
+          ..emoji = UnicodeEmoji('⏮️'),
+        MultiselectOptionBuilder('Forward', 'forward')
+          ..description = 'Go to the next song in the queue'
+          ..emoji = UnicodeEmoji('⏩'),
+        MultiselectOptionBuilder('Repeat', 'repeat')
+          ..description = 'Repeat the given track'
+          ..emoji = UnicodeEmoji('🔁'),
+        MultiselectOptionBuilder('Stop', 'stop')
+          ..description = 'Stop playing tracks and delete the queue'
+          ..emoji = UnicodeEmoji('⏹️'),
       ]));
     componentMessageBuilder.addComponentRow(componentRow);
 
@@ -243,11 +229,7 @@ class FunMusicInteractions {
         {
           node.stop(guildId);
 
-          final componentMessageBuilder = ComponentMessageBuilder();
-          final componentRow = ComponentRowBuilder();
-          componentMessageBuilder.addComponentRow(componentRow);
-
-          await event.editOriginalResponse(componentMessageBuilder);
+          await event.interaction.message?.delete();
           break;
         }
     }
