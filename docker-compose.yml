@@ -5,6 +5,7 @@ services:
     container_name: lavalink
     image: fredboat/lavalink:dev
     network_mode: host
+    restart: on-failure
     ports:
       - 2333:2333
     volumes:
@@ -16,7 +17,6 @@ services:
       context: .
       dockerfile: Dockerfile
     network_mode: host
-    # init: true
     restart: on-failure
 
     env_file: 

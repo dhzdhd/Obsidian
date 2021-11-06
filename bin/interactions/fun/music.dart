@@ -21,9 +21,7 @@ class FunMusicInteractions {
             options: [
               CommandOptionBuilder(CommandOptionType.string, 'title',
                   'Title of song to be played.',
-                  required: true),
-              CommandOptionBuilder(CommandOptionType.channel, 'voice-channel',
-                  'The voice channel the music should be played in.')
+                  required: true)
             ],
           )..registerHandler(playMusicSlashCommand),
           CommandOptionBuilder(
@@ -51,21 +49,49 @@ class FunMusicInteractions {
             'stop',
             'Stop playing music and clear queue.',
           )..registerHandler(stopMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'queue',
+            'View the current queue.',
+          )..registerHandler(queueMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'add',
+            'Add a song to the queue.',
+            options: [
+              CommandOptionBuilder(CommandOptionType.string, 'title',
+                  'Title of song to be added to the queue.',
+                  required: true)
+            ],
+          )..registerHandler(addMusicSlashCommand)
         ],
       ))
       ..registerMultiselectHandler('music', musicOptionHandler);
   }
 
   void initEvents() {
-    // bot.onVoiceStateUpdate.listen((event) async {
-    //   print(event.raw);
-    //   print(
-    //       (event.state.channel!.getFromCache() as VoiceGuildChannel).userLimit);
-    // });
+    bot.onVoiceStateUpdate.listen((event) async {
+      var buffer = [];
 
-    // bot.onVoiceServerUpdate.listen((event) async {
-    //   print(event.raw);
-    // });
+      final botSnowflake = Snowflake(Tokens.BOT_ID);
+      final channel =
+          await event.state.channel?.getOrDownload() as VoiceGuildChannel;
+
+      final guild = await event.state.guild?.getOrDownload();
+      final voiceStates = guild?.voiceStates.asMap.keys.toList();
+
+      if (voiceStates == null) return;
+      if (voiceStates.contains(botSnowflake)) {
+        buffer.add(botSnowflake);
+        voiceStates.remove(botSnowflake);
+      } else {
+        return;
+      }
+
+      print(voiceStates);
+    });
+
+    bot.onVoiceServerUpdate.listen((event) async {});
   }
 
   // ! Add channel input support
@@ -74,8 +100,7 @@ class FunMusicInteractions {
 
     late VoiceGuildChannel vc;
     final guildId = event.interaction.guild!.id;
-    var title = event.getArg('title').value.toString();
-    // var channel = event.interaction.resolved?.channels.first;
+    final title = event.getArg('title').value;
 
     vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
         as VoiceGuildChannel;
@@ -114,7 +139,7 @@ class FunMusicInteractions {
         MultiselectOptionBuilder('Backward', 'backward')
           ..description = 'Go to the start of the track'
           ..emoji = UnicodeEmoji('⏮️'),
-        MultiselectOptionBuilder('Forward', 'forward')
+        MultiselectOptionBuilder('Skip', 'skip')
           ..description = 'Go to the next song in the queue'
           ..emoji = UnicodeEmoji('⏩'),
         MultiselectOptionBuilder('Repeat', 'repeat')
@@ -132,8 +157,7 @@ class FunMusicInteractions {
   Future<void> skipMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final node =
-        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
     node.skip(event.interaction.guild!.getFromCache()!.id);
 
     await event.respond(MessageBuilder.embed(
@@ -157,8 +181,7 @@ class FunMusicInteractions {
       SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final node =
-        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
     node.resume(event.interaction.guild!.getFromCache()!.id);
 
     await event.respond(MessageBuilder.embed(
@@ -169,8 +192,7 @@ class FunMusicInteractions {
       SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final node =
-        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
     node.pause(event.interaction.guild!.getFromCache()!.id);
 
     await event.respond(MessageBuilder.embed(
@@ -180,13 +202,45 @@ class FunMusicInteractions {
   Future<void> stopMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final node =
-        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
     node.stop(event.interaction.guild!.getFromCache()!.id);
 
     await event.respond(MessageBuilder.embed(musicEmbed(
         'Stop',
         'Stopped music and removed songs from the queue.',
+        event.interaction.userAuthor)));
+  }
+
+  Future<void> queueMusicSlashCommand(
+      SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final guildId = event.interaction.guild!.id;
+
+    final node = cluster.getOrCreatePlayerNode(guildId);
+    final player = node.players[Snowflake(guildId)];
+
+    await event.respond(MessageBuilder.embed(musicEmbed(
+        'Queue',
+        player?.queue.map((e) => e.track.info?.title).join('\n') ??
+            'No songs currently in the queue',
+        event.interaction.userAuthor)));
+  }
+
+  Future<void> addMusicSlashCommand(SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final title = event.getArg('title').value;
+    final guildId = event.interaction.guild!.id;
+    final node = cluster.getOrCreatePlayerNode(guildId);
+    final player = node.players[Snowflake(guildId)];
+
+    final track = (await node.autoSearch(title)).tracks.first as QueuedTrack;
+    player?.queue.add(track);
+
+    await event.respond(MessageBuilder.embed(musicEmbed(
+        'Add | ${track.track.info?.title}',
+        'Added track to the queue',
         event.interaction.userAuthor)));
   }
 
@@ -220,7 +274,7 @@ class FunMusicInteractions {
           node.resume(guildId);
           break;
         }
-      case 'forward':
+      case 'skip':
         {
           node.skip(guildId);
           break;

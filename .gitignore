@@ -11,3 +11,4 @@ build/
 
 lavalink_server/logs/
 azure_vps/
+k8s-secret.yml
