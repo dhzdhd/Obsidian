@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: obsidian
-        image: <Image>
+        image: ghcr.io/dhzdhd/obsidian:stable
         resources:
           limits:
             memory: "128Mi"
