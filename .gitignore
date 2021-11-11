@@ -12,3 +12,5 @@ build/
 lavalink_server/logs/
 azure_vps/
 k8s-secret.yml
+
+base64_converter/__pycache__

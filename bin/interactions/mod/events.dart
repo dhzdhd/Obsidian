@@ -63,41 +63,55 @@ class ModEventsInteractions {
         final logChannel =
             (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
 
-        await logChannel.sendMessage(MessageBuilder.embed(auditEmbed(
+        final messageCondition = message.content.isNotEmpty
+            ? message.content.contains(RegExp(r'\`\`\`(.*?)\`\`\`'))
+                ? message.content
+                : '```${message.content}```'
+            : 'No content';
+        final delEmbed = auditEmbed(
           'Message deleted in channel: ${channel.name}',
-          message.content,
+          '''
+          Author: ${(message.author as User).mention}
+          Message: $messageCondition
+          ''',
           message.author as User,
           'msg_delete',
-        )));
+        );
+
+        if (message.attachments.isNotEmpty) {
+          delEmbed.imageUrl = message.attachments.first.url;
+        }
+
+        await logChannel.sendMessage(MessageBuilder.embed(delEmbed));
       }
     });
 
-    bot.onMessageUpdate.listen((event) async {
-      final channel = event.channel.getFromCache()! as TextGuildChannel;
-      final oldMessage = await event.channel.fetchMessage(event.messageId);
-      final updatedMessage = event.updatedMessage!;
-      final guildId = channel.guild.id.id;
-
-      if (updatedMessage.author.bot) return;
-
-      final response = await LogDatabase.fetch(guildId: guildId);
-
-      if (response.isNotEmpty) {
-        final channelId = response[0]['channel'];
-        final logChannel =
-            (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
-
-        await logChannel.sendMessage(MessageBuilder.embed(auditEmbed(
-          'Message edited in channel: ${channel.name}',
-          '''
-          **Old:**\n${oldMessage.content}
-          **New:**\n${updatedMessage.content}
-          ''',
-          oldMessage.author as User,
-          'msg_edit',
-        )));
-      }
-    });
+    // bot.onMessageUpdate.listen((event) async {
+    //   final channel = event.channel.getFromCache()! as TextGuildChannel;
+    //   final oldMessage = await event.channel.fetchMessage(event.messageId);
+    //   final updatedMessage = event.updatedMessage!;
+    //   final guildId = channel.guild.id.id;
+    //
+    //   if (updatedMessage.author.bot) return;
+    //
+    //   final response = await LogDatabase.fetch(guildId: guildId);
+    //
+    //   if (response.isNotEmpty) {
+    //     final channelId = response[0]['channel'];
+    //     final logChannel =
+    //         (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
+    //
+    //     await logChannel.sendMessage(MessageBuilder.embed(auditEmbed(
+    //       'Message edited in channel: ${channel.name}',
+    //       '''
+    //       **Old:**\n${oldMessage.content}
+    //       **New:**\n${updatedMessage.content}
+    //       ''',
+    //       oldMessage.author as User,
+    //       'msg_edit',
+    //     )));
+    //   }
+    // });
 
     bot.onGuildBanAdd.listen((event) {});
 
@@ -107,20 +121,31 @@ class ModEventsInteractions {
 
       if (user == bot.self) return;
 
-      await owner.sendMessage(MessageBuilder.embed(
-        EmbedBuilder()
-          ..title = 'DM recieved!'
-          ..description = '''
+      final message = event.message;
+      final messageCondition = message.content.isNotEmpty
+          ? message.content.contains(RegExp(r'\`\`\`(.*?)\`\`\`'))
+              ? message.content
+              : '```${message.content}```'
+          : 'No content';
+
+      final dmEmbed = EmbedBuilder()
+        ..title = 'DM recieved!'
+        ..description = '''
           Author: ${user.mention}
-          Message:\n ${event.message.content}
+          Message: $messageCondition
           '''
-          ..color = DiscordColor.goldenrod
-          ..timestamp = DateTime.now()
-          ..addFooter((footer) {
-            footer.text = 'Message sent by ${user.username}';
-            footer.iconUrl = user.avatarURL();
-          }),
-      ));
+        ..color = DiscordColor.goldenrod
+        ..timestamp = DateTime.now()
+        ..addFooter((footer) {
+          footer.text = 'Message sent by ${user.username}';
+          footer.iconUrl = user.avatarURL();
+        });
+
+      if (message.attachments.isNotEmpty) {
+        dmEmbed.imageUrl = message.attachments.first.url;
+      }
+
+      await owner.sendMessage(MessageBuilder.embed(dmEmbed));
     });
   }
 }

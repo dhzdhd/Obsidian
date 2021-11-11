@@ -26,7 +26,6 @@ class Converter:
 
     def read_env(self) -> None:
         self.env_list = list(map(lambda x: getenv(x), Converter.ENV_LIST))
-        print(self.env_list)
 
     def convert(self) -> None:
         self.encoded_list = [
