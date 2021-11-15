@@ -15,6 +15,14 @@
 - [x] movie.dart
   - [x] movie
 - [ ] music.dart
+  - [ ] play
+  - [ ] pause
+  - [ ] skip
+  - [ ] backward
+  - [ ] stop
+  - [ ] queue
+  - [ ] add
+  - [ ] shuffle
 - [ ] tictactoe.dart
 - [x] wolfram.dart
   - [x] short

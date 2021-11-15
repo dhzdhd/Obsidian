@@ -57,8 +57,7 @@ class FunMusicInteractions {
             CommandOptionType.subCommand,
             'queue',
             'View the current queue.',
-          )
-            ..registerHandler(queueMusicSlashCommand),
+          )..registerHandler(queueMusicSlashCommand),
           CommandOptionBuilder(
             CommandOptionType.subCommand,
             'add',
@@ -68,14 +67,12 @@ class FunMusicInteractions {
                   'Title of song to be added to the queue.',
                   required: true)
             ],
-          )
-            ..registerHandler(addMusicSlashCommand),
+          )..registerHandler(addMusicSlashCommand),
           CommandOptionBuilder(
             CommandOptionType.subCommand,
             'shuffle',
             'Shuffle tracks in the current queue.',
-          )
-            ..registerHandler(shuffleMusicSlashCommand),
+          )..registerHandler(shuffleMusicSlashCommand),
         ],
       ))
       ..registerMultiselectHandler('music', musicOptionHandler);
@@ -87,7 +84,7 @@ class FunMusicInteractions {
 
       final botSnowflake = Snowflake(Tokens.BOT_ID);
       final channel =
-      await event.state.channel?.getOrDownload() as VoiceGuildChannel;
+          await event.state.channel?.getOrDownload() as VoiceGuildChannel;
 
       final guild = await event.state.guild?.getOrDownload();
       final voiceStates = guild?.voiceStates.asMap.keys.toList();
@@ -115,14 +112,21 @@ class FunMusicInteractions {
     final title = event.getArg('title').value;
 
     vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
-    as VoiceGuildChannel;
+        as VoiceGuildChannel;
 
     final node = cluster.getOrCreatePlayerNode(guildId);
     vc.connect(selfDeafen: true);
 
     final searchResults = await node.autoSearch(title);
+    if (searchResults.tracks.isEmpty) {
+      await event.respond(MessageBuilder.embed(errorEmbed(
+          'Song not found! Please try again with a different query.',
+          event.interaction.userAuthor)));
+    }
     final track = searchResults.tracks[0];
     final trackInfo = track.info!;
+    final trackTime =
+        '${((trackInfo.length / 1000) / 60).floor()}:${((trackInfo.length / 1000) % 60).round()}';
 
     node.play(guildId, track).queue();
 
@@ -131,7 +135,7 @@ class FunMusicInteractions {
         'Play | ${trackInfo.title}',
         '''
         Artist: ${trackInfo.author}
-        Duration: ${(trackInfo.length / 60000).roundToDouble()} minutes
+        Duration: $trackTime minutes
         URL: ${trackInfo.uri}
         ''',
         event.interaction.userAuthor,
@@ -176,7 +180,8 @@ class FunMusicInteractions {
         musicEmbed('Skip', 'Skipped music.', event.interaction.userAuthor)));
   }
 
-  Future<void> repeatMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> repeatMusicSlashCommand(
+      SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -188,7 +193,8 @@ class FunMusicInteractions {
         musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
   }
 
-  Future<void> resumeMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> resumeMusicSlashCommand(
+      SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -198,7 +204,8 @@ class FunMusicInteractions {
         musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
   }
 
-  Future<void> pauseMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> pauseMusicSlashCommand(
+      SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -220,7 +227,8 @@ class FunMusicInteractions {
         event.interaction.userAuthor)));
   }
 
-  Future<void> queueMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> queueMusicSlashCommand(
+      SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final guildId = event.interaction.guild!.id;
@@ -238,9 +246,7 @@ class FunMusicInteractions {
   Future<void> addMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final title = event
-        .getArg('title')
-        .value;
+    final title = event.getArg('title').value;
     final guildId = event.interaction.guild!.id;
     final node = cluster.getOrCreatePlayerNode(guildId);
     final player = node.players[Snowflake(guildId)];
@@ -284,7 +290,7 @@ class FunMusicInteractions {
     final guildId = event.interaction.guild!.id;
 
     final node =
-    cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
     final player = node.createPlayer(guildId);
 
     switch (value) {
