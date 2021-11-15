@@ -1,7 +1,6 @@
 import base64
-from os import getenv
-
 from dotenv import load_dotenv
+from os import getenv
 
 
 class Converter:

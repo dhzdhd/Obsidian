@@ -74,9 +74,10 @@ class FunDictInteractions {
       return;
     }
 
-    final raw = response.data[0]['meanings'][0]['definitions'][0];
+    final Map raw = response.data[0]['meanings'][0]['definitions'][0];
     final def = raw['definition'];
-    final ex = raw['example'];
+    final ex =
+    raw.keys.contains('example') ? raw['example'] : 'No examples found.';
 
     await event.respond(
         MessageBuilder.embed(dictEmbed(author, word, 'Oxford', def, ex)));

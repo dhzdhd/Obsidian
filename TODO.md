@@ -37,9 +37,9 @@
 - [ ] events.dart
   - [ ] on-guild-join
   - [ ] on-guild-leave
-  - [ ] on-delete
+  - [x] on-delete
   - [ ] on-edit (Old message can't be fetched)
-  - [ ] on-bot-dm
+  - [x] on-bot-dm
 - [ ] log.dart
 - [ ] mute.dart
 - [ ] vc.dart

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 import 'package:nyxx_lavalink/lavalink.dart';
@@ -7,6 +9,8 @@ import '../../utils/constants.dart';
 import '../../utils/embed.dart';
 
 class FunMusicInteractions {
+  final _random = Random();
+
   FunMusicInteractions() {
     initEvents();
     botInteractions
@@ -53,7 +57,8 @@ class FunMusicInteractions {
             CommandOptionType.subCommand,
             'queue',
             'View the current queue.',
-          )..registerHandler(queueMusicSlashCommand),
+          )
+            ..registerHandler(queueMusicSlashCommand),
           CommandOptionBuilder(
             CommandOptionType.subCommand,
             'add',
@@ -63,7 +68,14 @@ class FunMusicInteractions {
                   'Title of song to be added to the queue.',
                   required: true)
             ],
-          )..registerHandler(addMusicSlashCommand)
+          )
+            ..registerHandler(addMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'shuffle',
+            'Shuffle tracks in the current queue.',
+          )
+            ..registerHandler(shuffleMusicSlashCommand),
         ],
       ))
       ..registerMultiselectHandler('music', musicOptionHandler);
@@ -75,7 +87,7 @@ class FunMusicInteractions {
 
       final botSnowflake = Snowflake(Tokens.BOT_ID);
       final channel =
-          await event.state.channel?.getOrDownload() as VoiceGuildChannel;
+      await event.state.channel?.getOrDownload() as VoiceGuildChannel;
 
       final guild = await event.state.guild?.getOrDownload();
       final voiceStates = guild?.voiceStates.asMap.keys.toList();
@@ -103,7 +115,7 @@ class FunMusicInteractions {
     final title = event.getArg('title').value;
 
     vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
-        as VoiceGuildChannel;
+    as VoiceGuildChannel;
 
     final node = cluster.getOrCreatePlayerNode(guildId);
     vc.connect(selfDeafen: true);
@@ -164,8 +176,7 @@ class FunMusicInteractions {
         musicEmbed('Skip', 'Skipped music.', event.interaction.userAuthor)));
   }
 
-  Future<void> repeatMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+  Future<void> repeatMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -177,8 +188,7 @@ class FunMusicInteractions {
         musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
   }
 
-  Future<void> resumeMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+  Future<void> resumeMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -188,8 +198,7 @@ class FunMusicInteractions {
         musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
   }
 
-  Future<void> pauseMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+  Future<void> pauseMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -211,8 +220,7 @@ class FunMusicInteractions {
         event.interaction.userAuthor)));
   }
 
-  Future<void> queueMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+  Future<void> queueMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final guildId = event.interaction.guild!.id;
@@ -230,18 +238,44 @@ class FunMusicInteractions {
   Future<void> addMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final title = event.getArg('title').value;
+    final title = event
+        .getArg('title')
+        .value;
     final guildId = event.interaction.guild!.id;
     final node = cluster.getOrCreatePlayerNode(guildId);
     final player = node.players[Snowflake(guildId)];
 
-    final track = (await node.autoSearch(title)).tracks.first as QueuedTrack;
-    player?.queue.add(track);
+    final track = (await node.autoSearch(title)).tracks.first;
+    node.play(guildId, track).queue();
 
     await event.respond(MessageBuilder.embed(musicEmbed(
-        'Add | ${track.track.info?.title}',
+        'Add | ${track.info?.title}',
         'Added track to the queue',
         event.interaction.userAuthor)));
+  }
+
+  Future<void> shuffleMusicSlashCommand(
+      SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    final guildId = event.interaction.guild!.id;
+    final node = cluster.getOrCreatePlayerNode(guildId);
+    final player = node.players[Snowflake(guildId)];
+
+    if (player?.queue == null || player!.queue.length < 2) {
+      await event.respond(MessageBuilder.embed(errorEmbed(
+          'Cannot shuffle the current queue!', event.interaction.userAuthor)));
+      return;
+    }
+
+    final shuffledQueue = <QueuedTrack>[];
+    for (var _ = 0; _ < player.queue.length; _++) {
+      var randomIndex = _random.nextInt(player.queue.length);
+      shuffledQueue.add(player.queue[randomIndex]);
+      player.queue.removeAt(randomIndex);
+    }
+
+    player.queue = shuffledQueue;
   }
 
   Future<void> musicOptionHandler(MultiselectInteractionEvent event) async {
@@ -250,7 +284,7 @@ class FunMusicInteractions {
     final guildId = event.interaction.guild!.id;
 
     final node =
-        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
     final player = node.createPlayer(guildId);
 
     switch (value) {

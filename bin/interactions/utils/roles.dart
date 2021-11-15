@@ -2,11 +2,9 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/interactions.dart';
 
 import '../../obsidian_dart.dart';
-import '../../utils/constants.dart';
 import '../../utils/constraints.dart';
 import '../../utils/embed.dart';
 
-// TODO: Make messages ephemeral
 class UtilsRolesInteractions {
   late Message? message;
   late Role? role;

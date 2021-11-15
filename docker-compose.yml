@@ -6,8 +6,6 @@ services:
     image: fredboat/lavalink:dev
     network_mode: host
     restart: on-failure
-    ports:
-      - 2333:2333
     volumes:
       - ./lavalink_server/application.yml:/opt/Lavalink/application.yml
 
@@ -24,4 +22,3 @@ services:
 
     depends_on:
       - lavalink
-

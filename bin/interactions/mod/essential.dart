@@ -30,7 +30,7 @@ class ModEssentialInteractions {
       )..registerHandler(censorSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
         'slowmode',
-        'Set a slowmode time for a particular channel.',
+        '<MOD ONLY> Set a slowmode time for a particular channel.',
         [
           CommandOptionBuilder(CommandOptionType.integer, 'amount',
               'The slowmode amount. 0 implies removal of slowmode.',
@@ -127,6 +127,8 @@ class ModEssentialInteractions {
 
   Future<void> slowmodeSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
+    final channelId = event.interaction.resolved?.channels.first.id;
+    final guild = event.interaction.guild!.getFromCache();
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.embed(
@@ -139,12 +141,20 @@ class ModEssentialInteractions {
     final channel =
         event.interaction.resolved?.channels.first as TextGuildChannel? ??
             event.interaction.channel.getFromCache()! as TextGuildChannel;
-    final amount = event.getArg('amount').value;
+    final amount = event
+        .getArg('amount')
+        .value;
 
-    await channel.edit(ChannelBuilder()..rateLimitPerUser = amount);
+    try {
+      await channel.edit(ChannelBuilder()
+        ..rateLimitPerUser = amount);
 
-    await event.respond(MessageBuilder.embed(successEmbed(
-        'Successfully set channel slowmode to **$amount** seconds.',
-        event.interaction.userAuthor)));
+      await event.respond(MessageBuilder.embed(successEmbed(
+          'Successfully set channel slowmode to **$amount** seconds.',
+          event.interaction.userAuthor)));
+    } catch (_) {
+      await event.respond(MessageBuilder.embed(
+          errorEmbed('Invalid amount entered!', event.interaction.userAuthor)));
+    }
   }
 }
