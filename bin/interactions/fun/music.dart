@@ -103,7 +103,6 @@ class FunMusicInteractions {
     bot.onVoiceServerUpdate.listen((event) async {});
   }
 
-  // ! Add channel input support
   Future<void> playMusicSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
@@ -111,9 +110,18 @@ class FunMusicInteractions {
     final guildId = event.interaction.guild!.id;
     final title = event.getArg('title').value;
 
-    vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
-        as VoiceGuildChannel;
+    // Check if user is in a vc
+    try {
+      vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
+          as VoiceGuildChannel;
+    } catch (err) {
+      await event.respond(MessageBuilder.embed(errorEmbed(
+          'User has not joined a voice channel!\nPlease join a voice channel first.',
+          event.interaction.userAuthor)));
+      return;
+    }
 
+    // Create node and search for song
     final node = cluster.getOrCreatePlayerNode(guildId);
     vc.connect(selfDeafen: true);
 
