@@ -86,32 +86,34 @@ class ModEventsInteractions {
       }
     });
 
-    // bot.onMessageUpdate.listen((event) async {
-    //   final channel = event.channel.getFromCache()! as TextGuildChannel;
-    //   final oldMessage = await event.channel.fetchMessage(event.messageId);
-    //   final updatedMessage = event.updatedMessage!;
-    //   final guildId = channel.guild.id.id;
-    //
-    //   if (updatedMessage.author.bot) return;
-    //
-    //   final response = await LogDatabase.fetch(guildId: guildId);
-    //
-    //   if (response.isNotEmpty) {
-    //     final channelId = response[0]['channel'];
-    //     final logChannel =
-    //         (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
-    //
-    //     await logChannel.sendMessage(MessageBuilder.embed(auditEmbed(
-    //       'Message edited in channel: ${channel.name}',
-    //       '''
-    //       **Old:**\n${oldMessage.content}
-    //       **New:**\n${updatedMessage.content}
-    //       ''',
-    //       oldMessage.author as User,
-    //       'msg_edit',
-    //     )));
-    //   }
-    // });
+    /*
+    bot.onMessageUpdate.listen((event) async {
+      final channel = event.channel.getFromCache()! as TextGuildChannel;
+      final oldMessage = await event.channel.fetchMessage(event.messageId);
+      final updatedMessage = event.updatedMessage!;
+      final guildId = channel.guild.id.id;
+    
+      if (updatedMessage.author.bot) return;
+    
+      final response = await LogDatabase.fetch(guildId: guildId);
+    
+      if (response.isNotEmpty) {
+        final channelId = response[0]['channel'];
+        final logChannel =
+            (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
+    
+        await logChannel.sendMessage(MessageBuilder.embed(auditEmbed(
+          'Message edited in channel: ${channel.name}',
+          '''
+          **Old:**\n${oldMessage.content}
+          **New:**\n${updatedMessage.content}
+          ''',
+          oldMessage.author as User,
+          'msg_edit',
+        )));
+      }
+    });
+    */
 
     bot.onGuildBanAdd.listen((event) {});
 

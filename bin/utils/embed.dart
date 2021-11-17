@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:nyxx/nyxx.dart';
 import 'dart:math';
 
@@ -6,6 +8,12 @@ import 'constants.dart';
 final _random = Random();
 final _success = Names.SUCCESS_LIST;
 final _error = Names.ERROR_LIST;
+
+void deleteMessageWithTimer({required Message message, int time = 10}) async {
+  Timer(Duration(seconds: time), () async {
+    await message.delete();
+  });
+}
 
 EmbedBuilder confirmEmbed(String desc, User? author) {
   return EmbedBuilder()

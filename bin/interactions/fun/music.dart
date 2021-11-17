@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:nyxx/nyxx.dart';
@@ -110,6 +111,19 @@ class FunMusicInteractions {
     final guildId = event.interaction.guild!.id;
     final title = event.getArg('title').value;
 
+    // Check if bot is already playing music
+    //!
+    if (cluster
+        .getOrCreatePlayerNode(guildId)
+        .createPlayer(guildId)
+        .queue
+        .isNotEmpty) {
+      await event.respond(MessageBuilder.embed(errorEmbed(
+          'Bot is currently occupied in this server!',
+          event.interaction.userAuthor)));
+      return;
+    }
+
     // Check if user is in a vc
     try {
       vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
@@ -184,8 +198,10 @@ class FunMusicInteractions {
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
     node.skip(event.interaction.guild!.getFromCache()!.id);
 
-    await event.respond(MessageBuilder.embed(
-        musicEmbed('Skip', 'Skipped music.', event.interaction.userAuthor)));
+    deleteMessageWithTimer(
+      message: await event.sendFollowup(MessageBuilder.embed(
+          musicEmbed('Skip', 'Skipped music.', event.interaction.userAuthor))),
+    );
   }
 
   Future<void> repeatMusicSlashCommand(
@@ -197,8 +213,10 @@ class FunMusicInteractions {
 
     player.queue.add(player.nowPlaying!);
 
-    await event.respond(MessageBuilder.embed(
-        musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
+    deleteMessageWithTimer(
+      message: await event.sendFollowup(MessageBuilder.embed(musicEmbed(
+          'Resume', 'Resumed music.', event.interaction.userAuthor))),
+    );
   }
 
   Future<void> resumeMusicSlashCommand(
@@ -208,8 +226,10 @@ class FunMusicInteractions {
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
     node.resume(event.interaction.guild!.getFromCache()!.id);
 
-    await event.respond(MessageBuilder.embed(
-        musicEmbed('Resume', 'Resumed music.', event.interaction.userAuthor)));
+    deleteMessageWithTimer(
+      message: await event.sendFollowup(MessageBuilder.embed(musicEmbed(
+          'Resume', 'Resumed music.', event.interaction.userAuthor))),
+    );
   }
 
   Future<void> pauseMusicSlashCommand(
@@ -257,7 +277,6 @@ class FunMusicInteractions {
     final title = event.getArg('title').value;
     final guildId = event.interaction.guild!.id;
     final node = cluster.getOrCreatePlayerNode(guildId);
-    final player = node.players[Snowflake(guildId)];
 
     final track = (await node.autoSearch(title)).tracks.first;
     node.play(guildId, track).queue();
