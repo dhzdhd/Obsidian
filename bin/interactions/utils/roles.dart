@@ -6,10 +6,9 @@ import '../../utils/constraints.dart';
 import '../../utils/embed.dart';
 
 class UtilsRolesInteractions {
-  late Message? message;
-  late Role? role;
+  Map<int, Role?> roleMap = {};
+  Map<int, List> embedRolesMap = {};
   late EmbedBuilder embed;
-  List roles = [];
 
   UtilsRolesInteractions() {
     botInteractions
@@ -46,7 +45,7 @@ class UtilsRolesInteractions {
 
   Future<void> addToRoleSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    role = event.interaction.resolved?.roles.first;
+    final role = event.interaction.resolved?.roles.first;
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.content(
@@ -64,7 +63,7 @@ class UtilsRolesInteractions {
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
 
-    message = await event.sendFollowup(MessageBuilder.embed(embed));
+    final message = await event.sendFollowup(MessageBuilder.embed(embed));
 
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
@@ -77,26 +76,29 @@ class UtilsRolesInteractions {
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);
+    roleMap[message.id.id] = role;
+    embedRolesMap[message.id.id] = [];
   }
 
   Future<void> addRoleButtonHandler(ButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
+    final role = roleMap[event.interaction.message!.id.id];
+    final messageId = event.interaction.message!.id.id;
 
-    try {
-      await event.interaction.memberAuthor?.addRole(role as SnowflakeEntity);
-    } catch (err) {
+    if (event.interaction.memberAuthor!.roles.contains(role)) {
       await event.interaction.userAuthor?.sendMessage(
         MessageBuilder.content('You already have the role - ${role?.name}!'),
       );
       return;
     }
 
-    var oldField = embed.fields.first;
-    print(oldField);
+    await event.interaction.memberAuthor?.addRole(role as SnowflakeEntity);
 
-    roles.add(event.interaction.userAuthor?.mention);
+    var oldField = embed.fields.first;
+
+    embedRolesMap[messageId]!.add(event.interaction.userAuthor?.mention);
     var content = '';
-    roles.forEach((element) {
+    embedRolesMap[messageId]!.forEach((element) {
       content += '${element.toString()}';
     });
 
@@ -114,6 +116,8 @@ class UtilsRolesInteractions {
 
   Future<void> removeRoleButtonHandler(ButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
+    final role = roleMap[event.interaction.message!.id.id];
+    final messageId = event.interaction.message!.id.id;
 
     try {
       await event.interaction.memberAuthor?.removeRole(role as SnowflakeEntity);
@@ -127,9 +131,9 @@ class UtilsRolesInteractions {
     var oldField = embed.fields.first;
     print(oldField);
 
-    roles.remove(event.interaction.userAuthor?.mention);
+    embedRolesMap[messageId]!.remove(event.interaction.userAuthor?.mention);
     var content = '';
-    roles.forEach((element) {
+    embedRolesMap[messageId]!.forEach((element) {
       content += '${element.toString()}';
     });
 
@@ -158,13 +162,14 @@ class UtilsRolesInteractions {
       return;
     }
 
-    await message?.delete();
+    roleMap.remove(event.interaction.message!.id.id);
+    await event.interaction.message?.delete();
   }
 
   Future<void> deleteRoleSlashCommand(
       SlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    role = event.interaction.resolved?.roles.first;
+    final role = event.interaction.resolved?.roles.first;
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.content(
