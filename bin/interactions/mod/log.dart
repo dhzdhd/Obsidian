@@ -17,9 +17,13 @@ class ModLogInteractions {
           'create',
           '<MOD ONLY> Create a new log channel.',
           options: [
-            CommandOptionBuilder(CommandOptionType.channel, 'channel',
-                'Channel to assign to logging.',
-                required: true)
+            CommandOptionBuilder(
+              CommandOptionType.channel,
+              'channel',
+              'Channel to assign to logging.',
+              required: true,
+              channelTypes: [ChannelType.text],
+            )
           ],
         )..registerHandler(createLogSlashCommand),
         CommandOptionBuilder(
