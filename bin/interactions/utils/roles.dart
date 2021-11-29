@@ -38,9 +38,9 @@ class UtilsRolesInteractions {
           )..registerHandler(deleteRoleSlashCommand)
         ],
       ))
-      ..registerButtonHandler('roleAdd', addRoleButtonHandler)
-      ..registerButtonHandler('roleRemove', removeRoleButtonHandler)
-      ..registerButtonHandler('roleCancel', cancelButtonHandler);
+      ..registerButtonHandler('role-add', addRoleButtonHandler)
+      ..registerButtonHandler('role-remove', removeRoleButtonHandler)
+      ..registerButtonHandler('role-cancel', cancelButtonHandler);
   }
 
   Future<void> addToRoleSlashCommand(SlashCommandInteractionEvent event) async {
@@ -68,11 +68,11 @@ class UtilsRolesInteractions {
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(
-          ButtonBuilder('Add role', 'roleAdd', ComponentStyle.primary))
+          ButtonBuilder('Add role', 'role-add', ComponentStyle.primary))
       ..addComponent(
-          ButtonBuilder('Remove role', 'roleRemove', ComponentStyle.secondary))
+          ButtonBuilder('Remove role', 'role-remove', ComponentStyle.secondary))
       ..addComponent(
-          ButtonBuilder('Delete', 'roleCancel', ComponentStyle.danger));
+          ButtonBuilder('Delete', 'role-cancel', ComponentStyle.danger));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);

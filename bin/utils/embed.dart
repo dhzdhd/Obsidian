@@ -9,7 +9,8 @@ final _random = Random();
 final _success = Names.SUCCESS_LIST;
 final _error = Names.ERROR_LIST;
 
-void deleteMessageWithTimer({required Message message, int time = 10}) async {
+Future<void> deleteMessageWithTimer(
+    {required Message message, int time = 10}) async {
   Timer(Duration(seconds: time), () async {
     await message.delete();
   });
