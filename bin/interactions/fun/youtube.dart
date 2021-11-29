@@ -15,6 +15,7 @@ class FunYoutubeInteractions {
     'maxResults': 5,
     'videoEmbeddable': 'true',
     'type': 'video',
+    'safeSearch': 'strict'
   };
 
   FunYoutubeInteractions() {
