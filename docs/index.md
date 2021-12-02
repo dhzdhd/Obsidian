@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Obsidian
 
 You can use the [editor on GitHub](https://github.com/dhzdhd/Obsidian/edit/master/docs/index.md) to maintain and preview the content for your website in Markdown files.
 
