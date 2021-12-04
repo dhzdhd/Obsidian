@@ -4,6 +4,7 @@ import 'package:nyxx_interactions/interactions.dart';
 
 import '../../obsidian_dart.dart' show botInteractions;
 import '../../utils/constraints.dart';
+import '../../utils/embed.dart';
 
 class UtilsCommonInteractions {
   UtilsCommonInteractions() {
@@ -30,8 +31,9 @@ Future<void> inviteBotSlashCommand(SlashCommandInteractionEvent event) async {
       .firstWhere((element) => element.channelType == ChannelType.text);
 
   if (!(await checkForMod(event))) {
-    await event.respond(MessageBuilder.content(
-        'You do not have the permissions to use this command!'));
+    await event.respond(MessageBuilder.embed(
+      errorEmbed('Permission Denied!', event.interaction.userAuthor),
+    ));
     return;
   }
 

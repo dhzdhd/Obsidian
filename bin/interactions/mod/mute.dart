@@ -4,6 +4,8 @@ import '../../obsidian_dart.dart';
 import 'package:nyxx_interactions/interactions.dart';
 
 import '../../utils/constants.dart';
+import '../../utils/constraints.dart';
+import '../../utils/embed.dart';
 
 class ModMuteInteractions {
   ModMuteInteractions() {
@@ -35,6 +37,12 @@ class ModMuteInteractions {
 
   Future<void> muteSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
+
+    if (!(await checkForMod(event))) {
+      await event.respond(MessageBuilder.embed(
+          errorEmbed('Permission Denied!', event.interaction.userAuthor)));
+      return;
+    }
 
     final user = event.interaction.resolved?.users.first;
     final time = event.getArg('time').value;
