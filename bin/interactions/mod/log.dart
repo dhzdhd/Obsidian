@@ -50,8 +50,9 @@ class ModLogInteractions {
     }
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.content(
-          'You do not have the permissions to use this command!'));
+      await event.respond(MessageBuilder.embed(
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
+      ));
       return;
     }
 
@@ -79,8 +80,9 @@ class ModLogInteractions {
     await event.acknowledge();
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.content(
-          'You do not have the permissions to use this command!'));
+      await event.respond(MessageBuilder.embed(
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
+      ));
       return;
     }
 

@@ -49,8 +49,7 @@ class ModEssentialInteractions {
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.embed(
-        errorEmbed('You do not have the permissions to use this command!',
-            event.interaction.userAuthor),
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
       ));
       return;
     }
@@ -88,8 +87,7 @@ class ModEssentialInteractions {
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.embed(
-        errorEmbed('You do not have the permissions to use this command!',
-            event.interaction.userAuthor),
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
       ));
       return;
     }
@@ -132,8 +130,7 @@ class ModEssentialInteractions {
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.embed(
-        errorEmbed('You do not have the permissions to use this command!',
-            event.interaction.userAuthor),
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
       ));
       return;
     }
@@ -141,13 +138,10 @@ class ModEssentialInteractions {
     final channel =
         event.interaction.resolved?.channels.first as TextGuildChannel? ??
             event.interaction.channel.getFromCache()! as TextGuildChannel;
-    final amount = event
-        .getArg('amount')
-        .value;
+    final amount = event.getArg('amount').value;
 
     try {
-      await channel.edit(ChannelBuilder()
-        ..rateLimitPerUser = amount);
+      await channel.edit(ChannelBuilder()..rateLimitPerUser = amount);
 
       await event.respond(MessageBuilder.embed(successEmbed(
           'Successfully set channel slowmode to **$amount** seconds.',

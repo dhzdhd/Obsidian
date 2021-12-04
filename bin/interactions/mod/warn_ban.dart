@@ -43,8 +43,8 @@ class ModWarnBanInteractions {
     final reason = event.getArg('reason').value;
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.content(
-          'You do not have the permissions to use this command!'));
+      await event.respond(MessageBuilder.embed(
+          errorEmbed('Permission Denied!', event.interaction.userAuthor)));
       return;
     }
 
@@ -78,8 +78,8 @@ class ModWarnBanInteractions {
     final reason = event.getArg('reason').value;
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.content(
-          'You do not have the permissions to use this command!'));
+      await event.respond(MessageBuilder.embed(
+          errorEmbed('Permission Denied!', event.interaction.userAuthor)));
       return;
     }
 
@@ -115,5 +115,14 @@ class ModWarnBanInteractions {
 
   Future<void> banButtonHandler(ButtonInteractionEvent event) async {
     await event.acknowledge();
+
+    if (!(await checkForMod(event))) {
+      await event.interaction.userAuthor
+          ?.sendMessage(MessageBuilder.embed(errorEmbed(
+        'You do not have the permissions to use this button!',
+        event.interaction.userAuthor,
+      )));
+      return;
+    }
   }
 }
