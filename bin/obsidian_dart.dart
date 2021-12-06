@@ -7,6 +7,7 @@ import 'interactions/fun/dict.dart';
 import 'interactions/fun/movie.dart';
 import 'interactions/fun/music.dart';
 import 'interactions/fun/wolfram.dart';
+import 'interactions/fun/xkcd.dart';
 import 'interactions/fun/youtube.dart';
 import 'interactions/mod/clone.dart';
 import 'interactions/mod/essential.dart';
@@ -59,6 +60,7 @@ void main() async {
   FunYoutubeInteractions();
   FunMovieInteractions();
   FunMusicInteractions();
+  FunXkcdInteractions();
 
   // Mod interactions
   ModCloneInteractions();
