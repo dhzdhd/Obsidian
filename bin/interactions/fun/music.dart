@@ -198,7 +198,7 @@ class FunMusicInteractions {
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
     node.skip(event.interaction.guild!.getFromCache()!.id);
 
-    deleteMessageWithTimer(
+    await deleteMessageWithTimer(
       message: await event.sendFollowup(MessageBuilder.embed(
           musicEmbed('Skip', 'Skipped music.', event.interaction.userAuthor))),
     );
@@ -213,7 +213,7 @@ class FunMusicInteractions {
 
     player.queue.add(player.nowPlaying!);
 
-    deleteMessageWithTimer(
+    await deleteMessageWithTimer(
       message: await event.sendFollowup(MessageBuilder.embed(musicEmbed(
           'Resume', 'Resumed music.', event.interaction.userAuthor))),
     );
@@ -226,7 +226,7 @@ class FunMusicInteractions {
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
     node.resume(event.interaction.guild!.getFromCache()!.id);
 
-    deleteMessageWithTimer(
+    await deleteMessageWithTimer(
       message: await event.sendFollowup(MessageBuilder.embed(musicEmbed(
           'Resume', 'Resumed music.', event.interaction.userAuthor))),
     );
