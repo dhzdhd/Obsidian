@@ -80,7 +80,7 @@ void main() async {
 
   botInteractions.syncOnReady();
 
-  bot.onReady.listen((ReadyEvent e) async {
+  bot.onReady.listen((ReadyEvent _) async {
     print('Ready!');
   });
 }

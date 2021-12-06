@@ -1,6 +1,6 @@
 import 'package:nyxx/nyxx.dart';
 
-import '../../obsidian_dart.dart' show bot, botInteractions;
+import '../../obsidian_dart.dart' show bot;
 import '../../utils/constants.dart';
 import '../../utils/database.dart' show LogDatabase;
 import '../../utils/embed.dart';
