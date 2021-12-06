@@ -46,7 +46,6 @@ class FunXkcdInteractions {
       ..imageUrl = imgUrl
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
-        ;
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
   }
