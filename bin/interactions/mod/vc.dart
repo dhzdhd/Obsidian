@@ -1,6 +1,9 @@
-import 'package:nyxx_interactions/interactions.dart';
-
 import '../../obsidian_dart.dart';
+import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx/nyxx.dart';
+
+import '../../utils/constraints.dart';
+import '../../utils/embed.dart';
 
 class ModVcInteractions {
   ModVcInteractions() {
@@ -36,13 +39,36 @@ class ModVcInteractions {
 
   Future<void> vcMuteSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
+
+    if (!(await checkForMod(event))) {
+      await event.respond(MessageBuilder.embed(
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
+      ));
+      return;
+    }
   }
 
   Future<void> vcMuteButtonHandler(ButtonInteractionEvent event) async {
     await event.acknowledge();
+
+    if (!(await checkForMod(event))) {
+      await event.interaction.userAuthor
+          ?.sendMessage(MessageBuilder.embed(errorEmbed(
+        'You do not have the permissions to use this button!',
+        event.interaction.userAuthor,
+      )));
+      return;
+    }
   }
 
   Future<void> vcUnmuteSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
+
+    if (!(await checkForMod(event))) {
+      await event.respond(MessageBuilder.embed(
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
+      ));
+      return;
+    }
   }
 }

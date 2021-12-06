@@ -48,8 +48,9 @@ class UtilsRolesInteractions {
     final role = event.interaction.resolved?.roles.first;
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.content(
-          'You do not have the permissions to use this command!'));
+      await event.respond(MessageBuilder.embed(
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
+      ));
       return;
     }
 
@@ -172,8 +173,9 @@ class UtilsRolesInteractions {
     final role = event.interaction.resolved?.roles.first;
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.content(
-          'You do not have the permissions to use this command!'));
+      await event.respond(MessageBuilder.embed(
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
+      ));
       return;
     }
 

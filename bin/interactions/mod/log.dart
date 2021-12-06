@@ -53,8 +53,15 @@ class ModLogInteractions {
       return;
     }
 
-    var response =
-        await LogDatabase.add(event.interaction.guild!.id.id, channel!.id.id);
+    if (!(await checkForMod(event))) {
+      await event.respond(MessageBuilder.embed(
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
+      ));
+      return;
+    }
+
+    var response = await LogDatabase.add(
+        event.interaction.guild?.id.id as int, channel?.id.id as int);
 
     if (response) {
       await deleteMessageWithTimer(
@@ -79,13 +86,9 @@ class ModLogInteractions {
     await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {
-      await deleteMessageWithTimer(
-        message: await event.sendFollowup(
-          MessageBuilder.embed(errorEmbed(
-              'You do not have the permissions to use this command!',
-              event.interaction.userAuthor)),
-        ),
-      );
+      await event.respond(MessageBuilder.embed(
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
+      ));
       return;
     }
 

@@ -32,8 +32,7 @@ class ModCloneInteractions {
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.embed(
-        errorEmbed('You do not have the permissions to use this command!',
-            event.interaction.userAuthor),
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
       ));
       return;
     }
@@ -72,10 +71,11 @@ class ModCloneInteractions {
     await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.embed(
-        errorEmbed('You do not have the permissions to use this command!',
-            event.interaction.userAuthor),
-      ));
+      await event.interaction.userAuthor
+          ?.sendMessage(MessageBuilder.embed(errorEmbed(
+        'You do not have the permissions to use this button!',
+        event.interaction.userAuthor,
+      )));
       return;
     }
 
@@ -105,10 +105,11 @@ class ModCloneInteractions {
     await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.embed(
-        errorEmbed('You do not have the permissions to use this command!',
-            event.interaction.userAuthor),
-      ));
+      await event.interaction.userAuthor
+          ?.sendMessage(MessageBuilder.embed(errorEmbed(
+        'You do not have the permissions to use this button!',
+        event.interaction.userAuthor,
+      )));
       return;
     }
 
