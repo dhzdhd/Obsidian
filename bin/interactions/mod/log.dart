@@ -35,12 +35,11 @@ class ModLogInteractions {
           )..registerHandler(deleteLogSlashCommand)
         ],
       ))
-      ..registerButtonHandler('delete-log', deleteLogButtonHandler)
-      ..registerButtonHandler('cancel-log', cancelLogButtonHandler);
+      ..registerButtonHandler('delete-log', deleteLogButtonHandler);
   }
 
   Future<void> createLogSlashCommand(SlashCommandInteractionEvent event) async {
-    await event.acknowledge();
+    await event.acknowledge(hidden: true);
     var channel = event.interaction.resolved?.channels.first;
 
     if (!(await checkForMod(event))) {
@@ -77,7 +76,7 @@ class ModLogInteractions {
   }
 
   Future<void> deleteLogSlashCommand(SlashCommandInteractionEvent event) async {
-    await event.acknowledge();
+    await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {
       await deleteMessageWithTimer(
@@ -104,26 +103,26 @@ class ModLogInteractions {
 
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
-      ..addComponent(ButtonBuilder('Yes', 'delete-log', ComponentStyle.danger))
-      ..addComponent(ButtonBuilder('No', 'cancel-log', ComponentStyle.primary));
+      ..addComponent(ButtonBuilder('Yes', 'delete-log', ComponentStyle.danger));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);
   }
 
   Future<void> deleteLogButtonHandler(ButtonInteractionEvent event) async {
-    await event.acknowledge();
+    await event.acknowledge(hidden: true);
+    await event.interaction.message!.delete();
 
     final response = await LogDatabase.delete(event.interaction.guild!.id.id);
 
     if (response) {
-      await deleteMessageWithTimer(
-          message: await event.sendFollowup(
+      await event.respond(
         MessageBuilder.embed(successEmbed(
           'Successfully deleted the log channel data from database!',
           event.interaction.userAuthor,
         )),
-      ));
+        hidden: true,
+      );
     } else {
       await deleteMessageWithTimer(
           message: await event.sendFollowup(
@@ -133,11 +132,9 @@ class ModLogInteractions {
         )),
       ));
     }
-  }
 
-  Future<void> cancelLogButtonHandler(ButtonInteractionEvent event) async {
-    await event.acknowledge();
-
-    await event.interaction.message?.delete();
+    final componentMessageBuilder = ComponentMessageBuilder();
+    componentMessageBuilder.addComponentRow(ComponentRowBuilder());
+    await event.sendFollowup(componentMessageBuilder);
   }
 }

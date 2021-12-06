@@ -1,6 +1,6 @@
 import 'package:nyxx/nyxx.dart';
 
-import '../../obsidian_dart.dart' show bot;
+import '../../obsidian_dart.dart' show bot, botInteractions;
 import '../../utils/constants.dart';
 import '../../utils/database.dart' show LogDatabase;
 import '../../utils/embed.dart';
@@ -8,7 +8,11 @@ import '../../utils/embed.dart';
 class ModEventsInteractions {
   ModEventsInteractions() {
     initEvents();
+
+    bot.onGuildMemberAdd.listen(onGuildMemberAdd);
   }
+
+  Future<void> onGuildMemberAdd(GuildMemberAddEvent event) async {}
 
   void initEvents() {
     bot.onGuildMemberAdd.listen((event) async {
@@ -86,6 +90,7 @@ class ModEventsInteractions {
       }
     });
 
+    /// ! Commented for now. To be implemented after the API is ready.
     /*
     bot.onMessageUpdate.listen((event) async {
       final channel = event.channel.getFromCache()! as TextGuildChannel;
