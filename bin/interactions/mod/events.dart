@@ -7,152 +7,148 @@ import '../../utils/embed.dart';
 
 class ModEventsInteractions {
   ModEventsInteractions() {
-    initEvents();
-
+    bot.onDmReceived.listen(onDmReceived);
+    bot.onMessageDelete.listen(onMessageDelete);
+    bot.onMessageUpdate.listen(onMessageUpdate);
     bot.onGuildMemberAdd.listen(onGuildMemberAdd);
+    bot.onGuildMemberRemove.listen(onGuildMemberRemove);
   }
 
-  Future<void> onGuildMemberAdd(GuildMemberAddEvent event) async {}
+  Future<void> onDmReceived(MessageReceivedEvent event) async {
+    final owner = await bot.fetchUser(Snowflake(Tokens.BOT_OWNER));
+    final user = event.message.author as User;
 
-  void initEvents() {
-    bot.onGuildMemberAdd.listen((event) async {
-      final guild = event.guild.getFromCache()!;
-      final member = event.member;
+    if (user == bot.self) return;
 
-      final response = await LogDatabase.fetch(guildId: guild.id.id);
+    final message = event.message;
+    final messageCondition = message.content.isNotEmpty
+        ? message.content.contains(RegExp(r'\`\`\`(.*?)\`\`\`'))
+            ? message.content
+            : '```${message.content}```'
+        : 'No content';
 
-      if (response.isNotEmpty) {
-        final channelId = response[0]['channel'];
-        final channel = bot.fetchChannel(channelId) as TextGuildChannel;
-
-        await channel.sendMessage(MessageBuilder.embed(auditEmbed(
-          'Member joined!',
-          '${member.nickname} has joined the server!',
-          bot.self,
-          'member',
-        )));
-      }
-    });
-
-    bot.onGuildMemberRemove.listen((event) async {
-      final guild = event.guild.getFromCache()!;
-      final user = event.user;
-
-      final response = await LogDatabase.fetch(guildId: guild.id.id);
-
-      if (response.isNotEmpty) {
-        final channelId = response[0]['channel'];
-        final channel = bot.fetchChannel(channelId) as TextGuildChannel;
-
-        await channel.sendMessage(MessageBuilder.embed(auditEmbed(
-          'Member left!',
-          '${user.username} has left the server!',
-          bot.self,
-          'member',
-        )));
-      }
-    });
-
-    bot.onMessageDelete.listen((event) async {
-      final channel = event.channel.getFromCache()! as TextGuildChannel;
-      final message = event.message!;
-      final guildId = channel.guild.id.id;
-
-      if (message.author.bot) return;
-
-      final response = await LogDatabase.fetch(guildId: guildId);
-
-      if (response.isNotEmpty) {
-        final channelId = response[0]['channel'];
-        final logChannel =
-            (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
-
-        final messageCondition = message.content.isNotEmpty
-            ? message.content.contains(RegExp(r'\`\`\`(.*?)\`\`\`'))
-                ? message.content
-                : '```${message.content}```'
-            : 'No content';
-        final delEmbed = auditEmbed(
-          'Message deleted in channel: ${channel.name}',
-          '''
-          Author: ${(message.author as User).mention}
+    final dmEmbed = EmbedBuilder()
+      ..title = 'DM recieved!'
+      ..description = '''
+          Author: ${user.mention}
           Message: $messageCondition
-          ''',
-          message.author as User,
-          'msg_delete',
-        );
-
-        if (message.attachments.isNotEmpty) {
-          delEmbed.imageUrl = message.attachments.first.url;
-        }
-
-        await logChannel.sendMessage(MessageBuilder.embed(delEmbed));
-      }
-    });
-
-    /// ! Commented for now. To be implemented after the API is ready.
-    /*
-    bot.onMessageUpdate.listen((event) async {
-      final channel = event.channel.getFromCache()! as TextGuildChannel;
-      final oldMessage = await event.channel.fetchMessage(event.messageId);
-      final updatedMessage = event.updatedMessage!;
-      final guildId = channel.guild.id.id;
-    
-      if (updatedMessage.author.bot) return;
-    
-      final response = await LogDatabase.fetch(guildId: guildId);
-    
-      if (response.isNotEmpty) {
-        final channelId = response[0]['channel'];
-        final logChannel =
-            (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
-    
-        await logChannel.sendMessage(MessageBuilder.embed(auditEmbed(
-          'Message edited in channel: ${channel.name}',
           '''
-          **Old:**\n${oldMessage.content}
-          **New:**\n${updatedMessage.content}
-          ''',
-          oldMessage.author as User,
-          'msg_edit',
-        )));
-      }
-    });
-    */
+      ..color = DiscordColor.goldenrod
+      ..timestamp = DateTime.now()
+      ..addFooter((footer) {
+        footer.text = 'Message sent by ${user.username}';
+        footer.iconUrl = user.avatarURL();
+      });
 
-    bot.onGuildBanAdd.listen((event) {});
+    if (message.attachments.isNotEmpty) {
+      dmEmbed.imageUrl = message.attachments.first.url;
+    }
 
-    bot.onDmReceived.listen((event) async {
-      final owner = await bot.fetchUser(Snowflake(Tokens.BOT_OWNER));
-      final user = event.message.author as User;
+    await owner.sendMessage(MessageBuilder.embed(dmEmbed));
+  }
 
-      if (user == bot.self) return;
+  Future<void> onMessageDelete(MessageDeleteEvent event) async {
+    final channel = event.channel.getFromCache()! as TextGuildChannel;
+    final message = event.message!;
+    final guildId = channel.guild.id.id;
 
-      final message = event.message;
+    if (message.author.bot) return;
+
+    final response = await LogDatabase.fetch(guildId: guildId);
+
+    if (response.isNotEmpty) {
+      final channelId = response[0]['channel'];
+      final logChannel =
+          (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
+
       final messageCondition = message.content.isNotEmpty
           ? message.content.contains(RegExp(r'\`\`\`(.*?)\`\`\`'))
               ? message.content
               : '```${message.content}```'
           : 'No content';
-
-      final dmEmbed = EmbedBuilder()
-        ..title = 'DM recieved!'
-        ..description = '''
-          Author: ${user.mention}
+      final delEmbed = auditEmbed(
+        'Message deleted in channel: ${channel.name}',
+        '''
+          Author: ${(message.author as User).mention}
           Message: $messageCondition
-          '''
-        ..color = DiscordColor.goldenrod
-        ..timestamp = DateTime.now()
-        ..addFooter((footer) {
-          footer.text = 'Message sent by ${user.username}';
-          footer.iconUrl = user.avatarURL();
-        });
+          ''',
+        message.author as User,
+        'msg_delete',
+      );
 
       if (message.attachments.isNotEmpty) {
-        dmEmbed.imageUrl = message.attachments.first.url;
+        delEmbed.imageUrl = message.attachments.first.url;
       }
 
-      await owner.sendMessage(MessageBuilder.embed(dmEmbed));
-    });
+      await logChannel.sendMessage(MessageBuilder.embed(delEmbed));
+    }
+  }
+
+  Future<void> onMessageUpdate(MessageUpdateEvent event) async {
+    /// ! Commented out for now. To be implemented after the API is ready.
+    /*
+    final channel = event.channel.getFromCache()! as TextGuildChannel;
+    final oldMessage = await event.channel.fetchMessage(event.messageId);
+    final updatedMessage = event.updatedMessage!;
+    final guildId = channel.guild.id.id;
+  
+    if (updatedMessage.author.bot) return;
+  
+    final response = await LogDatabase.fetch(guildId: guildId);
+  
+    if (response.isNotEmpty) {
+      final channelId = response[0]['channel'];
+      final logChannel =
+          (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
+  
+      await logChannel.sendMessage(MessageBuilder.embed(auditEmbed(
+        'Message edited in channel: ${channel.name}',
+        '''
+        **Old:**\n${oldMessage.content}
+        **New:**\n${updatedMessage.content}
+        ''',
+        oldMessage.author as User,
+        'msg_edit',
+      )));
+    }
+    */
+  }
+
+  Future<void> onGuildMemberAdd(GuildMemberAddEvent event) async {
+    final guild = event.guild.getFromCache()!;
+    final member = event.member;
+
+    final response = await LogDatabase.fetch(guildId: guild.id.id);
+
+    if (response.isNotEmpty) {
+      final channelId = response[0]['channel'];
+      final channel = bot.fetchChannel(channelId) as TextGuildChannel;
+
+      await channel.sendMessage(MessageBuilder.embed(auditEmbed(
+        'Member joined!',
+        '${member.nickname} has joined the server!',
+        bot.self,
+        'member',
+      )));
+    }
+  }
+
+  Future<void> onGuildMemberRemove(GuildMemberRemoveEvent event) async {
+    final guild = event.guild.getFromCache()!;
+    final user = event.user;
+
+    final response = await LogDatabase.fetch(guildId: guild.id.id);
+
+    if (response.isNotEmpty) {
+      final channelId = response[0]['channel'];
+      final channel = bot.fetchChannel(channelId) as TextGuildChannel;
+
+      await channel.sendMessage(MessageBuilder.embed(auditEmbed(
+        'Member left!',
+        '${user.username} has left the server!',
+        bot.self,
+        'member',
+      )));
+    }
   }
 }
