@@ -14,7 +14,6 @@ azure_vps/
 lavalink_server/logs/
 lavalink_server/Lavalink.jar
 .env-example
-.env
 base64_converter/
 .github/
 Pipfile

@@ -16,7 +16,6 @@ class Tokens {
   static String MOVIE_API_KEY = '';
 
   static void loadEnv() {
-    // Switch between dev and stable .env's
     load('.env');
 
     BOT_TOKEN = env['BOT_TOKEN'].toString();
