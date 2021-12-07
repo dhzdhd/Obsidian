@@ -62,10 +62,17 @@ Obsidian is a multipurpose discord bot made using the nyxx discord API wrapper i
   - Make a .env file as per step 2
   - Install `docker` and `docker-compose`
   - Run docker-compose to build and run.
+
     ```shell
     $ docker-compose -f docker-compose.yml up --build -d
     ```
 
 ## Contributing
 
-...
+**Note:** If you want to contribute you can open a new issue. The issue should be discussed and accepted before you start working on the issue. Do not open a pull request if you aren't assigned to the issue. 
+
+1. Create a new branch using `git checkout -b <name of new local branch> master`. Make sure the branch name is related to the feature or fix you are working for.
+
+2. Don't forget to write [good commits](https://cbea.ms/git-commit/). Please try to avoid making minor commits.
+
+3. Lint and format your code properly and push the changes using `git push -u origin <name of new remote branch>`.
