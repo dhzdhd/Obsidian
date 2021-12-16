@@ -42,7 +42,7 @@ packages:
       name: dio
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.0.1"
+    version: "4.0.4"
   dotenv:
     dependency: "direct main"
     description:
@@ -112,7 +112,7 @@ packages:
       name: nyxx
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   nyxx_extensions:
     dependency: "direct main"
     description:
@@ -126,7 +126,7 @@ packages:
       name: nyxx_interactions
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.3"
   nyxx_lavalink:
     dependency: "direct main"
     description:
@@ -154,14 +154,14 @@ packages:
       name: postgrest
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.8"
+    version: "0.1.9"
   realtime_client:
     dependency: transitive
     description:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.11"
+    version: "0.1.12+1"
   source_span:
     dependency: transitive
     description:
@@ -175,7 +175,7 @@ packages:
       name: storage_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.6+1"
+    version: "0.0.6+2"
   stream_channel:
     dependency: transitive
     description:
@@ -196,7 +196,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.8"
+    version: "0.2.10"
   term_glyph:
     dependency: transitive
     description:

@@ -103,7 +103,7 @@ ${user?.avatarURL(format: 'png', size: 128)}
         ..color = DiscordColor.flutterBlue
         ..timestamp = DateTime.now()
         ..addFooter((footer) {
-          footer.text = 'Message sent by ${author.username}';
+          footer.text = 'Requested by ${author.username}';
           footer.iconUrl = author.avatarURL();
         }),
     ));
