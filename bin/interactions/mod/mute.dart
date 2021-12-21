@@ -15,7 +15,7 @@ class ModMuteInteractions {
         '<MOD ONLY> Mutes user for a certain time period.',
         [
           CommandOptionBuilder(
-              CommandOptionType.user, 'user', 'A server member',
+              CommandOptionType.user, 'user', 'A server member.',
               required: true),
           CommandOptionBuilder(CommandOptionType.integer, 'time',
               'Time period of mute in minutes.',
@@ -23,32 +23,40 @@ class ModMuteInteractions {
           CommandOptionBuilder(
               CommandOptionType.string, 'reason', 'Reason for mute.')
         ],
-      ))
+      )..registerHandler(muteSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
         'unmute',
         '<MOD ONLY> Unmutes muted user.',
         [
           CommandOptionBuilder(
-              CommandOptionType.user, 'user', 'A server member',
-              required: true)
+              CommandOptionType.user, 'user', 'A server member.',
+              required: true),
+          CommandOptionBuilder(
+              CommandOptionType.string, 'reason', 'Reason for unmute.')
         ],
-      ));
+      )..registerHandler(unmuteSlashCommand));
   }
 
   Future<void> muteSlashCommand(SlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.embed(
-          errorEmbed('Permission Denied!', event.interaction.userAuthor)));
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(
+          errorEmbed('Permission Denied!', event.interaction.userAuthor),
+        )),
+      );
       return;
     }
 
     final user = event.interaction.resolved?.users.first;
     final time = event.getArg('time').value;
     final reason = event.getArg('reason').value ?? 'No reason provided';
-
-    var a = event.interaction.guild?.getFromCache()?.fetchRoles();
+    print('success $user $time $reason');
+    final a = await (event.interaction.guild?.getFromCache())
+        ?.fetchRoles()
+        .cast<Role>()
+        .toList();
     print(a);
 
     final muteEmbed = EmbedBuilder()
@@ -61,5 +69,21 @@ class ModMuteInteractions {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
+  }
+
+  Future<void> unmuteSlashCommand(SlashCommandInteractionEvent event) async {
+    await event.acknowledge();
+
+    if (!(await checkForMod(event))) {
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(
+          errorEmbed('Permission Denied!', event.interaction.userAuthor),
+        )),
+      );
+      return;
+    }
+
+    final user = event.interaction.resolved?.users.first;
+    final reason = event.getArg('reason').value ?? 'No reason provided';
   }
 }

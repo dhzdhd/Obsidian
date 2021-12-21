@@ -2,13 +2,12 @@
 
 ## Fun
 
-- [ ] basic.dart
+- [x] basic.dart
   - [x] avatar
   - [x] roll
   - [x] flip
   - [x] rip
   - [x] google
-  - [ ] xkcd
 - [x] dict.dart
   - [ ] oxford
   - [x] urban
@@ -27,6 +26,9 @@
 - [x] wolfram.dart
   - [x] short
   - [x] image
+- [x] xkcd.dart
+  - [x] latest
+  - [x] search
 - [x] youtube.dart
   - [x] youtube
 

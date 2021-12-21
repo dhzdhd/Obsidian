@@ -66,7 +66,7 @@ void main() async {
   ModCloneInteractions();
   ModEventsInteractions();
   ModEssentialInteractions();
-  // ModMuteInteractions();
+  ModMuteInteractions();
   ModWarnBanInteractions();
   ModVcInteractions();
   ModLogInteractions();
