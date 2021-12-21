@@ -10,6 +10,7 @@ import 'interactions/fun/wolfram.dart';
 import 'interactions/fun/xkcd.dart';
 import 'interactions/fun/youtube.dart';
 import 'interactions/mod/clone.dart';
+import 'interactions/mod/dm.dart';
 import 'interactions/mod/essential.dart';
 import 'interactions/mod/events.dart';
 import 'interactions/mod/log.dart';
@@ -60,32 +61,33 @@ void main() async {
     port: 2333,
   ));
 
-  // // Fun interactions
-  // FunBasicInteractions();
-  // FunDictInteractions();
-  // FunWolframInteractions();
-  // FunYoutubeInteractions();
-  // FunMovieInteractions();
-  // FunMusicInteractions();
-  // FunXkcdInteractions();
+  // Fun interactions
+  FunBasicInteractions();
+  FunDictInteractions();
+  FunWolframInteractions();
+  FunYoutubeInteractions();
+  FunMovieInteractions();
+  FunMusicInteractions();
+  FunXkcdInteractions();
 
-  // // Mod interactions
-  // ModCloneInteractions();
-  // ModEventsInteractions();
-  // ModEssentialInteractions();
-  // ModMuteInteractions();
-  // ModWarnBanInteractions();
-  // ModVcInteractions();
-  // ModLogInteractions();
+  // Mod interactions
+  ModCloneInteractions();
+  ModDmInteractions();
+  ModEventsInteractions();
+  ModEssentialInteractions();
+  ModMuteInteractions();
+  ModWarnBanInteractions();
+  ModVcInteractions();
+  ModLogInteractions();
 
-  // // Utils interactions
-  // UtilsCommonInteractions();
-  // UtilsBookmarkInteractions();
-  // // UtilsPollInteractions();
-  // UtilsEvalInteractions();
-  // UtilsMathInteractions();
-  // UtilsRolesInteractions();
-  // UtilsDbInteractions();
+  // Utils interactions
+  UtilsCommonInteractions();
+  UtilsBookmarkInteractions();
+  // UtilsPollInteractions();
+  UtilsEvalInteractions();
+  UtilsMathInteractions();
+  UtilsRolesInteractions();
+  UtilsDbInteractions();
 
   botInteractions.syncOnReady();
 

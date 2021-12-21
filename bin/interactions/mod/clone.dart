@@ -88,17 +88,17 @@ class ModCloneInteractions {
 
     await channel.delete();
 
-    await event.interaction.guild?.getFromCache()?.createChannel(
-          TextChannelBuilder()
-            ..type = ChannelType.text
-            ..name = channel.name
-            ..topic = channel.topic
-            ..position = channel.position
-            ..parentChannel =
-                SnowflakeEntity(channel.parentChannel!.getFromCache()!.id)
-            // ..overrides = overrides
-            ..nsfw = channel.isNsfw,
-        );
+    await event.interaction.guild
+        ?.getFromCache()
+        ?.createChannel(TextChannelBuilder()
+          ..type = ChannelType.text
+          ..name = channel.name
+          ..topic = channel.topic
+          ..position = channel.position
+          ..parentChannel =
+              SnowflakeEntity(channel.parentChannel!.getFromCache()!.id)
+          ..permissionOverrides = overrides
+          ..nsfw = channel.isNsfw);
   }
 
   Future<void> cloneButtonRejectHandler(IButtonInteractionEvent event) async {
