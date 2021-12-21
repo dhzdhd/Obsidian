@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/embed.dart';
@@ -41,7 +41,7 @@ class FunDictInteractions {
   }
 
   EmbedBuilder dictEmbed(
-      User author, String title, String type, String def, String ex) {
+      IUser author, String title, String type, String def, String ex) {
     return EmbedBuilder()
       ..title = '$type Dictionary: $title'
       ..description = '''
@@ -57,7 +57,7 @@ class FunDictInteractions {
   }
 
   Future<void> dictOxfordSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final word = event.getArg('word').value.toString().trim();
@@ -77,13 +77,14 @@ class FunDictInteractions {
     final Map raw = response.data[0]['meanings'][0]['definitions'][0];
     final def = raw['definition'];
     final ex =
-    raw.keys.contains('example') ? raw['example'] : 'No examples found.';
+        raw.keys.contains('example') ? raw['example'] : 'No examples found.';
 
     await event.respond(
         MessageBuilder.embed(dictEmbed(author, word, 'Oxford', def, ex)));
   }
 
-  Future<void> dictUrbanSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> dictUrbanSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final word = event.getArg('word').value.toString().trim();

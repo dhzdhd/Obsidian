@@ -1,7 +1,7 @@
 import 'package:nyxx/nyxx.dart';
 
 import '../../obsidian_dart.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../utils/constants.dart';
 import '../../utils/constraints.dart';
@@ -37,7 +37,7 @@ class ModMuteInteractions {
       )..registerHandler(unmuteSlashCommand));
   }
 
-  Future<void> muteSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> muteSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     if (!(await checkForMod(event))) {
@@ -55,7 +55,7 @@ class ModMuteInteractions {
     print('success $user $time $reason');
     final a = await (event.interaction.guild?.getFromCache())
         ?.fetchRoles()
-        .cast<Role>()
+        .cast<IRole>()
         .toList();
     print(a);
 
@@ -71,7 +71,7 @@ class ModMuteInteractions {
       });
   }
 
-  Future<void> unmuteSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> unmuteSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     if (!(await checkForMod(event))) {

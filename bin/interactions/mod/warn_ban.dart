@@ -1,5 +1,5 @@
 import '../../obsidian_dart.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 import 'package:nyxx/nyxx.dart';
 
 import '../../utils/constants.dart';
@@ -36,7 +36,7 @@ class ModWarnBanInteractions {
       ..registerButtonHandler('ban', banButtonHandler);
   }
 
-  Future<void> warnSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> warnSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final user = event.interaction.resolved?.users.first;
@@ -70,7 +70,7 @@ class ModWarnBanInteractions {
   }
 
   // TODO: Implement deleteMessageDays in ban()
-  Future<void> banSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> banSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final user = event.interaction.resolved?.users.first;
@@ -113,7 +113,7 @@ class ModWarnBanInteractions {
     }
   }
 
-  Future<void> banButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> banButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge();
 
     if (!(await checkForMod(event))) {

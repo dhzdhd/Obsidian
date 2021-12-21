@@ -1,5 +1,5 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/constants.dart';
@@ -38,7 +38,8 @@ class ModLogInteractions {
       ..registerButtonHandler('delete-log', deleteLogButtonHandler);
   }
 
-  Future<void> createLogSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> createLogSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
     var channel = event.interaction.resolved?.channels.first;
 
@@ -82,7 +83,8 @@ class ModLogInteractions {
     }
   }
 
-  Future<void> deleteLogSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> deleteLogSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {
@@ -112,7 +114,7 @@ class ModLogInteractions {
     await event.respond(componentMessageBuilder);
   }
 
-  Future<void> deleteLogButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> deleteLogButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
     await event.interaction.message!.delete();
 

@@ -1,12 +1,12 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/constraints.dart';
 import '../../utils/database.dart';
 import '../../utils/embed.dart';
 
-// TODO: confirm button for deleting data
+// TODO : confirm button for deleting data
 
 class UtilsDbInteractions {
   UtilsDbInteractions() {
@@ -53,7 +53,7 @@ class UtilsDbInteractions {
   }
 
   Future<void> viewUserDataSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     late var amount;
 
@@ -80,7 +80,7 @@ class UtilsDbInteractions {
   }
 
   Future<void> deleteUserDataSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     if (!(await checkForOwner(event))) {
@@ -102,7 +102,7 @@ class UtilsDbInteractions {
   }
 
   Future<void> viewLogDataSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     late var amount;
 
@@ -129,7 +129,7 @@ class UtilsDbInteractions {
   }
 
   Future<void> deleteLogDataSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     if (!(await checkForOwner(event))) {

@@ -1,4 +1,4 @@
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 
@@ -11,7 +11,7 @@ class FunTttInteractions {
     )..registerHandler(tttSlashCommand));
   }
 
-  Future<void> tttSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> tttSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:isolate';
 
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/constants.dart';
@@ -18,12 +18,12 @@ class UtilsEvalInteractions {
       ],
       defaultPermissions: true,
       permissions: [
-        ICommandPermissionBuilder.user(Tokens.BOT_OWNER.toSnowflake())
+        UserCommandPermissionBuilder(Tokens.BOT_OWNER.toSnowflake())
       ],
     )..registerHandler(evalSlashCommand));
   }
 
-  Future<void> evalSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> evalSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final function =

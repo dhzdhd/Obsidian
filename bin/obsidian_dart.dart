@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
-import 'package:nyxx_lavalink/lavalink.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
+import 'package:nyxx_lavalink/nyxx_lavalink.dart';
 import 'interactions/fun/basic.dart';
 import 'interactions/fun/dict.dart';
 import 'interactions/fun/movie.dart';
@@ -26,63 +26,70 @@ import 'utils/constants.dart' show Tokens;
 import 'utils/database.dart' show initDatabase;
 import 'interactions/utils/roles.dart';
 
-late Nyxx bot;
-late Interactions botInteractions;
+late INyxxWebsocket bot;
+late IInteractions botInteractions;
 late Dio dio;
-late Cluster cluster;
+late ICluster cluster;
 
 void main() async {
   Tokens.loadEnv();
   initDatabase();
   dio = Dio();
 
-  bot = Nyxx(Tokens.BOT_TOKEN, GatewayIntents.all,
-      options: ClientOptions(
-        initialPresence: PresenceBuilder.of(
-          status: UserStatus.online,
-          activity: ActivityBuilder("your DM's 👀", ActivityType.listening,
-              url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
-        ),
-      ));
+  bot = NyxxFactory.createNyxxWebsocket(
+    Tokens.BOT_TOKEN,
+    GatewayIntents.all,
+    options: ClientOptions(
+      initialPresence: PresenceBuilder.of(
+        status: UserStatus.online,
+        // activity: IActivity("your DM's 👀", ActivityType.listening,
+        //     url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
+      ),
+    ),
+  )
+    ..registerPlugin(Logging())
+    ..registerPlugin(CliIntegration())
+    ..registerPlugin(IgnoreExceptions());
+  await bot.connect();
 
-  botInteractions = Interactions(bot);
+  botInteractions = IInteractions.create(WebsocketInteractionBackend(bot));
 
-  cluster = Cluster(bot, Snowflake(Tokens.BOT_ID));
+  cluster = ICluster.createCluster(bot, Snowflake(Tokens.BOT_ID));
   await cluster.addNode(NodeOptions(
     host: '127.0.0.1',
     port: 2333,
   ));
 
-  // Fun interactions
-  FunBasicInteractions();
-  FunDictInteractions();
-  FunWolframInteractions();
-  FunYoutubeInteractions();
-  FunMovieInteractions();
-  FunMusicInteractions();
-  FunXkcdInteractions();
+  // // Fun interactions
+  // FunBasicInteractions();
+  // FunDictInteractions();
+  // FunWolframInteractions();
+  // FunYoutubeInteractions();
+  // FunMovieInteractions();
+  // FunMusicInteractions();
+  // FunXkcdInteractions();
 
-  // Mod interactions
-  ModCloneInteractions();
-  ModEventsInteractions();
-  ModEssentialInteractions();
-  ModMuteInteractions();
-  ModWarnBanInteractions();
-  ModVcInteractions();
-  ModLogInteractions();
+  // // Mod interactions
+  // ModCloneInteractions();
+  // ModEventsInteractions();
+  // ModEssentialInteractions();
+  // ModMuteInteractions();
+  // ModWarnBanInteractions();
+  // ModVcInteractions();
+  // ModLogInteractions();
 
-  // Utils interactions
-  UtilsCommonInteractions();
-  UtilsBookmarkInteractions();
-  // UtilsPollInteractions();
-  UtilsEvalInteractions();
-  UtilsMathInteractions();
-  UtilsRolesInteractions();
-  UtilsDbInteractions();
+  // // Utils interactions
+  // UtilsCommonInteractions();
+  // UtilsBookmarkInteractions();
+  // // UtilsPollInteractions();
+  // UtilsEvalInteractions();
+  // UtilsMathInteractions();
+  // UtilsRolesInteractions();
+  // UtilsDbInteractions();
 
   botInteractions.syncOnReady();
 
-  bot.onReady.listen((ReadyEvent _) async {
+  bot.eventsWs.onReady.listen((IReadyEvent _) async {
     print('Ready!');
   });
 }

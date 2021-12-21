@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart' show botInteractions, dio;
 import '../../utils/constants.dart';
@@ -59,7 +59,7 @@ class FunWolframInteractions {
   }
 
   EmbedBuilder wolframEmbed(
-      SlashCommandInteractionEvent event, String title, String desc) {
+      ISlashCommandInteractionEvent event, String title, String desc) {
     return EmbedBuilder()
       ..title = title
       ..description = desc
@@ -72,7 +72,7 @@ class FunWolframInteractions {
   }
 
   Future<void> wolframShortSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     final query = event.getArg('query').value;
     _shortParams = {'i': query};
@@ -84,7 +84,7 @@ class FunWolframInteractions {
   }
 
   Future<void> wolframImageSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     final query = event.getArg('query').value;
     final webQuery = query.trim().replaceAll(' ', '+');

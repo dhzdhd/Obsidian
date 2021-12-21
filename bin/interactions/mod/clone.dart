@@ -1,5 +1,5 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/constants.dart';
@@ -7,7 +7,7 @@ import '../../utils/constraints.dart';
 import '../../utils/embed.dart';
 
 class ModCloneInteractions {
-  var cloneDict = <int, TextGuildChannel>{};
+  var cloneDict = <int, ITextGuildChannel>{};
 
   ModCloneInteractions() {
     botInteractions
@@ -27,7 +27,7 @@ class ModCloneInteractions {
       ..registerButtonHandler('clone-reject', cloneButtonRejectHandler);
   }
 
-  Future<void> cloneSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> cloneSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     if (!(await checkForMod(event))) {
@@ -39,7 +39,7 @@ class ModCloneInteractions {
 
     // ! Add support for channel args
     final channel =
-        event.interaction.channel.getFromCache() as TextGuildChannel;
+        event.interaction.channel.getFromCache() as ITextGuildChannel;
     final author = event.interaction.userAuthor!;
 
     final message = await event.sendFollowup(MessageBuilder.embed(
@@ -67,7 +67,7 @@ class ModCloneInteractions {
     cloneDict[message.id.id] = channel;
   }
 
-  Future<void> cloneButtonAcceptHandler(ButtonInteractionEvent event) async {
+  Future<void> cloneButtonAcceptHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {
@@ -89,7 +89,7 @@ class ModCloneInteractions {
     await channel.delete();
 
     await event.interaction.guild?.getFromCache()?.createChannel(
-          ChannelBuilder()
+          TextChannelBuilder()
             ..type = ChannelType.text
             ..name = channel.name
             ..topic = channel.topic
@@ -101,7 +101,7 @@ class ModCloneInteractions {
         );
   }
 
-  Future<void> cloneButtonRejectHandler(ButtonInteractionEvent event) async {
+  Future<void> cloneButtonRejectHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {

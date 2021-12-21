@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/embed.dart';
@@ -36,7 +36,7 @@ class FunXkcdInteractions {
     );
   }
 
-  EmbedBuilder xkcdEmbed(SlashCommandInteractionEvent event, String title,
+  EmbedBuilder xkcdEmbed(ISlashCommandInteractionEvent event, String title,
       String desc, String imgUrl) {
     return EmbedBuilder()
       ..title = title
@@ -61,7 +61,7 @@ class FunXkcdInteractions {
   }
 
   Future<void> xkcdLatestSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final comicInfo = await xkcdLatestComicInfo();
@@ -83,7 +83,8 @@ class FunXkcdInteractions {
     await event.respond(MessageBuilder.embed(embed));
   }
 
-  Future<void> xkcdComicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> xkcdComicSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final comic = event.getArg('comic').value;

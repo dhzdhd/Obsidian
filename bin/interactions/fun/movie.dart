@@ -1,5 +1,5 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/constants.dart';
@@ -24,7 +24,7 @@ class FunMovieInteractions {
     )..registerHandler(movieSlashCommand));
   }
 
-  Future<void> movieSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> movieSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     final title = event.getArg('title').value;
 
@@ -41,8 +41,7 @@ class FunMovieInteractions {
 
     final movieEmbed = EmbedBuilder()
       ..title = 'Movie query: **$title**'
-      ..description =
-          '''
+      ..description = '''
       Title: ${data['Title']}
       Year of release: ${data['Year']}
       Runtime: ${data['Runtime']}

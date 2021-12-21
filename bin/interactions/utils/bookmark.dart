@@ -1,10 +1,10 @@
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 import 'package:nyxx/nyxx.dart';
 
 import '../../obsidian_dart.dart' show botInteractions;
 
 class UtilsBookmarkInteractions {
-  late Message? message;
+  late IMessage? message;
   late EmbedBuilder bookmarkEmbed;
 
   UtilsBookmarkInteractions() {
@@ -23,7 +23,7 @@ class UtilsBookmarkInteractions {
       ..registerButtonHandler('deleteBookmark', deleteOptionHandler);
   }
 
-  Future<void> addOptionHandler(ButtonInteractionEvent event) async {
+  Future<void> addOptionHandler(IButtonInteractionEvent event) async {
     await event.acknowledge();
     final author = event.interaction.userAuthor;
 
@@ -35,13 +35,13 @@ class UtilsBookmarkInteractions {
         );
   }
 
-  Future<void> deleteOptionHandler(ButtonInteractionEvent event) async {
+  Future<void> deleteOptionHandler(IButtonInteractionEvent event) async {
     await event.acknowledge();
 
     await event.deleteOriginalResponse();
   }
 
-  Future<void> bookmarkSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> bookmarkSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final id = int.tryParse(event.getArg('id').value);

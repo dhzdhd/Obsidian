@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 import '../../obsidian_dart.dart' show botInteractions;
 import '../../utils/constants.dart';
 
@@ -43,7 +43,7 @@ class FunBasicInteractions {
       )..registerHandler(googleSlashCommand));
   }
 
-  Future<void> avatarSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> avatarSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final avatar = event.interaction.resolved?.users.first
@@ -53,19 +53,19 @@ class FunBasicInteractions {
     await event.respond(MessageBuilder.content(avatar!));
   }
 
-  Future<void> rollSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> rollSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     await event.respond(
         MessageBuilder.content(':game_die: ${_random.nextInt(6) + 1}'));
   }
 
-  Future<void> flipSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> flipSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     await event.respond(MessageBuilder.content(
         ':coin: ${['Heads', 'Tails'][_random.nextInt(2)]}'));
   }
 
-  Future<void> ripUserSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> ripUserSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final user = event.interaction.resolved?.users.first;
@@ -87,7 +87,7 @@ ${user?.avatarURL(format: 'png', size: 128)}
     await channel?.sendMessage(MessageBuilder.content(secondMessage));
   }
 
-  Future<void> googleSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> googleSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final query = event.getArg('query').value;

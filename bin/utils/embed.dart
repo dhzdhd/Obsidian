@@ -10,13 +10,13 @@ final _success = Names.SUCCESS_LIST;
 final _error = Names.ERROR_LIST;
 
 Future<void> deleteMessageWithTimer(
-    {required Message message, int time = 10}) async {
+    {required IMessage message, int time = 10}) async {
   Timer(Duration(seconds: time), () async {
     await message.delete();
   });
 }
 
-EmbedBuilder confirmEmbed(String desc, User? author) {
+EmbedBuilder confirmEmbed(String desc, IUser? author) {
   return EmbedBuilder()
     ..title = '${Emojis.QUESTION} Confirmation'
     ..description = desc
@@ -28,7 +28,7 @@ EmbedBuilder confirmEmbed(String desc, User? author) {
     });
 }
 
-EmbedBuilder successEmbed(String desc, User? author) {
+EmbedBuilder successEmbed(String desc, IUser? author) {
   return EmbedBuilder()
     ..title = _success[_random.nextInt(_success.length)]
     ..description = desc
@@ -40,7 +40,7 @@ EmbedBuilder successEmbed(String desc, User? author) {
     });
 }
 
-EmbedBuilder errorEmbed(String desc, User? author) {
+EmbedBuilder errorEmbed(String desc, IUser? author) {
   return EmbedBuilder()
     ..title = _error[_random.nextInt(_error.length)]
     ..description = desc
@@ -52,7 +52,8 @@ EmbedBuilder errorEmbed(String desc, User? author) {
     });
 }
 
-EmbedBuilder auditEmbed(String title, String desc, User? author, String _type) {
+EmbedBuilder auditEmbed(
+    String title, String desc, IUser? author, String _type) {
   return EmbedBuilder()
     ..title = '${Emojis.STAFF} $title'
     ..description = desc
@@ -64,7 +65,7 @@ EmbedBuilder auditEmbed(String title, String desc, User? author, String _type) {
     });
 }
 
-EmbedBuilder musicEmbed(String title, String desc, User? author) {
+EmbedBuilder musicEmbed(String title, String desc, IUser? author) {
   return EmbedBuilder()
     ..title = '${Emojis.MUSIC} $title'
     ..description = desc

@@ -1,12 +1,12 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/constraints.dart';
 import '../../utils/embed.dart';
 
 class UtilsRolesInteractions {
-  Map<int, Role?> roleMap = {};
+  Map<int, IRole?> roleMap = {};
   Map<int, List> embedRolesMap = {};
   late EmbedBuilder embed;
 
@@ -43,7 +43,8 @@ class UtilsRolesInteractions {
       ..registerButtonHandler('role-cancel', cancelButtonHandler);
   }
 
-  Future<void> addToRoleSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> addToRoleSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     final role = event.interaction.resolved?.roles.first;
 
@@ -81,7 +82,7 @@ class UtilsRolesInteractions {
     embedRolesMap[message.id.id] = [];
   }
 
-  Future<void> addRoleButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> addRoleButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
     final role = roleMap[event.interaction.message!.id.id];
     final messageId = event.interaction.message!.id.id;
@@ -115,7 +116,7 @@ class UtilsRolesInteractions {
     );
   }
 
-  Future<void> removeRoleButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> removeRoleButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
     final role = roleMap[event.interaction.message!.id.id];
     final messageId = event.interaction.message!.id.id;
@@ -151,7 +152,7 @@ class UtilsRolesInteractions {
     );
   }
 
-  Future<void> cancelButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> cancelButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {
@@ -168,7 +169,7 @@ class UtilsRolesInteractions {
   }
 
   Future<void> deleteRoleSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     final role = event.interaction.resolved?.roles.first;
 

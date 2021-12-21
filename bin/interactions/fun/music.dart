@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
-import 'package:nyxx_lavalink/lavalink.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
+import 'package:nyxx_lavalink/nyxx_lavalink.dart';
 
 import '../../obsidian_dart.dart' show cluster, botInteractions, bot;
 import '../../utils/constants.dart';
@@ -80,15 +80,15 @@ class FunMusicInteractions {
   }
 
   void initEvents() {
-    bot.onVoiceStateUpdate.listen((event) async {
+    bot.eventsWs.onVoiceStateUpdate.listen((event) async {
       var buffer = [];
 
       final botSnowflake = Snowflake(Tokens.BOT_ID);
       final channel =
-          await event.state.channel?.getOrDownload() as VoiceGuildChannel;
+          await event.state.channel?.getOrDownload() as IVoiceGuildChannel;
 
       final guild = await event.state.guild?.getOrDownload();
-      final voiceStates = guild?.voiceStates.asMap.keys.toList();
+      final voiceStates = guild?.voiceStates.keys.toList();
 
       if (voiceStates == null) return;
       if (voiceStates.contains(botSnowflake)) {
@@ -101,13 +101,14 @@ class FunMusicInteractions {
       print(voiceStates);
     });
 
-    bot.onVoiceServerUpdate.listen((event) async {});
+    bot.eventsWs.onVoiceServerUpdate.listen((event) async {});
   }
 
-  Future<void> playMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> playMusicSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    late VoiceGuildChannel vc;
+    late final IVoiceGuildChannel vc;
     final guildId = event.interaction.guild!.id;
     final title = event.getArg('title').value;
 
@@ -127,7 +128,7 @@ class FunMusicInteractions {
     // Check if user is in a vc
     try {
       vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
-          as VoiceGuildChannel;
+          as IVoiceGuildChannel;
     } catch (err) {
       await event.respond(MessageBuilder.embed(errorEmbed(
           'User has not joined a voice channel!\nPlease join a voice channel first.',
@@ -192,7 +193,8 @@ class FunMusicInteractions {
     await event.respond(componentMessageBuilder);
   }
 
-  Future<void> skipMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> skipMusicSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -205,7 +207,7 @@ class FunMusicInteractions {
   }
 
   Future<void> repeatMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -220,7 +222,7 @@ class FunMusicInteractions {
   }
 
   Future<void> resumeMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -233,7 +235,7 @@ class FunMusicInteractions {
   }
 
   Future<void> pauseMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -243,7 +245,8 @@ class FunMusicInteractions {
         musicEmbed('Pause', 'Paused music.', event.interaction.userAuthor)));
   }
 
-  Future<void> stopMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> stopMusicSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -256,7 +259,7 @@ class FunMusicInteractions {
   }
 
   Future<void> queueMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final guildId = event.interaction.guild!.id;
@@ -271,7 +274,7 @@ class FunMusicInteractions {
         event.interaction.userAuthor)));
   }
 
-  Future<void> addMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> addMusicSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final title = event.getArg('title').value;
@@ -288,7 +291,7 @@ class FunMusicInteractions {
   }
 
   Future<void> shuffleMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final guildId = event.interaction.guild!.id;
@@ -301,17 +304,19 @@ class FunMusicInteractions {
       return;
     }
 
-    final shuffledQueue = <QueuedTrack>[];
+    final shuffledQueue = <IQueuedTrack>[];
     for (var _ = 0; _ < player.queue.length; _++) {
       var randomIndex = _random.nextInt(player.queue.length);
       shuffledQueue.add(player.queue[randomIndex]);
       player.queue.removeAt(randomIndex);
     }
 
-    player.queue = shuffledQueue;
+    player.queue
+      ..clear()
+      ..addAll(shuffledQueue);
   }
 
-  Future<void> musicOptionHandler(MultiselectInteractionEvent event) async {
+  Future<void> musicOptionHandler(IMultiselectInteractionEvent event) async {
     await event.acknowledge();
     final value = event.interaction.values.first;
     final guildId = event.interaction.guild!.id;

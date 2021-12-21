@@ -1,5 +1,5 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 import '../../obsidian_dart.dart' show botInteractions;
 import '../../utils/constraints.dart';
 import '../../utils/embed.dart';
@@ -42,7 +42,7 @@ class ModEssentialInteractions {
       )..registerHandler(slowmodeSlashCommand));
   }
 
-  Future<void> purgeSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> purgeSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
     final amount = event.getArg('amount').value;
     final channel = event.interaction.channel.getFromCache();
@@ -79,7 +79,7 @@ class ModEssentialInteractions {
     ));
   }
 
-  Future<void> censorSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> censorSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
     final amount = event.getArg('amount').value;
     final keyword = event.getArg('keyword').value;
@@ -99,9 +99,9 @@ class ModEssentialInteractions {
       return;
     }
 
-    List<Message> toDelete = [];
+    List<IMessage> toDelete = [];
     final messageList = await channel?.downloadMessages(limit: amount).toList()
-        as Iterable<Message>;
+        as Iterable<IMessage>;
     messageList.forEach((element) {
       if (element.content.contains(keyword)) {
         toDelete.add(element);
@@ -123,7 +123,7 @@ class ModEssentialInteractions {
     ));
   }
 
-  Future<void> slowmodeSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> slowmodeSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     final channelId = event.interaction.resolved?.channels.first.id;
     final guild = event.interaction.guild!.getFromCache();
@@ -136,12 +136,13 @@ class ModEssentialInteractions {
     }
 
     final channel =
-        event.interaction.resolved?.channels.first as TextGuildChannel? ??
-            event.interaction.channel.getFromCache()! as TextGuildChannel;
+        event.interaction.resolved?.channels.first as ITextGuildChannel? ??
+            event.interaction.channel.getFromCache()! as ITextGuildChannel;
     final amount = event.getArg('amount').value;
 
     try {
-      await channel.edit(ChannelBuilder()..rateLimitPerUser = amount);
+      // ! v3 error
+      // await channel.edit(ChannelBuilder()..rateLimitPerUser = amount);
 
       await event.respond(MessageBuilder.embed(successEmbed(
           'Successfully set channel slowmode to **$amount** seconds.',

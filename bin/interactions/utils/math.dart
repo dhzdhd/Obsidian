@@ -1,5 +1,5 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 import '../../obsidian_dart.dart';
@@ -82,8 +82,8 @@ class UtilsMathInteractions {
     return result.toString();
   }
 
-  EmbedBuilder createMathEmbed(String title, SlashCommandInteractionEvent event,
-      String expr, String result) {
+  EmbedBuilder createMathEmbed(String title,
+      ISlashCommandInteractionEvent event, String expr, String result) {
     if (expr == 'Invalid expression') {
       return errorEmbed(
           'Invalid expression entered!', event.interaction.userAuthor);
@@ -100,7 +100,7 @@ class UtilsMathInteractions {
       });
   }
 
-  Future<void> evalSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> evalSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     final expr = event.getArg('expression').value.toString();
 
@@ -110,7 +110,7 @@ class UtilsMathInteractions {
     await event.respond(MessageBuilder.embed(embed));
   }
 
-  Future<void> deriveSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> deriveSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     final expr = event.getArg('expression').value.toString();
     final variable = event.getArg('variable').value.toString();

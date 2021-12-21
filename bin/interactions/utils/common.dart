@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart' show botInteractions;
 import '../../utils/constraints.dart';
@@ -22,7 +22,7 @@ class UtilsCommonInteractions {
   }
 }
 
-Future<void> inviteBotSlashCommand(SlashCommandInteractionEvent event) async {
+Future<void> inviteBotSlashCommand(ISlashCommandInteractionEvent event) async {
   await event.acknowledge();
   final guild = event.interaction.guild?.getFromCache();
   final channel = event.interaction.guild
@@ -37,7 +37,7 @@ Future<void> inviteBotSlashCommand(SlashCommandInteractionEvent event) async {
     return;
   }
 
-  late Invite? invite;
+  late final IInvite? invite;
   try {
     invite = await guild?.fetchGuildInvites().first;
   } catch (err) {
@@ -49,10 +49,11 @@ Future<void> inviteBotSlashCommand(SlashCommandInteractionEvent event) async {
       .respond(MessageBuilder.content('Server invite URL: **$inviteUrl**'));
 }
 
-Future<void> latencySlashCommand(SlashCommandInteractionEvent event) async {
+Future<void> latencySlashCommand(ISlashCommandInteractionEvent event) async {
   await event.acknowledge();
 
-  final gatewayLatency = event.client.shardManager.gatewayLatency.inSeconds;
+  // ! v3 errors
+  // final gatewayLatency = event.client.shardManager.gatewayLatency.inSeconds;
 
   final apiStopwatch = Stopwatch()..start();
   await http.head(
@@ -64,8 +65,8 @@ Future<void> latencySlashCommand(SlashCommandInteractionEvent event) async {
     ..color = DiscordColor.purple
     ..title = 'Latency'
     ..timestamp = DateTime.now()
-    ..addField(
-        name: 'Gateway latency', content: '$gatewayLatency ms', inline: false)
+    // ..addField(
+    //     name: 'Gateway latency', content: '$gatewayLatency ms', inline: false)
     ..addField(name: 'REST latency', content: '$apiLatency ms', inline: false)
     ..addField(name: 'Message latency', content: 'Pending ...', inline: false)
     ..addFooter((footer) {

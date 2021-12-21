@@ -7,16 +7,16 @@ import '../../utils/embed.dart';
 
 class ModEventsInteractions {
   ModEventsInteractions() {
-    bot.onDmReceived.listen(onDmReceived);
-    bot.onMessageDelete.listen(onMessageDelete);
-    bot.onMessageUpdate.listen(onMessageUpdate);
-    bot.onGuildMemberAdd.listen(onGuildMemberAdd);
-    bot.onGuildMemberRemove.listen(onGuildMemberRemove);
+    bot.eventsWs.onMessageReceived.listen(onDmReceived);
+    bot.eventsWs.onMessageDelete.listen(onMessageDelete);
+    bot.eventsWs.onMessageUpdate.listen(onMessageUpdate);
+    bot.eventsWs.onGuildMemberAdd.listen(onGuildMemberAdd);
+    bot.eventsWs.onGuildMemberRemove.listen(onGuildMemberRemove);
   }
 
-  Future<void> onDmReceived(MessageReceivedEvent event) async {
+  Future<void> onDmReceived(IMessageReceivedEvent event) async {
     final owner = await bot.fetchUser(Snowflake(Tokens.BOT_OWNER));
-    final user = event.message.author as User;
+    final user = event.message.author as IUser;
 
     if (user == bot.self) return;
 
@@ -47,8 +47,8 @@ class ModEventsInteractions {
     await owner.sendMessage(MessageBuilder.embed(dmEmbed));
   }
 
-  Future<void> onMessageDelete(MessageDeleteEvent event) async {
-    final channel = event.channel.getFromCache()! as TextGuildChannel;
+  Future<void> onMessageDelete(IMessageDeleteEvent event) async {
+    final channel = event.channel.getFromCache()! as ITextGuildChannel;
     final message = event.message!;
     final guildId = channel.guild.id.id;
 
@@ -59,7 +59,7 @@ class ModEventsInteractions {
     if (response.isNotEmpty) {
       final channelId = response[0]['channel'];
       final logChannel =
-          (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
+          (await bot.fetchChannel(Snowflake(channelId))) as ITextGuildChannel;
 
       final messageCondition = message.content.isNotEmpty
           ? message.content.contains(RegExp(r'\`\`\`(.*?)\`\`\`'))
@@ -69,10 +69,10 @@ class ModEventsInteractions {
       final delEmbed = auditEmbed(
         'Message deleted in channel: ${channel.name}',
         '''
-          Author: ${(message.author as User).mention}
+          Author: ${(message.author as IUser).mention}
           Message: $messageCondition
           ''',
-        message.author as User,
+        message.author as IUser,
         'msg_delete',
       );
 
@@ -84,7 +84,7 @@ class ModEventsInteractions {
     }
   }
 
-  Future<void> onMessageUpdate(MessageUpdateEvent event) async {
+  Future<void> onMessageUpdate(IMessageUpdateEvent event) async {
     /// ! Commented out for now. To be implemented after the API is ready.
     /*
     final channel = event.channel.getFromCache()! as TextGuildChannel;
@@ -107,14 +107,14 @@ class ModEventsInteractions {
         **Old:**\n${oldMessage.content}
         **New:**\n${updatedMessage.content}
         ''',
-        oldMessage.author as User,
+        oldMessage.author as IUser,
         'msg_edit',
       )));
     }
     */
   }
 
-  Future<void> onGuildMemberAdd(GuildMemberAddEvent event) async {
+  Future<void> onGuildMemberAdd(IGuildMemberAddEvent event) async {
     final guild = event.guild.getFromCache()!;
     final member = event.member;
 
@@ -122,7 +122,7 @@ class ModEventsInteractions {
 
     if (response.isNotEmpty) {
       final channelId = response[0]['channel'];
-      final channel = bot.fetchChannel(channelId) as TextGuildChannel;
+      final channel = bot.fetchChannel(channelId) as ITextGuildChannel;
 
       await channel.sendMessage(MessageBuilder.embed(auditEmbed(
         'Member joined!',
@@ -133,7 +133,7 @@ class ModEventsInteractions {
     }
   }
 
-  Future<void> onGuildMemberRemove(GuildMemberRemoveEvent event) async {
+  Future<void> onGuildMemberRemove(IGuildMemberRemoveEvent event) async {
     final guild = event.guild.getFromCache()!;
     final user = event.user;
 
@@ -141,7 +141,7 @@ class ModEventsInteractions {
 
     if (response.isNotEmpty) {
       final channelId = response[0]['channel'];
-      final channel = bot.fetchChannel(channelId) as TextGuildChannel;
+      final channel = bot.fetchChannel(channelId) as ITextGuildChannel;
 
       await channel.sendMessage(MessageBuilder.embed(auditEmbed(
         'Member left!',

@@ -1,5 +1,5 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 import 'package:dio/dio.dart';
 
 import '../../utils/constants.dart';
@@ -8,7 +8,7 @@ import '../../utils/embed.dart';
 
 class FunYoutubeInteractions {
   static const YT_URL = 'https://www.googleapis.com/youtube/v3/search/';
-  Map<int, Message> messageMap = {};
+  Map<int, IMessage> messageMap = {};
   var params = {
     'key': Tokens.YT_KEY,
     'part': 'snippet',
@@ -32,7 +32,7 @@ class FunYoutubeInteractions {
       ..registerMultiselectHandler('youtube', ytOptionHandler);
   }
 
-  Future<void> ytSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> ytSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     var vidIdList = [];
@@ -102,7 +102,7 @@ class FunYoutubeInteractions {
     await event.respond(componentMessageBuilder);
   }
 
-  Future<void> ytOptionHandler(MultiselectInteractionEvent event) async {
+  Future<void> ytOptionHandler(IMultiselectInteractionEvent event) async {
     await event.acknowledge();
 
     await event.sendFollowup(MessageBuilder.content(
