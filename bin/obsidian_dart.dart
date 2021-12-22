@@ -43,8 +43,8 @@ void main() async {
     options: ClientOptions(
       initialPresence: PresenceBuilder.of(
         status: UserStatus.online,
-        // activity: IActivity("your DM's 👀", ActivityType.listening,
-        //     url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
+        activity: ActivityBuilder("your DM's 👀", ActivityType.listening,
+            url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
       ),
     ),
   )
