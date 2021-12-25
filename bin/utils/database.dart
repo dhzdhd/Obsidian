@@ -21,7 +21,7 @@ class UserDatabase {
     if (response.error == null) {
       return true;
     } else {
-      var flag = (await update(userId, guildId, type)) ? true : false;
+      final flag = (await update(userId, guildId, type)) ? true : false;
       return flag;
     }
   }

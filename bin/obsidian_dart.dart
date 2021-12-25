@@ -51,7 +51,7 @@ void main() async {
     ..registerPlugin(Logging())
     ..registerPlugin(CliIntegration())
     ..registerPlugin(IgnoreExceptions());
-  await bot.connect();
+  bot.connect();
 
   botInteractions = IInteractions.create(WebsocketInteractionBackend(bot));
 

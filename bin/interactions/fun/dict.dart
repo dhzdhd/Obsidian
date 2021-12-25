@@ -6,10 +6,8 @@ import '../../obsidian_dart.dart';
 import '../../utils/embed.dart';
 
 class FunDictInteractions {
-  final dictUrl = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
-  final urbanUrl = 'https://api.urbandictionary.com/v0/define?term=';
-
-  final _dio = dio;
+  static const DICT_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
+  static const URBAN_URL = 'https://api.urbandictionary.com/v0/define?term=';
 
   FunDictInteractions() {
     botInteractions.registerSlashCommand(SlashCommandBuilder(
@@ -21,9 +19,12 @@ class FunDictInteractions {
           'oxford',
           'The oxford dictionary.',
           options: [
-            CommandOptionBuilder(CommandOptionType.string, 'word',
-                'The word whose definition you want to get.',
-                required: true)
+            CommandOptionBuilder(
+              CommandOptionType.string,
+              'word',
+              'The word whose definition you want to get.',
+              required: true,
+            )
           ],
         )..registerHandler(dictOxfordSlashCommand),
         CommandOptionBuilder(
@@ -31,9 +32,12 @@ class FunDictInteractions {
           'urban',
           'The urban dictionary.',
           options: [
-            CommandOptionBuilder(CommandOptionType.string, 'word',
-                'The word whose definition you want to get.',
-                required: true)
+            CommandOptionBuilder(
+              CommandOptionType.string,
+              'word',
+              'The word whose definition you want to get.',
+              required: true,
+            )
           ],
         )..registerHandler(dictUrbanSlashCommand)
       ],
@@ -51,7 +55,7 @@ class FunDictInteractions {
       ..color = DiscordColor.dartBlue
       ..timestamp = DateTime.now()
       ..addFooter((footer) {
-        footer.text = 'Message sent by ${author.username}';
+        footer.text = 'Requested by ${author.username}';
         footer.iconUrl = author.avatarURL();
       });
   }
@@ -60,17 +64,19 @@ class FunDictInteractions {
       ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final word = event.getArg('word').value.toString().trim();
+    final String word = event.getArg('word').value.trim();
     final author = event.interaction.userAuthor!;
-    late Response<dynamic> response;
+    late final Response<dynamic> response;
 
     try {
-      response = await _dio.get('$dictUrl${word.replaceAll(' ', '+')}');
+      response = await dio.get('$DICT_URL${word.replaceAll(' ', '+')}');
     } on DioError catch (_) {
-      await event.respond(MessageBuilder.embed(errorEmbed(
-        'The API could not understand the query!\nPlease try again with a different word.',
-        author,
-      )));
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(errorEmbed(
+          'The API could not understand the query!\nPlease try again with a different word.',
+          author,
+        ))),
+      );
       return;
     }
 
@@ -80,7 +86,8 @@ class FunDictInteractions {
         raw.keys.contains('example') ? raw['example'] : 'No examples found.';
 
     await event.respond(
-        MessageBuilder.embed(dictEmbed(author, word, 'Oxford', def, ex)));
+      MessageBuilder.embed(dictEmbed(author, word, 'Oxford', def, ex)),
+    );
   }
 
   Future<void> dictUrbanSlashCommand(
@@ -89,24 +96,25 @@ class FunDictInteractions {
 
     final word = event.getArg('word').value.toString().trim();
     final author = event.interaction.userAuthor!;
-    late Response<dynamic> response;
-    late Map raw;
+    final response = await dio.get('$URBAN_URL${word.replaceAll(' ', '+')}');
 
+    late final String def, ex;
     try {
-      response = await _dio.get('$urbanUrl${word.replaceAll(' ', '+')}');
-      raw = response.data['list'][0];
+      final Map raw = response.data['list'][0];
+      def = raw['definition'].replaceAll('[', '').replaceAll(']', '');
+      ex = raw['example'].replaceAll('[', '').replaceAll(']', '');
     } on Error catch (_) {
-      await event.respond(MessageBuilder.embed(errorEmbed(
-        'The API could not understand the query!\nPlease try again with a different word.',
-        author,
-      )));
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(errorEmbed(
+          'The API could not understand the query!\nPlease try again with a different word.',
+          author,
+        ))),
+      );
       return;
     }
 
-    final def = raw['definition'].replaceAll('[', '').replaceAll(']', '');
-    final ex = raw['example'].replaceAll('[', '').replaceAll(']', '');
-
     await event.respond(
-        MessageBuilder.embed(dictEmbed(author, word, 'Urban', def, ex)));
+      MessageBuilder.embed(dictEmbed(author, word, 'Urban', def, ex)),
+    );
   }
 }

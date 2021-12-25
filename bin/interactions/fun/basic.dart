@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/nyxx_interactions.dart';
 import '../../obsidian_dart.dart' show botInteractions;
@@ -16,7 +15,10 @@ class FunBasicInteractions {
         'Shows the user profile picture/gif.',
         [
           CommandOptionBuilder(
-              CommandOptionType.user, 'user', 'A server member.')
+            CommandOptionType.user,
+            'user',
+            'A server member.',
+          )
         ],
       )..registerHandler(avatarSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder('roll', 'Roll a die.', [])
@@ -25,11 +27,14 @@ class FunBasicInteractions {
         ..registerHandler(flipSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
         'rip',
-        'Create a rip user message',
+        'Create a rip user message.',
         [
           CommandOptionBuilder(
-              CommandOptionType.user, 'user', 'A server member.',
-              required: true)
+            CommandOptionType.user,
+            'user',
+            'A server member.',
+            required: true,
+          )
         ],
       )..registerHandler(ripUserSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
@@ -37,8 +42,11 @@ class FunBasicInteractions {
         'Get a google search link for the given query.',
         [
           CommandOptionBuilder(
-              CommandOptionType.string, 'query', 'The query to be googled.',
-              required: true)
+            CommandOptionType.string,
+            'query',
+            'The query to be googled.',
+            required: true,
+          )
         ],
       )..registerHandler(googleSlashCommand));
   }
