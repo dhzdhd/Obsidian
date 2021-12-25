@@ -10,7 +10,7 @@ class FunWolframInteractions {
       'http://api.wolframalpha.com/v1/simple?appid=${Tokens.WOLFRAM_ID}&layout=labelbar&background=0C0B0B&foreground=white&width=400';
   final _shortUrl =
       'http://api.wolframalpha.com/v1/result?appid=${Tokens.WOLFRAM_ID}';
-  late Map<String, String> _shortParams;
+  late final Map<String, String> _shortParams;
 
   FunWolframInteractions() {
     botInteractions.registerSlashCommand(SlashCommandBuilder(
@@ -22,19 +22,25 @@ class FunWolframInteractions {
           'short',
           'Retrieves short answer for the question.',
           options: [
-            CommandOptionBuilder(CommandOptionType.string, 'query',
-                'The query to ask to the Wolfram API.',
-                required: true)
+            CommandOptionBuilder(
+              CommandOptionType.string,
+              'query',
+              'The query to ask to the Wolfram API.',
+              required: true,
+            )
           ],
         )..registerHandler(wolframShortSlashCommand),
         CommandOptionBuilder(
           CommandOptionType.subCommand,
           'image',
-          'Retrieves image for the question',
+          'Retrieves image for the question.',
           options: [
-            CommandOptionBuilder(CommandOptionType.string, 'query',
-                'The query to ask to the Wolfram API.',
-                required: true)
+            CommandOptionBuilder(
+              CommandOptionType.string,
+              'query',
+              'The query to ask to the Wolfram API.',
+              required: true,
+            )
           ],
         )..registerHandler(wolframImageSlashCommand)
       ],
@@ -43,7 +49,7 @@ class FunWolframInteractions {
 
   Future<String> webRequestHandler(
       String url, Map<String, String> params) async {
-    late Response response;
+    late final Response response;
     try {
       response = await dio.get(url, queryParameters: params);
     } on DioError catch (err) {
@@ -80,6 +86,7 @@ class FunWolframInteractions {
     final response = await webRequestHandler(_shortUrl, _shortParams);
     final embed =
         wolframEmbed(event, 'Query: $query', 'Response:\n **$response**');
+
     await event.respond(MessageBuilder.embed(embed));
   }
 

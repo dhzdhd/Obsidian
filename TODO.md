@@ -9,7 +9,7 @@
   - [x] rip
   - [x] google
 - [x] dict.dart
-  - [ ] oxford
+  - [x] oxford
   - [x] urban
 - [x] movie.dart
   - [x] movie
@@ -22,7 +22,6 @@
   - [ ] queue
   - [ ] add
   - [ ] shuffle
-- [ ] tictactoe.dart
 - [x] wolfram.dart
   - [x] short
   - [x] image
