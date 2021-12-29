@@ -50,8 +50,8 @@ void main() async {
   )
     ..registerPlugin(Logging())
     ..registerPlugin(CliIntegration())
-    ..registerPlugin(IgnoreExceptions());
-  bot.connect();
+    ..registerPlugin(IgnoreExceptions())
+    ..connect();
 
   botInteractions = IInteractions.create(WebsocketInteractionBackend(bot));
 

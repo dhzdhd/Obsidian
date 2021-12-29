@@ -15,13 +15,22 @@ class ModMuteInteractions {
         '<MOD ONLY> Mutes user for a certain time period.',
         [
           CommandOptionBuilder(
-              CommandOptionType.user, 'user', 'A server member.',
-              required: true),
-          CommandOptionBuilder(CommandOptionType.integer, 'time',
-              'Time period of mute in minutes.',
-              required: true),
+            CommandOptionType.user,
+            'user',
+            'A server member.',
+            required: true,
+          ),
           CommandOptionBuilder(
-              CommandOptionType.string, 'reason', 'Reason for mute.')
+            CommandOptionType.integer,
+            'time',
+            'Time period of mute in minutes.',
+            required: true,
+          ),
+          CommandOptionBuilder(
+            CommandOptionType.string,
+            'reason',
+            'Reason for mute.',
+          ),
         ],
       )..registerHandler(muteSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
@@ -29,10 +38,16 @@ class ModMuteInteractions {
         '<MOD ONLY> Unmutes muted user.',
         [
           CommandOptionBuilder(
-              CommandOptionType.user, 'user', 'A server member.',
-              required: true),
+            CommandOptionType.user,
+            'user',
+            'A server member.',
+            required: true,
+          ),
           CommandOptionBuilder(
-              CommandOptionType.string, 'reason', 'Reason for unmute.')
+            CommandOptionType.string,
+            'reason',
+            'Reason for unmute.',
+          )
         ],
       )..registerHandler(unmuteSlashCommand));
   }
@@ -49,19 +64,22 @@ class ModMuteInteractions {
       return;
     }
 
-    final user = event.interaction.resolved?.users.first;
+    final user = event.interaction.resolved!.users.first;
+    final member = event.interaction.resolved!.members.first;
     final time = event.getArg('time').value;
     final reason = event.getArg('reason').value ?? 'No reason provided';
     print('success $user $time $reason');
-    final a = await (event.interaction.guild?.getFromCache())
-        ?.fetchRoles()
-        .cast<IRole>()
-        .toList();
-    print(a);
+
+    await bot.httpEndpoints.editGuildMember(
+      member.guild.id,
+      member.id,
+      builder: MemberBuilder()
+        ..timeoutUntil = DateTime.parse('formattedString'),
+    );
 
     final muteEmbed = EmbedBuilder()
       ..title =
-          ':mute: Muted user: ${user?.username} for time: **$time** minutes.'
+          ':mute: Muted user: ${user.username} for time: **$time** minutes.'
       ..description = '**$reason**'
       ..color = Colors.AUDIT_COLORS['mod']
       ..timestamp = DateTime.now()

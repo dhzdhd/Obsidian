@@ -7,8 +7,7 @@ import '../../utils/embed.dart';
 
 class ModEventsInteractions {
   ModEventsInteractions() {
-    //! Late initialisation error
-    // bot.eventsWs.onDmReceived.listen(onDmReceived);
+    bot.eventsWs.onDmReceived.listen(onDmReceived);
     bot.eventsWs.onMessageDelete.listen(onMessageDelete);
     bot.eventsWs.onMessageUpdate.listen(onMessageUpdate);
     bot.eventsWs.onGuildMemberAdd.listen(onGuildMemberAdd);
