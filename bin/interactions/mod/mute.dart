@@ -70,9 +70,7 @@ class ModMuteInteractions {
     final reason = event.getArg('reason').value ?? 'No reason provided';
     print('success $user $time $reason');
 
-    await bot.httpEndpoints.editGuildMember(
-      member.guild.id,
-      member.id,
+    await member.edit(
       builder: MemberBuilder()
         ..timeoutUntil = DateTime.parse('formattedString'),
     );
