@@ -1,15 +1,12 @@
 name: obsidian_dart
-description: A simple command-line application.
+description: A multipurpose discord bot.
 version: 1.0.0
-# homepage: https://www.example.com
+homepage: https://dhzdhd.github.io/Obsidian/
 
 publish_to: "none"
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
-
-# dependencies:
-#   path: ^1.8.0
 
 dev_dependencies:
   pedantic: ^1.10.0
@@ -17,7 +14,7 @@ dependencies:
   dio: ^4.0.4
   dotenv: ^3.0.0
   http: ^0.13.4
-  nyxx: ^3.1.1
+  nyxx: ^3.2.1
   nyxx_extensions: ^3.0.0
   nyxx_interactions: ^3.1.0
   nyxx_lavalink: ^3.0.0

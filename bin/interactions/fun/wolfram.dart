@@ -10,7 +10,6 @@ class FunWolframInteractions {
       'http://api.wolframalpha.com/v1/simple?appid=${Tokens.WOLFRAM_ID}&layout=labelbar&background=0C0B0B&foreground=white&width=400';
   final _shortUrl =
       'http://api.wolframalpha.com/v1/result?appid=${Tokens.WOLFRAM_ID}';
-  late final Map<String, String> _shortParams;
 
   FunWolframInteractions() {
     botInteractions.registerSlashCommand(SlashCommandBuilder(
@@ -80,10 +79,10 @@ class FunWolframInteractions {
   Future<void> wolframShortSlashCommand(
       ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    final query = event.getArg('query').value;
-    _shortParams = {'i': query};
+    final query = event.getArg('query').value.toString();
+    final params = {'i': query};
 
-    final response = await webRequestHandler(_shortUrl, _shortParams);
+    final response = await webRequestHandler(_shortUrl, params);
     final embed =
         wolframEmbed(event, 'Query: $query', 'Response:\n **$response**');
 
@@ -96,12 +95,12 @@ class FunWolframInteractions {
     final query = event.getArg('query').value;
     final webQuery = query.trim().replaceAll(' ', '+');
 
-    final response = '$_imageUrl&i=$webQuery';
+    final imageUrl = '$_imageUrl&i=$webQuery';
     final embed = wolframEmbed(
       event,
       'Query: $query',
       '[View original](https://www.wolframalpha.com/input/?i=$webQuery)',
-    )..imageUrl = response;
+    )..imageUrl = imageUrl;
 
     await event.respond(MessageBuilder.embed(embed));
   }

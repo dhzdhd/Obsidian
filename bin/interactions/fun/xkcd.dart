@@ -96,6 +96,7 @@ class FunXkcdInteractions {
       await event.respond(MessageBuilder.embed(errorEmbed(
           '${err.response?.statusCode}: Could not retrieve xkcd comic #$comic',
           event.interaction.userAuthor)));
+      return;
     }
 
     final comicInfo = response.data;

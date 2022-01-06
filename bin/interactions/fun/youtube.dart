@@ -25,11 +25,14 @@ class FunYoutubeInteractions {
         'Search for a youtube video.',
         [
           CommandOptionBuilder(
-              CommandOptionType.string, 'query', 'The video name.',
-              required: true)
+            CommandOptionType.string,
+            'query',
+            'The video name.',
+            required: true,
+          )
         ],
       )..registerHandler(ytSlashCommand))
-      ..registerMultiselectHandler('youtube', ytOptionHandler);
+      ..registerMultiselectHandler('youtube-option', ytOptionHandler);
   }
 
   Future<void> ytSlashCommand(ISlashCommandInteractionEvent event) async {
@@ -37,7 +40,6 @@ class FunYoutubeInteractions {
 
     var vidIdList = [];
     late final List videoList;
-    late final EmbedBuilder errEmbed;
 
     final query = await event.getArg('query').value;
     params['q'] = query;
@@ -49,19 +51,23 @@ class FunYoutubeInteractions {
     } on DioError catch (err) {
       final code = err.response?.statusCode;
       if (code == 403) {
-        errEmbed = errorEmbed(
+        final errEmbed = errorEmbed(
             'YT API Quota finished. Sorry for the inconvenience.',
             event.interaction.userAuthor);
 
-        await event.respond(MessageBuilder.embed(errEmbed));
+        await deleteMessageWithTimer(
+          message: await event.sendFollowup(MessageBuilder.embed(errEmbed)),
+        );
         return;
       }
     } on RangeError catch (_) {
-      errEmbed = errorEmbed(
+      final errEmbed = errorEmbed(
           'The requested video was not found. Try with a different query.',
           event.interaction.userAuthor);
 
-      await event.respond(MessageBuilder.embed(errEmbed));
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(errEmbed)),
+      );
       return;
     }
 
@@ -91,7 +97,7 @@ class FunYoutubeInteractions {
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(MultiselectBuilder(
-        'youtube',
+        'youtube-option',
         [
           for (var _ = 0; _ < vidIdList.length; _++)
             MultiselectOptionBuilder('Option ${_ + 1}', vidIdList[_])

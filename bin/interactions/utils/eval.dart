@@ -4,7 +4,6 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
-import '../../utils/constants.dart';
 
 class UtilsEvalInteractions {
   UtilsEvalInteractions() {
@@ -12,13 +11,17 @@ class UtilsEvalInteractions {
       'eval',
       'Evaluate dart code.',
       [
-        CommandOptionBuilder(CommandOptionType.string, 'code',
-            'The code to be evaluated in the form of a function.',
-            required: true)
-      ],
-      defaultPermissions: true,
-      permissions: [
-        UserCommandPermissionBuilder(Tokens.BOT_OWNER.toSnowflake())
+        CommandOptionBuilder(
+          CommandOptionType.string,
+          'code',
+          'The code to be evaluated in the form of a function.',
+          required: true,
+        ),
+        CommandOptionBuilder(
+          CommandOptionType.string,
+          'args',
+          'Arguments to the passed function. Pass as comma separated values.',
+        )
       ],
     )..registerHandler(evalSlashCommand));
   }
@@ -29,6 +32,8 @@ class UtilsEvalInteractions {
     final function =
         event.getArg('code').value.toString().replaceAll('```', '');
     final functionName = function.split('()')[0].split(' ')[1];
+    // ! final args = event.getArg('args').value.split(',') ?? 'bro';
+    // print(args);
 
     final uri = Uri.dataFromString(
       '''
@@ -40,11 +45,9 @@ class UtilsEvalInteractions {
       // For http requests
       import 'package:dio/dio.dart';
 
-      late final dio;
+      final dio = Dio();
 
       Future<String> get(String url, {Map<dynamic, dynamic>? params}) async {
-        dio = Dio();
-
         late final response;
         try {
           response = await dio.get(url, queryParameters: params);

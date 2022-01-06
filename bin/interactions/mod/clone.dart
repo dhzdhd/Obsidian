@@ -15,25 +15,27 @@ class ModCloneInteractions {
         'clone',
         '<MOD ONLY> Clone a channel and delete the original.',
         [
-          // CommandOptionBuilder(
-          //   CommandOptionType.channel,
-          //   'channel',
-          //   'The channel to be cloned.',
-          //   channelTypes: [ChannelType.text],
-          // )
+          CommandOptionBuilder(
+            CommandOptionType.channel,
+            'channel',
+            'The channel to be cloned.',
+            channelTypes: [ChannelType.text],
+          )
         ],
       )..registerHandler(cloneSlashCommand))
-      ..registerButtonHandler('clone-accept', cloneButtonAcceptHandler)
-      ..registerButtonHandler('clone-reject', cloneButtonRejectHandler);
+      ..registerButtonHandler('clone-accept-button', cloneButtonAcceptHandler)
+      ..registerButtonHandler('clone-reject-button', cloneButtonRejectHandler);
   }
 
   Future<void> cloneSlashCommand(ISlashCommandInteractionEvent event) async {
-    await event.acknowledge();
+    await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.embed(
-        errorEmbed('Permission Denied!', event.interaction.userAuthor),
-      ));
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(
+          errorEmbed('Permission Denied!', event.interaction.userAuthor),
+        )),
+      );
       return;
     }
 
@@ -57,9 +59,9 @@ class ModCloneInteractions {
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(
-          ButtonBuilder('Yes', 'clone-accept', ComponentStyle.success))
+          ButtonBuilder('Yes', 'clone-accept-button', ComponentStyle.success))
       ..addComponent(
-          ButtonBuilder('No', 'clone-reject', ComponentStyle.danger));
+          ButtonBuilder('No', 'clone-reject-button', ComponentStyle.danger));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);
@@ -70,15 +72,6 @@ class ModCloneInteractions {
   Future<void> cloneButtonAcceptHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
 
-    if (!(await checkForMod(event))) {
-      await event.interaction.userAuthor
-          ?.sendMessage(MessageBuilder.embed(errorEmbed(
-        'You do not have the permissions to use this button!',
-        event.interaction.userAuthor,
-      )));
-      return;
-    }
-
     final channel = cloneDict[event.interaction.message!.id.id]!;
     cloneDict.remove(event.interaction.message!.id.id);
 
@@ -88,30 +81,21 @@ class ModCloneInteractions {
 
     await channel.delete();
 
-    await event.interaction.guild
-        ?.getFromCache()
-        ?.createChannel(TextChannelBuilder()
-          ..type = ChannelType.text
-          ..name = channel.name
-          ..topic = channel.topic
-          ..position = channel.position
-          ..parentChannel =
-              SnowflakeEntity(channel.parentChannel!.getFromCache()!.id)
-          ..permissionOverrides = overrides
-          ..nsfw = channel.isNsfw);
+    await event.interaction.guild?.getFromCache()?.createChannel(
+          TextChannelBuilder()
+            ..type = ChannelType.text
+            ..name = channel.name
+            ..topic = channel.topic
+            ..position = channel.position
+            ..parentChannel =
+                SnowflakeEntity(channel.parentChannel!.getFromCache()!.id)
+            ..permissionOverrides = overrides
+            ..nsfw = channel.isNsfw,
+        );
   }
 
   Future<void> cloneButtonRejectHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
-
-    if (!(await checkForMod(event))) {
-      await event.interaction.userAuthor
-          ?.sendMessage(MessageBuilder.embed(errorEmbed(
-        'You do not have the permissions to use this button!',
-        event.interaction.userAuthor,
-      )));
-      return;
-    }
 
     await event.interaction.message!.delete();
   }
