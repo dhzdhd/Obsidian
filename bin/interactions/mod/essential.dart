@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/nyxx_interactions.dart';
 import '../../obsidian_dart.dart' show botInteractions;

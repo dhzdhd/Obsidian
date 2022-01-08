@@ -18,7 +18,7 @@ class ModEventsInteractions {
     final owner = await bot.fetchUser(Snowflake(Tokens.BOT_OWNER));
     final user = event.message.author as IUser;
 
-    if (user == bot.self) return;
+    if (user.bot) return;
 
     final message = event.message;
     final messageCondition = message.content.isNotEmpty
