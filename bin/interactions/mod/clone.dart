@@ -51,7 +51,7 @@ class ModCloneInteractions {
           ..color = Colors.AUDIT_COLORS['mod']
           ..timestamp = DateTime.now()
           ..addFooter((footer) {
-            footer.text = 'Message sent by ${author.username}';
+            footer.text = 'Requested by ${author.username}';
             footer.iconUrl = author.avatarURL();
           }),
       ),

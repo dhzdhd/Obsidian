@@ -40,7 +40,9 @@ class ModDmInteractions {
 
     await user?.sendMessage(MessageBuilder.content(message));
 
-    await event.respond(MessageBuilder.content('Successfully sent message!'),
-        hidden: true);
+    await event.respond(
+      MessageBuilder.content('Successfully sent message!'),
+      hidden: true,
+    );
   }
 }
