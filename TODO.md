@@ -50,6 +50,8 @@
   - [ ] on-edit (Old message can't be fetched)
   - [x] on-bot-dm
 - [ ] log.dart
+  - [ ] assign
+  - [ ] delete
 - [ ] mute.dart
 - [ ] vc.dart
 - [ ] warn_ban.dart

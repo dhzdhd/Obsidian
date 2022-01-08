@@ -21,6 +21,13 @@ class FunBasicInteractions {
           ),
         ],
       )..registerHandler(avatarSlashCommand))
+      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      ..registerSlashCommand(SlashCommandBuilder(
+        'avatar',
+        null,
+        [],
+        type: SlashCommandType.user,
+      )..registerHandler(avatarSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder('roll', 'Roll a die.', [])
         ..registerHandler(rollSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder('flip', 'Flip a coin.', [])

@@ -35,7 +35,7 @@ class ModLogInteractions {
           )..registerHandler(deleteLogSlashCommand)
         ],
       ))
-      ..registerButtonHandler('delete-log', deleteLogButtonHandler);
+      ..registerButtonHandler('delete-log-button', deleteLogButtonHandler);
   }
 
   Future<void> createLogSlashCommand(
@@ -44,42 +44,29 @@ class ModLogInteractions {
     var channel = event.interaction.resolved?.channels.first;
 
     if (!(await checkForMod(event))) {
-      await deleteMessageWithTimer(
-        message: await event.sendFollowup(
-          MessageBuilder.embed(errorEmbed(
-              'You do not have the permissions to use this command!',
-              event.interaction.userAuthor)),
-        ),
-      );
-      return;
-    }
-
-    if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.embed(
         errorEmbed('Permission Denied!', event.interaction.userAuthor),
       ));
       return;
     }
 
-    var response = await LogDatabase.add(
-        event.interaction.guild?.id.id as int, channel?.id.id as int);
+    final response =
+        await LogDatabase.add(event.interaction.guild!.id.id, channel!.id.id);
 
     if (response) {
-      await deleteMessageWithTimer(
-          message: await event.sendFollowup(MessageBuilder.embed(
+      await event.respond(MessageBuilder.embed(
         successEmbed(
-          'Successfully added the log channel data in the database!',
+          'Successfully added the log channel data to the database!',
           event.interaction.userAuthor,
         ),
-      )));
+      ));
     } else {
-      await deleteMessageWithTimer(
-          message: await event.sendFollowup(MessageBuilder.embed(
+      await event.respond(MessageBuilder.embed(
         errorEmbed(
           'Error in adding the log channel data to the database!',
           event.interaction.userAuthor,
         ),
-      )));
+      ));
     }
   }
 
@@ -108,7 +95,8 @@ class ModLogInteractions {
 
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
-      ..addComponent(ButtonBuilder('Yes', 'delete-log', ComponentStyle.danger));
+      ..addComponent(
+          ButtonBuilder('Yes', 'delete-log-button', ComponentStyle.danger));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);
