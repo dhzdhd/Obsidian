@@ -23,8 +23,7 @@ class ModCloneInteractions {
           )
         ],
       )..registerHandler(cloneSlashCommand))
-      ..registerButtonHandler('clone-accept-button', cloneButtonAcceptHandler)
-      ..registerButtonHandler('clone-reject-button', cloneButtonRejectHandler);
+      ..registerButtonHandler('clone-accept-button', cloneButtonAcceptHandler);
   }
 
   Future<void> cloneSlashCommand(ISlashCommandInteractionEvent event) async {
@@ -44,24 +43,25 @@ class ModCloneInteractions {
         event.interaction.channel.getFromCache() as ITextGuildChannel;
     final author = event.interaction.userAuthor!;
 
-    final message = await event.sendFollowup(MessageBuilder.embed(
-      EmbedBuilder()
-        ..title = 'Clone channel'
-        ..description = 'Are you sure you want to clone **${channel.name}**?'
-        ..color = Colors.AUDIT_COLORS['mod']
-        ..timestamp = DateTime.now()
-        ..addFooter((footer) {
-          footer.text = 'Message sent by ${author.username}';
-          footer.iconUrl = author.avatarURL();
-        }),
-    ));
+    final message = await event.sendFollowup(
+      MessageBuilder.embed(
+        EmbedBuilder()
+          ..title = 'Clone channel'
+          ..description = 'Are you sure you want to clone **${channel.name}**?'
+          ..color = Colors.AUDIT_COLORS['mod']
+          ..timestamp = DateTime.now()
+          ..addFooter((footer) {
+            footer.text = 'Message sent by ${author.username}';
+            footer.iconUrl = author.avatarURL();
+          }),
+      ),
+      hidden: true,
+    );
 
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(
-          ButtonBuilder('Yes', 'clone-accept-button', ComponentStyle.success))
-      ..addComponent(
-          ButtonBuilder('No', 'clone-reject-button', ComponentStyle.danger));
+          ButtonBuilder('Yes', 'clone-accept-button', ComponentStyle.success));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);
@@ -75,28 +75,25 @@ class ModCloneInteractions {
     final channel = cloneDict[event.interaction.message!.id.id]!;
     cloneDict.remove(event.interaction.message!.id.id);
 
-    final overrides = channel.permissionOverrides.map((element) {
-      return PermissionOverrideBuilder.of(SnowflakeEntity(element.id));
-    }).toList();
+    List<PermissionOverrideBuilder>? overrides = [];
+    channel.permissionOverrides.forEach((element) {
+      overrides.add(PermissionOverrideBuilder.from(
+          element.type, element.id, element.permissions));
+    });
 
     await channel.delete();
 
-    await event.interaction.guild?.getFromCache()?.createChannel(
-          TextChannelBuilder()
-            ..type = ChannelType.text
-            ..name = channel.name
-            ..topic = channel.topic
-            ..position = channel.position
-            ..parentChannel =
-                SnowflakeEntity(channel.parentChannel!.getFromCache()!.id)
-            ..permissionOverrides = overrides
-            ..nsfw = channel.isNsfw,
-        );
-  }
-
-  Future<void> cloneButtonRejectHandler(IButtonInteractionEvent event) async {
-    await event.acknowledge(hidden: true);
-
-    await event.interaction.message!.delete();
+    final guild = await event.interaction.guild!.getOrDownload();
+    await guild.createChannel(
+      TextChannelBuilder()
+        ..type = ChannelType.text
+        ..name = channel.name
+        ..topic = channel.topic
+        ..position = channel.position
+        ..parentChannel =
+            SnowflakeEntity(channel.parentChannel!.getFromCache()!.id)
+        // !..permissionOverrides = overrides
+        ..nsfw = channel.isNsfw,
+    );
   }
 }

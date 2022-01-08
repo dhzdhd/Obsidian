@@ -18,7 +18,7 @@ class FunBasicInteractions {
             CommandOptionType.user,
             'user',
             'A server member.',
-          )
+          ),
         ],
       )..registerHandler(avatarSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder('roll', 'Roll a die.', [])
