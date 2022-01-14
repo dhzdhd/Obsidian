@@ -9,14 +9,14 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dev_dependencies:
-  pedantic: ^1.10.0
+  lints: ^1.0.1
 dependencies:
   dio: ^4.0.4
   dotenv: ^3.0.0
   http: ^0.13.4
-  nyxx: ^3.2.1
+  nyxx: ^3.2.3
   nyxx_extensions: ^3.0.0
-  nyxx_interactions: ^3.1.0
+  nyxx_interactions: ^3.3.0
   nyxx_lavalink: ^3.0.0
   math_expressions: ^2.2.0
-  supabase: ^0.2.10
+  supabase: ^0.2.12
