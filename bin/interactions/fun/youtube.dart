@@ -39,16 +39,15 @@ class FunYoutubeInteractions {
     await event.acknowledge();
 
     List<String> vidIdList = [];
-    late final List videoList;
+    late final dynamic videoList;
 
     final query = (await event.getArg('query').value).toString();
     params['q'] = query;
 
     try {
       final response =
-          await dio.get<Map<String, List>>(ytUrl, queryParameters: params);
+          await dio.get<Map<String, dynamic>>(ytUrl, queryParameters: params);
       videoList = response.data!['items']!.toList();
-      final dynamic _ = videoList[0];
     } on DioError catch (err) {
       final code = err.response?.statusCode;
       if (code == 403) {
@@ -83,7 +82,7 @@ class FunYoutubeInteractions {
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
 
-    for (var _ = 0; _ < videoList.length; _++) {
+    for (var _ = 0; _ < (videoList as List).length; _++) {
       ytEmbed.addField(
           name: '${_ + 1}) ${videoList[_]['snippet']['title']}',
           content:

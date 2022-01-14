@@ -12,8 +12,8 @@
 - [x] dict.dart
   - [x] oxford
   - [x] urban
-- [ ] movie.dart
-  - [ ] movie
+- [x] movie.dart
+  - [x] movie
 - [ ] music.dart
   - [ ] play
   - [ ] pause
@@ -26,11 +26,11 @@
 - [x] wolfram.dart
   - [x] short
   - [x] image
-- [ ] xkcd.dart
-  - [ ] latest
+- [x] xkcd.dart
+  - [x] latest
   - [x] search
-- [ ] youtube.dart
-  - [ ] youtube
+- [x] youtube.dart
+  - [x] youtube
 
 ## Mod
 

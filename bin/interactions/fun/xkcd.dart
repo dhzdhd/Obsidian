@@ -53,7 +53,7 @@ class FunXkcdInteractions {
   Future<dynamic> xkcdLatestComicInfo() async {
     late final Response response;
     try {
-      response = await dio.get<Map<String, String>>('$baseUrl/info.0.json');
+      response = await dio.get<Map>('$baseUrl/info.0.json');
     } on DioError catch (err) {
       print(err);
     }

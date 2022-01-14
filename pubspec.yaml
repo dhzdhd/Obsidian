@@ -1,6 +1,6 @@
 name: obsidian_dart
 description: A multipurpose discord bot.
-version: 1.0.0
+version: 2.0.0
 homepage: https://dhzdhd.github.io/Obsidian/
 
 publish_to: "none"

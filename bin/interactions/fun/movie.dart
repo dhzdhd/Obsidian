@@ -29,7 +29,7 @@ class FunMovieInteractions {
     final title = event.getArg('title').value.toString();
 
     final response = await dio
-        .get<String>(movieUrl, queryParameters: <String, String>{'t': title});
+        .get<Map>(movieUrl, queryParameters: <String, String>{'t': title});
     final dynamic data = response.data;
 
     if (data['Title'] == null) {
