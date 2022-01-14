@@ -69,7 +69,7 @@ class FunDictInteractions {
     late final Response<dynamic> response;
 
     try {
-      response = await dio.get<String>('$dictUrl${word.replaceAll(' ', '+')}');
+      response = await dio.get<List>('$dictUrl${word.replaceAll(' ', '+')}');
     } on DioError catch (_) {
       await deleteMessageWithTimer(
         message: await event.sendFollowup(MessageBuilder.embed(errorEmbed(

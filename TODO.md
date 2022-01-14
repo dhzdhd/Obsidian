@@ -9,8 +9,8 @@
   - [x] flip
   - [x] rip
   - [x] google
-- [ ] dict.dart
-  - [ ] oxford
+- [x] dict.dart
+  - [x] oxford
   - [x] urban
 - [ ] movie.dart
   - [ ] movie
