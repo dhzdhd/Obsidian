@@ -21,9 +21,8 @@ class FunBasicInteractions {
           ),
         ],
       )..registerHandler(avatarSlashCommand))
-      // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       ..registerSlashCommand(SlashCommandBuilder(
-        'avatar',
+        'Avatar',
         null,
         [],
         type: SlashCommandType.user,

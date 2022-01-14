@@ -4,15 +4,16 @@
 
 - [x] basic.dart
   - [x] avatar
+  - [x] avatar-app
   - [x] roll
   - [x] flip
   - [x] rip
   - [x] google
-- [x] dict.dart
-  - [x] oxford
+- [ ] dict.dart
+  - [ ] oxford
   - [x] urban
-- [x] movie.dart
-  - [x] movie
+- [ ] movie.dart
+  - [ ] movie
 - [ ] music.dart
   - [ ] play
   - [ ] pause
@@ -25,11 +26,11 @@
 - [x] wolfram.dart
   - [x] short
   - [x] image
-- [x] xkcd.dart
-  - [x] latest
+- [ ] xkcd.dart
+  - [ ] latest
   - [x] search
-- [x] youtube.dart
-  - [x] youtube
+- [ ] youtube.dart
+  - [ ] youtube
 
 ## Mod
 
@@ -38,13 +39,13 @@
 - [ ] dm.dart
   - [ ] dm
 - [ ] essential.dart
-  - [x] purge
-  - [x] censor
+  - [ ] purge
+  - [ ] censor
   - [ ] slowmode
 - [ ] events.dart
   - [ ] on-guild-join
   - [ ] on-guild-leave
-  - [x] on-delete
+  - [ ] on-delete
   - [ ] on-edit (Old message can't be fetched)
   - [x] on-bot-dm
 - [ ] log.dart
