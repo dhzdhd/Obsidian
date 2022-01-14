@@ -31,14 +31,12 @@
 - [x] youtube.dart
   - [x] youtube
 
-------
-
-- [ ] Problems with oxford dict, probably absence of examples in some queries.
-
 ## Mod
 
 - [ ] clone.dart
   - [ ] clone
+- [ ] dm.dart
+  - [ ] dm
 - [ ] essential.dart
   - [x] purge
   - [x] censor
@@ -59,7 +57,6 @@
 ------
 
 - [ ] Add audit logging support to all mod commands
-- [ ] Add clone command
 
 ## Utils
 

@@ -81,11 +81,11 @@ class FunMusicInteractions {
 
   void initEvents() {
     bot.eventsWs.onVoiceStateUpdate.listen((event) async {
-      var buffer = [];
+      List<Snowflake> buffer = [];
 
-      final botSnowflake = Snowflake(Tokens.BOT_ID);
-      final channel =
-          await event.state.channel?.getOrDownload() as IVoiceGuildChannel;
+      final botSnowflake = Snowflake(Tokens.botId);
+      // final channel =
+      //     await event.state.channel?.getOrDownload() as IVoiceGuildChannel;
 
       final guild = await event.state.guild?.getOrDownload();
       final voiceStates = guild?.voiceStates.keys.toList();
@@ -110,7 +110,7 @@ class FunMusicInteractions {
 
     late final IVoiceGuildChannel vc;
     final guildId = event.interaction.guild!.id;
-    final title = event.getArg('title').value;
+    final title = event.getArg('title').value.toString();
 
     // Check if bot is already playing music
     //!
@@ -277,7 +277,7 @@ class FunMusicInteractions {
   Future<void> addMusicSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final title = event.getArg('title').value;
+    final title = event.getArg('title').value.toString();
     final guildId = event.interaction.guild!.id;
     final node = cluster.getOrCreatePlayerNode(guildId);
 

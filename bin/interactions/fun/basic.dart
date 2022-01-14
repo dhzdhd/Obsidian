@@ -97,7 +97,7 @@ ${user?.avatarURL(format: 'png', size: 128)}
 1 like :heart: = 1 prayer :pray:
     ''';
 
-    await event.respond(MessageBuilder.content(Emojis.RIP));
+    await event.respond(MessageBuilder.content(Emojis.rip));
     await channel?.sendMessage(MessageBuilder.content(firstMessage));
     await channel?.sendMessage(MessageBuilder.content(secondMessage));
   }
@@ -105,7 +105,7 @@ ${user?.avatarURL(format: 'png', size: 128)}
   Future<void> googleSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final query = event.getArg('query').value;
+    final query = event.getArg('query').value.toString();
     final author = event.interaction.userAuthor!;
 
     await event.respond(MessageBuilder.embed(

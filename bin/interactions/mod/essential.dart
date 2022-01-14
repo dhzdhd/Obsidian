@@ -59,7 +59,7 @@ class ModEssentialInteractions {
 
   Future<void> purgeSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
-    final amount = event.getArg('amount').value;
+    final amount = int.parse(event.getArg('amount').value.toString());
     final channel = event.interaction.channel.getFromCache()!;
 
     if (!(await checkForMod(event))) {
@@ -99,8 +99,8 @@ class ModEssentialInteractions {
 
   Future<void> censorSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
-    final amount = event.getArg('amount').value;
-    final keyword = event.getArg('keyword').value;
+    final amount = int.parse(event.getArg('amount').value.toString());
+    final keyword = event.getArg('keyword').value.toString();
     final channel = event.interaction.channel.getFromCache();
 
     if (!(await checkForMod(event))) {
@@ -121,11 +121,11 @@ class ModEssentialInteractions {
     List<IMessage> toDelete = [];
     final messageList = await channel?.downloadMessages(limit: amount).toList()
         as Iterable<IMessage>;
-    messageList.forEach((element) {
+    for (var element in messageList) {
       if (element.content.contains(keyword)) {
         toDelete.add(element);
       }
-    });
+    }
 
     try {
       await channel?.bulkRemoveMessages(toDelete);
@@ -145,8 +145,8 @@ class ModEssentialInteractions {
 
   Future<void> slowmodeSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
-    final channelId = event.interaction.resolved?.channels.first.id;
-    final guild = event.interaction.guild!.getFromCache();
+    // final channelId = event.interaction.resolved?.channels.first.id;
+    // final guild = event.interaction.guild!.getFromCache();
 
     if (!(await checkForOwner(event))) {
       await event.respond(MessageBuilder.embed(
@@ -155,10 +155,10 @@ class ModEssentialInteractions {
       return;
     }
 
-    final channel =
-        event.interaction.resolved?.channels.first as ITextGuildChannel? ??
-            event.interaction.channel.getFromCache()! as ITextGuildChannel;
-    final amount = event.getArg('amount').value;
+    // final channel =
+    //     event.interaction.resolved?.channels.first as ITextGuildChannel? ??
+    //         event.interaction.channel.getFromCache()! as ITextGuildChannel;
+    final amount = event.getArg('amount').value.toString();
 
     try {
       // ! v3 error

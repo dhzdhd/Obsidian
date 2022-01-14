@@ -1,10 +1,9 @@
-import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import 'constants.dart';
 
 Future<bool> checkForOwner(IInteractionEvent event) async {
-  if (event.interaction.userAuthor?.id.toString() == Tokens.BOT_OWNER) {
+  if (event.interaction.userAuthor?.id.toString() == Tokens.botOwner) {
     return true;
   }
 

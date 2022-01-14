@@ -44,7 +44,7 @@ class UtilsBookmarkInteractions {
   Future<void> bookmarkSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final id = int.tryParse(event.getArg('id').value);
+    final id = int.tryParse(event.getArg('id').value.toString());
 
     if (id == null) {
       await event.respond(MessageBuilder.content('Enter a valid message ID!'));

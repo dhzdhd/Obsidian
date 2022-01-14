@@ -15,7 +15,7 @@ class ModEventsInteractions {
   }
 
   Future<void> onDmReceived(IMessageReceivedEvent event) async {
-    final owner = await bot.fetchUser(Snowflake(Tokens.BOT_OWNER));
+    final owner = await bot.fetchUser(Snowflake(Tokens.botOwner));
     final user = event.message.author as IUser;
 
     if (user.bot) return;
@@ -54,10 +54,10 @@ class ModEventsInteractions {
 
     if (message.author.bot) return;
 
-    final response = await LogDatabase.fetch(guildId: guildId);
+    final response = (await LogDatabase.fetch(guildId: guildId)) as List;
 
     if (response.isNotEmpty) {
-      final channelId = response[0]['channel'];
+      final dynamic channelId = response[0]['channel'];
       final logChannel =
           (await bot.fetchChannel(Snowflake(channelId))) as ITextGuildChannel;
 
@@ -118,11 +118,12 @@ class ModEventsInteractions {
     final guild = event.guild.getFromCache()!;
     final member = event.member;
 
-    final response = await LogDatabase.fetch(guildId: guild.id.id);
+    final response = (await LogDatabase.fetch(guildId: guild.id.id)) as List;
 
     if (response.isNotEmpty) {
-      final channelId = response[0]['channel'];
-      final channel = bot.fetchChannel(channelId) as ITextGuildChannel;
+      final dynamic channelId = response[0]['channel'];
+      final channel =
+          bot.fetchChannel(Snowflake(channelId)) as ITextGuildChannel;
 
       await channel.sendMessage(MessageBuilder.embed(auditEmbed(
         'Member joined!',
@@ -137,11 +138,13 @@ class ModEventsInteractions {
     final guild = event.guild.getFromCache()!;
     final user = event.user;
 
-    final response = await LogDatabase.fetch(guildId: guild.id.id);
+    final List response =
+        (await LogDatabase.fetch(guildId: guild.id.id)) as List;
 
     if (response.isNotEmpty) {
-      final channelId = response[0]['channel'];
-      final channel = bot.fetchChannel(channelId) as ITextGuildChannel;
+      final dynamic channelId = response[0]['channel'];
+      final channel =
+          bot.fetchChannel(Snowflake(channelId)) as ITextGuildChannel;
 
       await channel.sendMessage(MessageBuilder.embed(auditEmbed(
         'Member left!',

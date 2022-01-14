@@ -48,7 +48,7 @@ class ModCloneInteractions {
         EmbedBuilder()
           ..title = 'Clone channel'
           ..description = 'Are you sure you want to clone **${channel.name}**?'
-          ..color = Colors.AUDIT_COLORS['mod']
+          ..color = Colors.auditColors['mod']
           ..timestamp = DateTime.now()
           ..addFooter((footer) {
             footer.text = 'Requested by ${author.username}';
@@ -76,10 +76,13 @@ class ModCloneInteractions {
     cloneDict.remove(event.interaction.message!.id.id);
 
     List<PermissionOverrideBuilder>? overrides = [];
-    channel.permissionOverrides.forEach((element) {
+    for (var element in channel.permissionOverrides) {
       overrides.add(PermissionOverrideBuilder.from(
-          element.type, element.id, element.permissions));
-    });
+        element.type,
+        element.id,
+        element.permissions,
+      ));
+    }
 
     await channel.delete();
 

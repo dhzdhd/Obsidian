@@ -7,9 +7,9 @@ import '../../utils/constants.dart';
 
 class FunWolframInteractions {
   final _imageUrl =
-      'http://api.wolframalpha.com/v1/simple?appid=${Tokens.WOLFRAM_ID}&layout=labelbar&background=0C0B0B&foreground=white&width=400';
+      'http://api.wolframalpha.com/v1/simple?appid=${Tokens.wolframId}&layout=labelbar&background=0C0B0B&foreground=white&width=400';
   final _shortUrl =
-      'http://api.wolframalpha.com/v1/result?appid=${Tokens.WOLFRAM_ID}';
+      'http://api.wolframalpha.com/v1/result?appid=${Tokens.wolframId}';
 
   FunWolframInteractions() {
     botInteractions.registerSlashCommand(SlashCommandBuilder(
@@ -50,7 +50,7 @@ class FunWolframInteractions {
       String url, Map<String, String> params) async {
     late final Response response;
     try {
-      response = await dio.get(url, queryParameters: params);
+      response = await dio.get<String>(url, queryParameters: params);
     } on DioError catch (err) {
       if (err.response?.statusCode == 400) {
         return 'Sorry, the API did not find any input to interpret.';
@@ -92,7 +92,7 @@ class FunWolframInteractions {
   Future<void> wolframImageSlashCommand(
       ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    final query = event.getArg('query').value;
+    final query = event.getArg('query').value.toString();
     final webQuery = query.trim().replaceAll(' ', '+');
 
     final imageUrl = '$_imageUrl&i=$webQuery';

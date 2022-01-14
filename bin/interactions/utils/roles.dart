@@ -79,7 +79,7 @@ class UtilsRolesInteractions {
 
     await event.respond(componentMessageBuilder);
     roleMap[message.id.id] = role;
-    embedRolesMap[message.id.id] = [];
+    embedRolesMap[message.id.id] = <void>[];
   }
 
   Future<void> addRoleButtonHandler(IButtonInteractionEvent event) async {
@@ -87,7 +87,8 @@ class UtilsRolesInteractions {
     final role = roleMap[event.interaction.message!.id.id];
     final messageId = event.interaction.message!.id.id;
 
-    if (event.interaction.memberAuthor!.roles.contains(role)) {
+    // ! Sort out Cacheable matching
+    if (event.interaction.memberAuthor!.roles.contains(role?.id)) {
       await event.interaction.userAuthor?.sendMessage(
         MessageBuilder.content('You already have the role - ${role?.name}!'),
       );
@@ -99,14 +100,15 @@ class UtilsRolesInteractions {
     var oldField = embed.fields.first;
 
     embedRolesMap[messageId]!.add(event.interaction.userAuthor?.mention);
-    var content = '';
-    embedRolesMap[messageId]!.forEach((element) {
-      content += '${element.toString()}';
-    });
+
+    final content = StringBuffer();
+    for (var element in embedRolesMap[messageId]!) {
+      content.write('$element');
+    }
 
     await event.editOriginalResponse(
       MessageBuilder.embed(
-        embed..replaceField(name: oldField.name, content: content),
+        embed..replaceField(name: oldField.name, content: content.toString()),
       ),
     );
 
@@ -134,14 +136,15 @@ class UtilsRolesInteractions {
     print(oldField);
 
     embedRolesMap[messageId]!.remove(event.interaction.userAuthor?.mention);
-    var content = '';
-    embedRolesMap[messageId]!.forEach((element) {
-      content += '${element.toString()}';
-    });
+
+    final content = StringBuffer();
+    for (var element in embedRolesMap[messageId]!) {
+      content.write('$element');
+    }
 
     await event.editOriginalResponse(
       MessageBuilder.embed(
-        embed..replaceField(name: oldField.name, content: content),
+        embed..replaceField(name: oldField.name, content: content.toString()),
       ),
     );
 

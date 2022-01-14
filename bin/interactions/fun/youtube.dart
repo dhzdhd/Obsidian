@@ -7,10 +7,10 @@ import '../../obsidian_dart.dart' show botInteractions, dio;
 import '../../utils/embed.dart';
 
 class FunYoutubeInteractions {
-  static const YT_URL = 'https://www.googleapis.com/youtube/v3/search/';
+  static const ytUrl = 'https://www.googleapis.com/youtube/v3/search/';
   Map<int, IMessage> messageMap = {};
   var params = {
-    'key': Tokens.YT_KEY,
+    'key': Tokens.ytKey,
     'part': 'snippet',
     'maxResults': 5,
     'videoEmbeddable': 'true',
@@ -38,16 +38,17 @@ class FunYoutubeInteractions {
   Future<void> ytSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    var vidIdList = [];
+    List<String> vidIdList = [];
     late final List videoList;
 
-    final query = await event.getArg('query').value;
+    final query = (await event.getArg('query').value).toString();
     params['q'] = query;
 
     try {
-      final response = await dio.get(YT_URL, queryParameters: params);
-      videoList = response.data['items'];
-      var _ = videoList[0];
+      final response =
+          await dio.get<Map<String, List>>(ytUrl, queryParameters: params);
+      videoList = response.data!['items']!.toList();
+      final dynamic _ = videoList[0];
     } on DioError catch (err) {
       final code = err.response?.statusCode;
       if (code == 403) {
@@ -88,7 +89,7 @@ class FunYoutubeInteractions {
           content:
               '[Thumbnail](${videoList[_]['snippet']['thumbnails']['high']['url']})',
           inline: false);
-      vidIdList.add(videoList[_]['id']['videoId']);
+      vidIdList.add(videoList[_]['id']['videoId'].toString());
     }
 
     final message = await event.sendFollowup(MessageBuilder.embed(ytEmbed));

@@ -1,5 +1,10 @@
 include: package:lints/recommended.yaml
 
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+
 linter:
   rules:
     - always_use_package_imports

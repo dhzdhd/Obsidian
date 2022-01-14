@@ -68,7 +68,7 @@ class UtilsEvalInteractions {
 
     final port = ReceivePort();
     final isolate = await Isolate.spawnUri(uri, [], port.sendPort);
-    final String response = await port.first;
+    final String response = (await port.first).toString();
 
     port.close();
     isolate.kill();

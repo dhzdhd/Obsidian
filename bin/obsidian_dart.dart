@@ -5,7 +5,7 @@ import 'package:nyxx_lavalink/nyxx_lavalink.dart';
 import 'interactions/fun/basic.dart';
 import 'interactions/fun/dict.dart';
 import 'interactions/fun/movie.dart';
-import 'interactions/fun/music.dart';
+// import 'interactions/fun/music.dart';
 import 'interactions/fun/wolfram.dart';
 import 'interactions/fun/xkcd.dart';
 import 'interactions/fun/youtube.dart';
@@ -22,7 +22,7 @@ import 'interactions/utils/common.dart';
 import 'interactions/utils/db_utils.dart';
 import 'interactions/utils/eval.dart';
 import 'interactions/utils/math.dart';
-import 'interactions/utils/poll.dart';
+// import 'interactions/utils/poll.dart';
 import 'utils/constants.dart' show Tokens;
 import 'utils/database.dart' show initDatabase;
 import 'interactions/utils/roles.dart';
@@ -38,7 +38,7 @@ void main() async {
   dio = Dio();
 
   bot = NyxxFactory.createNyxxWebsocket(
-    Tokens.BOT_TOKEN,
+    Tokens.botToken,
     GatewayIntents.all,
     options: ClientOptions(
       initialPresence: PresenceBuilder.of(
@@ -55,7 +55,7 @@ void main() async {
 
   botInteractions = IInteractions.create(WebsocketInteractionBackend(bot));
 
-  cluster = ICluster.createCluster(bot, Snowflake(Tokens.BOT_ID));
+  cluster = ICluster.createCluster(bot, Snowflake(Tokens.botId));
   await cluster.addNode(NodeOptions(
     host: '127.0.0.1',
     port: 2333,
@@ -67,7 +67,7 @@ void main() async {
   FunWolframInteractions();
   FunYoutubeInteractions();
   FunMovieInteractions();
-  FunMusicInteractions();
+  // FunMusicInteractions();
   FunXkcdInteractions();
 
   // Mod interactions

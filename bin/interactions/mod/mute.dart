@@ -3,7 +3,7 @@ import 'package:nyxx/nyxx.dart';
 import '../../obsidian_dart.dart';
 import 'package:nyxx_interactions/nyxx_interactions.dart';
 
-import '../../utils/constants.dart';
+// import '../../utils/constants.dart';
 import '../../utils/constraints.dart';
 import '../../utils/embed.dart';
 
@@ -66,8 +66,8 @@ class ModMuteInteractions {
 
     final user = event.interaction.resolved!.users.first;
     final member = event.interaction.resolved!.members.first;
-    final time = event.getArg('time').value;
-    final reason = event.getArg('reason').value ?? 'No reason provided';
+    final time = event.getArg('time').value.toString();
+    final reason = event.getArg('reason').value.toString();
     print('success $user $time $reason');
 
     await member.edit(
@@ -75,16 +75,16 @@ class ModMuteInteractions {
         ..timeoutUntil = DateTime.parse('formattedString'),
     );
 
-    final muteEmbed = EmbedBuilder()
-      ..title =
-          ':mute: Muted user: ${user.username} for time: **$time** minutes.'
-      ..description = '**$reason**'
-      ..color = Colors.AUDIT_COLORS['mod']
-      ..timestamp = DateTime.now()
-      ..addFooter((footer) {
-        footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
-        footer.iconUrl = event.interaction.userAuthor?.avatarURL();
-      });
+    // final muteEmbed = EmbedBuilder()
+    //   ..title =
+    //       ':mute: Muted user: ${user.username} for time: **$time** minutes.'
+    //   ..description = '**$reason**'
+    //   ..color = Colors.auditColors['mod']
+    //   ..timestamp = DateTime.now()
+    //   ..addFooter((footer) {
+    //     footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
+    //     footer.iconUrl = event.interaction.userAuthor?.avatarURL();
+    //   });
   }
 
   Future<void> unmuteSlashCommand(ISlashCommandInteractionEvent event) async {
@@ -99,7 +99,7 @@ class ModMuteInteractions {
       return;
     }
 
-    final user = event.interaction.resolved?.users.first;
-    final reason = event.getArg('reason').value ?? 'No reason provided';
+    // final user = event.interaction.resolved?.users.first;
+    // final reason = event.getArg('reason').value.toString();
   }
 }

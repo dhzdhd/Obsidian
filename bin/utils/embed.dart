@@ -6,8 +6,8 @@ import 'dart:math';
 import 'constants.dart';
 
 final _random = Random();
-final _success = Names.SUCCESS_LIST;
-final _error = Names.ERROR_LIST;
+final _success = Names.successList;
+final _error = Names.errorList;
 
 Future<void> deleteMessageWithTimer(
     {required IMessage message, int time = 10}) async {
@@ -18,7 +18,7 @@ Future<void> deleteMessageWithTimer(
 
 EmbedBuilder confirmEmbed(String desc, IUser? author) {
   return EmbedBuilder()
-    ..title = '${Emojis.QUESTION} Confirmation'
+    ..title = '${Emojis.question} Confirmation'
     ..description = desc
     ..color = DiscordColor.yellow
     ..timestamp = DateTime.now()
@@ -55,19 +55,19 @@ EmbedBuilder errorEmbed(String desc, IUser? author) {
 EmbedBuilder auditEmbed(
     String title, String desc, IUser? author, String _type) {
   return EmbedBuilder()
-    ..title = '${Emojis.STAFF} $title'
+    ..title = '${Emojis.staff} $title'
     ..description = desc
-    ..color = Colors.AUDIT_COLORS[_type]
+    ..color = Colors.auditColors[_type]
     ..timestamp = DateTime.now()
     ..addFooter((footer) {
-      footer.text = '${Names.AUDIT_EMBED_FOOTER[_type]} ${author?.username}';
+      footer.text = '${Names.auditEmbedFooter[_type]} ${author?.username}';
       footer.iconUrl = author?.avatarURL();
     });
 }
 
 EmbedBuilder musicEmbed(String title, String desc, IUser? author) {
   return EmbedBuilder()
-    ..title = '${Emojis.MUSIC} $title'
+    ..title = '${Emojis.music} $title'
     ..description = desc
     ..color = DiscordColor.sapGreen
     ..timestamp = DateTime.now()

@@ -40,7 +40,7 @@ class ModWarnBanInteractions {
     await event.acknowledge();
 
     final user = event.interaction.resolved?.users.first;
-    final reason = event.getArg('reason').value;
+    final reason = event.getArg('reason').value.toString();
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.embed(
@@ -51,7 +51,7 @@ class ModWarnBanInteractions {
     final warnEmbed = EmbedBuilder()
       ..title = ':warning: Warned user: ${user?.username}'
       ..description = '**$reason**'
-      ..color = Colors.AUDIT_COLORS['mod']
+      ..color = Colors.auditColors['mod']
       ..timestamp = DateTime.now()
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
@@ -75,7 +75,7 @@ class ModWarnBanInteractions {
 
     final user = event.interaction.resolved?.users.first;
     final member = event.interaction.resolved?.members.first;
-    final reason = event.getArg('reason').value;
+    final reason = event.getArg('reason').value.toString();
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.embed(
@@ -94,7 +94,7 @@ class ModWarnBanInteractions {
     final banEmbed = EmbedBuilder()
       ..title = ':warning: Banned user: ${user?.username}'
       ..description = '**$reason**'
-      ..color = Colors.AUDIT_COLORS['mod']
+      ..color = Colors.auditColors['mod']
       ..timestamp = DateTime.now()
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';

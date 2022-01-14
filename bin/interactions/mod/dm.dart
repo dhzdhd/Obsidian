@@ -29,7 +29,7 @@ class ModDmInteractions {
   Future<void> dmSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
     final user = event.interaction.resolved?.users.first;
-    final message = event.getArg('message').value;
+    final message = event.getArg('message').value.toString();
 
     if (!(await checkForOwner(event))) {
       await event.respond(MessageBuilder.embed(

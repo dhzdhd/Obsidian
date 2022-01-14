@@ -6,8 +6,8 @@ import '../../obsidian_dart.dart';
 import '../../utils/embed.dart';
 
 class FunDictInteractions {
-  static const DICT_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
-  static const URBAN_URL = 'https://api.urbandictionary.com/v0/define?term=';
+  static const dictUrl = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
+  static const urbanUrl = 'https://api.urbandictionary.com/v0/define?term=';
 
   FunDictInteractions() {
     botInteractions.registerSlashCommand(SlashCommandBuilder(
@@ -64,12 +64,12 @@ class FunDictInteractions {
       ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final String word = event.getArg('word').value.trim();
+    final String word = event.getArg('word').value.toString().trim();
     final author = event.interaction.userAuthor!;
     late final Response<dynamic> response;
 
     try {
-      response = await dio.get('$DICT_URL${word.replaceAll(' ', '+')}');
+      response = await dio.get<String>('$dictUrl${word.replaceAll(' ', '+')}');
     } on DioError catch (_) {
       await deleteMessageWithTimer(
         message: await event.sendFollowup(MessageBuilder.embed(errorEmbed(
@@ -80,10 +80,11 @@ class FunDictInteractions {
       return;
     }
 
-    final Map raw = response.data[0]['meanings'][0]['definitions'][0];
-    final def = raw['definition'];
-    final ex =
-        raw.keys.contains('example') ? raw['example'] : 'No examples found.';
+    final dynamic raw = response.data[0]['meanings'][0]['definitions'][0];
+    final def = raw['definition'].toString();
+    final ex = raw.keys.contains('example') == true
+        ? raw['example'].toString()
+        : 'No examples found.';
 
     await event.respond(
       MessageBuilder.embed(dictEmbed(author, word, 'Oxford', def, ex)),
@@ -96,13 +97,15 @@ class FunDictInteractions {
 
     final word = event.getArg('word').value.toString().trim();
     final author = event.interaction.userAuthor!;
-    final response = await dio.get('$URBAN_URL${word.replaceAll(' ', '+')}');
+    final response =
+        await dio.get<Map>('$urbanUrl${word.replaceAll(' ', '+')}');
 
     late final String def, ex;
     try {
-      final Map raw = response.data['list'][0];
-      def = raw['definition'].replaceAll('[', '').replaceAll(']', '');
-      ex = raw['example'].replaceAll('[', '').replaceAll(']', '');
+      final dynamic raw = response.data?['list'][0];
+      def =
+          raw['definition'].toString().replaceAll('[', '').replaceAll(']', '');
+      ex = raw['example'].toString().replaceAll('[', '').replaceAll(']', '');
     } on Error catch (_) {
       await deleteMessageWithTimer(
         message: await event.sendFollowup(MessageBuilder.embed(errorEmbed(

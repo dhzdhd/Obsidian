@@ -6,8 +6,8 @@ import '../../utils/constants.dart';
 import '../../utils/embed.dart';
 
 class FunMovieInteractions {
-  final String MOVIE_URL =
-      'http://www.omdbapi.com/?apikey=${Tokens.MOVIE_API_KEY}&plot=full';
+  final String movieUrl =
+      'http://www.omdbapi.com/?apikey=${Tokens.movieApiKey}&plot=full';
 
   FunMovieInteractions() {
     botInteractions.registerSlashCommand(SlashCommandBuilder(
@@ -26,10 +26,11 @@ class FunMovieInteractions {
 
   Future<void> movieSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    final title = event.getArg('title').value;
+    final title = event.getArg('title').value.toString();
 
-    final response = await dio.get(MOVIE_URL, queryParameters: {'t': title});
-    final data = response.data;
+    final response = await dio
+        .get<String>(movieUrl, queryParameters: <String, String>{'t': title});
+    final dynamic data = response.data;
 
     if (data['Title'] == null) {
       await deleteMessageWithTimer(
@@ -59,7 +60,7 @@ class FunMovieInteractions {
       '''
       ..color = DiscordColor.cyan
       ..timestamp = DateTime.now()
-      ..thumbnailUrl = data['Poster']
+      ..thumbnailUrl = data['Poster'].toString()
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();

@@ -55,13 +55,9 @@ class UtilsDbInteractions {
   Future<void> viewUserDataSlashCommand(
       ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    late var amount;
+    late final int? amount;
 
-    try {
-      amount = event.getArg('amount').value;
-    } catch (err) {
-      amount = null;
-    }
+    amount = int.tryParse(event.getArg('amount').value.toString());
 
     if (!(await checkForOwner(event))) {
       await event.respond(MessageBuilder.embed(
@@ -70,9 +66,9 @@ class UtilsDbInteractions {
       return;
     }
 
-    var message = '';
-    var response = await UserDatabase.fetch(amount: amount);
-    response.forEach((element) {
+    late final String message;
+    final dynamic response = await UserDatabase.fetch(amount: amount);
+    response.forEach((dynamic element) {
       message += '$element\n';
     });
 
@@ -104,13 +100,9 @@ class UtilsDbInteractions {
   Future<void> viewLogDataSlashCommand(
       ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    late var amount;
+    late final int? amount;
 
-    try {
-      amount = event.getArg('amount').value;
-    } catch (err) {
-      amount = null;
-    }
+    amount = int.tryParse(event.getArg('amount').value.toString());
 
     if (!(await checkForOwner(event))) {
       await event.respond(MessageBuilder.embed(
@@ -119,9 +111,9 @@ class UtilsDbInteractions {
       return;
     }
 
-    var message = '';
-    var response = await LogDatabase.fetch(amount: amount);
-    response.forEach((element) {
+    late final String message;
+    final dynamic response = await LogDatabase.fetch(amount: amount);
+    response.forEach((dynamic element) {
       message += '$element\n';
     });
 

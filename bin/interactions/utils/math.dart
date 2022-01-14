@@ -41,7 +41,7 @@ class UtilsMathInteractions {
   String evaluate(String expr) {
     expr = expr.replaceAll('x', '*');
 
-    late final eval;
+    late final dynamic eval;
     final p = Parser();
     final cm = ContextModel();
 
@@ -60,7 +60,7 @@ class UtilsMathInteractions {
 
   String derive(String variable, String expr) {
     final p = Parser();
-    late final exp;
+    late final Expression exp;
 
     try {
       exp = p.parse(expr);
@@ -69,7 +69,6 @@ class UtilsMathInteractions {
     } on FormatException catch (_) {
       return 'Invalid expression';
     }
-
     final result = exp.derive(variable.trim());
     return result.toString();
   }

@@ -84,7 +84,7 @@ class ModLogInteractions {
     await event.sendFollowup(
       MessageBuilder.embed(EmbedBuilder()
         ..title = 'Are you sure you want to delete the log channel?'
-        ..color = Colors.AUDIT_COLORS['mod']
+        ..color = Colors.auditColors['mod']
         ..timestamp = DateTime.now()
         ..addFooter((footer) {
           footer.text =
