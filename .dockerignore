@@ -16,5 +16,6 @@ lavalink_server/Lavalink.jar
 .env-example
 base64_converter/
 .github/
+docs/
 Pipfile
 Pipfile.lock

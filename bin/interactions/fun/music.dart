@@ -9,6 +9,8 @@ import '../../obsidian_dart.dart' show cluster, botInteractions, bot;
 import '../../utils/constants.dart';
 import '../../utils/embed.dart';
 
+// ! Try with VPN
+
 class FunMusicInteractions {
   final _random = Random();
 
@@ -16,92 +18,97 @@ class FunMusicInteractions {
     initEvents();
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
-        'music',
-        'Music group of commands.',
-        [
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'play',
-            'Play some music.',
-            options: [
-              CommandOptionBuilder(CommandOptionType.string, 'title',
-                  'Title of song to be played.',
-                  required: true)
-            ],
-          )..registerHandler(playMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'skip',
-            'Skip the currently playing music.',
-          )..registerHandler(skipMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'repeat',
-            'Repeat the currently playing music.',
-          )..registerHandler(repeatMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'resume',
-            'Resume paused music.',
-          )..registerHandler(resumeMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'pause',
-            'Pause currently playing music.',
-          )..registerHandler(pauseMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'stop',
-            'Stop playing music and clear queue.',
-          )..registerHandler(stopMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'queue',
-            'View the current queue.',
-          )..registerHandler(queueMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'add',
-            'Add a song to the queue.',
-            options: [
-              CommandOptionBuilder(CommandOptionType.string, 'title',
-                  'Title of song to be added to the queue.',
-                  required: true)
-            ],
-          )..registerHandler(addMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'shuffle',
-            'Shuffle tracks in the current queue.',
-          )..registerHandler(shuffleMusicSlashCommand),
-        ],
-      ))
+          'music',
+          'Music group of commands.',
+          [
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'play',
+              'Play some music.',
+              options: [
+                CommandOptionBuilder(CommandOptionType.string, 'title',
+                    'Title of song to be played.',
+                    required: true)
+              ],
+            )..registerHandler(playMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'skip',
+              'Skip the currently playing music.',
+            )..registerHandler(skipMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'repeat',
+              'Repeat the currently playing music.',
+            )..registerHandler(repeatMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'resume',
+              'Resume paused music.',
+            )..registerHandler(resumeMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'pause',
+              'Pause currently playing music.',
+            )..registerHandler(pauseMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'stop',
+              'Stop playing music and clear queue.',
+            )..registerHandler(stopMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'queue',
+              'View the current queue.',
+            )..registerHandler(queueMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'add',
+              'Add a song to the queue.',
+              options: [
+                CommandOptionBuilder(CommandOptionType.string, 'title',
+                    'Title of song to be added to the queue.',
+                    required: true)
+              ],
+            )..registerHandler(addMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'shuffle',
+              'Shuffle tracks in the current queue.',
+            )..registerHandler(shuffleMusicSlashCommand),
+          ],
+          guild: Snowflake(791639588606967818)))
+      ..registerButtonHandler(
+          'increase-vol-button', increaseVolumeButtonHandler)
+      ..registerButtonHandler(
+          'decrease-vol-button', decreaseVolumeButtonHandler)
+      ..registerButtonHandler('mute-button', muteButtonHandler)
       ..registerMultiselectHandler('music', musicOptionHandler);
   }
 
   void initEvents() {
-    bot.eventsWs.onVoiceStateUpdate.listen((event) async {
-      List<Snowflake> buffer = [];
+    // bot.eventsWs.onVoiceStateUpdate.listen((event) async {
+    // List<Snowflake> buffer = [];
 
-      final botSnowflake = Snowflake(Tokens.botId);
-      // final channel =
-      //     await event.state.channel?.getOrDownload() as IVoiceGuildChannel;
+    // final botSnowflake = Snowflake(Tokens.botId);
+    // final channel =
+    //     await event.state.channel?.getOrDownload() as IVoiceGuildChannel;
 
-      final guild = await event.state.guild?.getOrDownload();
-      final voiceStates = guild?.voiceStates.keys.toList();
+    //   final guild = await event.state.guild?.getOrDownload();
+    //   final voiceStates = guild?.voiceStates.keys.toList();
 
-      if (voiceStates == null) return;
-      if (voiceStates.contains(botSnowflake)) {
-        buffer.add(botSnowflake);
-        voiceStates.remove(botSnowflake);
-      } else {
-        return;
-      }
+    //   if (voiceStates == null) return;
+    //   if (voiceStates.contains(botSnowflake)) {
+    //     buffer.add(botSnowflake);
+    //     voiceStates.remove(botSnowflake);
+    //   } else {
+    //     return;
+    //   }
 
-      print(voiceStates);
-    });
+    //   print(voiceStates);
+    // });
 
-    bot.eventsWs.onVoiceServerUpdate.listen((event) async {});
+    // bot.eventsWs.onVoiceServerUpdate.listen((event) async {});
   }
 
   Future<void> playMusicSlashCommand(
@@ -114,16 +121,16 @@ class FunMusicInteractions {
 
     // Check if bot is already playing music
     //!
-    if (cluster
-        .getOrCreatePlayerNode(guildId)
-        .createPlayer(guildId)
-        .queue
-        .isNotEmpty) {
-      await event.respond(MessageBuilder.embed(errorEmbed(
-          'Bot is currently occupied in this server!',
-          event.interaction.userAuthor)));
-      return;
-    }
+    // if (cluster
+    //     .getOrCreatePlayerNode(guildId)
+    //     .createPlayer(guildId)
+    //     .queue
+    //     .isNotEmpty) {
+    //   await event.respond(MessageBuilder.embed(errorEmbed(
+    //       'Bot is currently occupied in this server!',
+    //       event.interaction.userAuthor)));
+    //   return;
+    // }
 
     // Check if user is in a vc
     try {
@@ -167,7 +174,26 @@ class FunMusicInteractions {
     );
 
     final componentMessageBuilder = ComponentMessageBuilder();
-    final componentRow = ComponentRowBuilder()
+    final buttonComponentRow = ComponentRowBuilder()
+      ..addComponent(ButtonBuilder(
+        'Increase Volume',
+        'increase-vol-button',
+        ComponentStyle.primary,
+        emoji: UnicodeEmoji('🔊'),
+      ))
+      ..addComponent(ButtonBuilder(
+        'Decrease Volume',
+        'decrease-vol-button',
+        ComponentStyle.primary,
+        emoji: UnicodeEmoji('🔉'),
+      ))
+      ..addComponent(ButtonBuilder(
+        'Mute',
+        'mute-button',
+        ComponentStyle.danger,
+        emoji: UnicodeEmoji('🔇'),
+      ));
+    final optionComponentRow = ComponentRowBuilder()
       ..addComponent(MultiselectBuilder('music', [
         MultiselectOptionBuilder('Pause', 'pause')
           ..description = 'Pause the current playing track'
@@ -188,7 +214,8 @@ class FunMusicInteractions {
           ..description = 'Stop playing tracks and delete the queue'
           ..emoji = UnicodeEmoji('⏹️'),
       ]));
-    componentMessageBuilder.addComponentRow(componentRow);
+    componentMessageBuilder.addComponentRow(buttonComponentRow);
+    componentMessageBuilder.addComponentRow(optionComponentRow);
 
     await event.respond(componentMessageBuilder);
   }
@@ -315,6 +342,12 @@ class FunMusicInteractions {
       ..clear()
       ..addAll(shuffledQueue);
   }
+
+  Future<void> increaseVolumeButtonHandler(
+      IButtonInteractionEvent event) async {}
+  Future<void> decreaseVolumeButtonHandler(
+      IButtonInteractionEvent event) async {}
+  Future<void> muteButtonHandler(IButtonInteractionEvent event) async {}
 
   Future<void> musicOptionHandler(IMultiselectInteractionEvent event) async {
     await event.acknowledge();

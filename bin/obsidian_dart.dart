@@ -5,7 +5,7 @@ import 'package:nyxx_lavalink/nyxx_lavalink.dart';
 import 'interactions/fun/basic.dart';
 import 'interactions/fun/dict.dart';
 import 'interactions/fun/movie.dart';
-// import 'interactions/fun/music.dart';
+import 'interactions/fun/music.dart';
 import 'interactions/fun/wolfram.dart';
 import 'interactions/fun/xkcd.dart';
 import 'interactions/fun/youtube.dart';
@@ -23,6 +23,7 @@ import 'interactions/utils/db_utils.dart';
 import 'interactions/utils/eval.dart';
 import 'interactions/utils/math.dart';
 // import 'interactions/utils/poll.dart';
+import 'plugins/logging.dart';
 import 'utils/constants.dart' show Tokens;
 import 'utils/database.dart' show initDatabase;
 import 'interactions/utils/roles.dart';
@@ -35,6 +36,7 @@ late ICluster cluster;
 void main() async {
   Tokens.loadEnv();
   initDatabase();
+  await CustomLogging.initLogFile();
   dio = Dio();
 
   bot = NyxxFactory.createNyxxWebsocket(
@@ -48,7 +50,7 @@ void main() async {
       ),
     ),
   )
-    ..registerPlugin(Logging())
+    ..registerPlugin(CustomLogging())
     ..registerPlugin(CliIntegration())
     ..registerPlugin(IgnoreExceptions())
     ..connect();
@@ -67,7 +69,7 @@ void main() async {
   FunWolframInteractions();
   FunYoutubeInteractions();
   FunMovieInteractions();
-  // FunMusicInteractions();
+  FunMusicInteractions();
   FunXkcdInteractions();
 
   // Mod interactions

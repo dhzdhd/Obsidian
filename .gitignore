@@ -14,3 +14,6 @@ azure_vps/
 k8s-secret.yml
 
 base64_converter/__pycache__
+
+/.ionide/
+logs/*
