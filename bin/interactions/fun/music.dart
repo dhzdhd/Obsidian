@@ -13,6 +13,7 @@ import '../../utils/embed.dart';
 
 class FunMusicInteractions {
   final _random = Random();
+  Map<Snowflake, int> volumeMap = {};
 
   FunMusicInteractions() {
     initEvents();
@@ -120,17 +121,6 @@ class FunMusicInteractions {
     final title = event.getArg('title').value.toString();
 
     // Check if bot is already playing music
-    //!
-    // if (cluster
-    //     .getOrCreatePlayerNode(guildId)
-    //     .createPlayer(guildId)
-    //     .queue
-    //     .isNotEmpty) {
-    //   await event.respond(MessageBuilder.embed(errorEmbed(
-    //       'Bot is currently occupied in this server!',
-    //       event.interaction.userAuthor)));
-    //   return;
-    // }
 
     // Check if user is in a vc
     try {
@@ -149,10 +139,16 @@ class FunMusicInteractions {
 
     final searchResults = await node.autoSearch(title);
     if (searchResults.tracks.isEmpty) {
-      await event.respond(MessageBuilder.embed(errorEmbed(
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(errorEmbed(
           'Song not found! Please try again with a different query.',
-          event.interaction.userAuthor)));
+          event.interaction.userAuthor,
+        ))),
+      );
+      return;
     }
+
+    // Get first track and track info
     final track = searchResults.tracks[0];
     final trackInfo = track.info!;
     final trackTime =
@@ -218,6 +214,8 @@ class FunMusicInteractions {
     componentMessageBuilder.addComponentRow(optionComponentRow);
 
     await event.respond(componentMessageBuilder);
+
+    volumeMap[guildId] = 100;
   }
 
   Future<void> skipMusicSlashCommand(
@@ -333,7 +331,7 @@ class FunMusicInteractions {
 
     final shuffledQueue = <IQueuedTrack>[];
     for (var _ = 0; _ < player.queue.length; _++) {
-      var randomIndex = _random.nextInt(player.queue.length);
+      final randomIndex = _random.nextInt(player.queue.length);
       shuffledQueue.add(player.queue[randomIndex]);
       player.queue.removeAt(randomIndex);
     }
@@ -344,10 +342,22 @@ class FunMusicInteractions {
   }
 
   Future<void> increaseVolumeButtonHandler(
-      IButtonInteractionEvent event) async {}
+      IButtonInteractionEvent event) async {
+    final guildId = event.interaction.guild!.id;
+    final newVolume = volumeMap[guildId]! + 50;
+    volumeMap[guildId] = volumeMap[guildId]! + 50;
+    final node =
+        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    node.volume(guildId, newVolume);
+  }
+
   Future<void> decreaseVolumeButtonHandler(
       IButtonInteractionEvent event) async {}
-  Future<void> muteButtonHandler(IButtonInteractionEvent event) async {}
+  Future<void> muteButtonHandler(IButtonInteractionEvent event) async {
+    final node =
+        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    node.volume(event.interaction.guild!.id, 1);
+  }
 
   Future<void> musicOptionHandler(IMultiselectInteractionEvent event) async {
     await event.acknowledge();

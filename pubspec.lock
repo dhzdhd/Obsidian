@@ -119,7 +119,7 @@ packages:
       name: nyxx
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.3"
+    version: "3.2.4"
   nyxx_extensions:
     dependency: "direct main"
     description:
@@ -140,7 +140,7 @@ packages:
       name: nyxx_lavalink
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   path:
     dependency: transitive
     description:
@@ -161,14 +161,14 @@ packages:
       name: realtime_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.13"
+    version: "0.1.14"
   source_span:
     dependency: transitive
     description:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.2"
   storage_client:
     dependency: transitive
     description:
@@ -196,7 +196,7 @@ packages:
       name: supabase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.12"
+    version: "0.2.13"
   term_glyph:
     dependency: transitive
     description:
