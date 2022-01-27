@@ -4,7 +4,7 @@
 
 - [x] basic.dart
   - [x] avatar
-  - [x] avatar-app
+  - [x] Avatar
   - [x] roll
   - [x] flip
   - [x] rip
@@ -36,8 +36,8 @@
 
 - [ ] clone.dart
   - [ ] clone
-- [ ] dm.dart
-  - [ ] dm
+- [x] dm.dart
+  - [x] dm
 - [ ] essential.dart
   - [ ] purge
   - [ ] censor
@@ -47,7 +47,7 @@
   - [ ] on-guild-leave
   - [ ] on-delete
   - [ ] on-edit (Old message can't be fetched)
-  - [x] on-bot-dm
+  - [ ] on-bot-dm
 - [ ] log.dart
   - [ ] assign
   - [ ] delete
@@ -57,12 +57,14 @@
 
 ------
 
-- [ ] Add audit logging support to all mod commands
+- [ ] Add logging support to all mod commands
 
 ## Utils
 
 - [ ] bookmark.dart
-- [ ] common.dart
+- [x] common.dart
+  - [x] invite
+  - [x] ping
 - [ ] db_utils.dart
 - [ ] eval.dart
 - [ ] math.dart

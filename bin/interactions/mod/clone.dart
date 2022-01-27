@@ -76,13 +76,17 @@ class ModCloneInteractions {
     cloneDict.remove(event.interaction.message!.id.id);
 
     List<PermissionOverrideBuilder>? overrides = [];
-    for (var element in channel.permissionOverrides) {
-      overrides.add(PermissionOverrideBuilder.from(
-        element.type,
-        element.id,
-        element.permissions,
-      ));
-    }
+    overrides = channel.permissionOverrides
+        .map((e) => PermissionOverrideBuilder(e.type, e.id))
+        .toList();
+    // for (var element in channel.permissionOverrides) {
+    //   print(element);
+    //   overrides.add(PermissionOverrideBuilder.from(
+    //     element.type,
+    //     element.id,
+    //     element.permissions,
+    //   ));
+    // }
 
     await channel.delete();
 
@@ -95,7 +99,7 @@ class ModCloneInteractions {
         ..position = channel.position
         ..parentChannel =
             SnowflakeEntity(channel.parentChannel!.getFromCache()!.id)
-        // !..permissionOverrides = overrides
+        ..permissionOverrides = overrides
         ..nsfw = channel.isNsfw,
     );
   }

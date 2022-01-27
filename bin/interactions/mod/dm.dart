@@ -30,7 +30,6 @@ class ModDmInteractions {
     await event.acknowledge(hidden: true);
     final user = event.interaction.resolved?.users.first;
     final message = event.getArg('message').value.toString();
-
     if (!(await checkForOwner(event))) {
       await event.respond(MessageBuilder.embed(
         errorEmbed('Permission Denied!', event.interaction.userAuthor),

@@ -31,9 +31,11 @@ Future<void> inviteBotSlashCommand(ISlashCommandInteractionEvent event) async {
       .firstWhere((element) => element.channelType == ChannelType.text);
 
   if (!(await checkForMod(event))) {
-    await event.respond(MessageBuilder.embed(
-      errorEmbed('Permission Denied!', event.interaction.userAuthor),
-    ));
+    await deleteMessageWithTimer(
+      message: await event.sendFollowup(MessageBuilder.embed(
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
+      )),
+    );
     return;
   }
 
@@ -45,15 +47,21 @@ Future<void> inviteBotSlashCommand(ISlashCommandInteractionEvent event) async {
   }
 
   final inviteUrl = invite?.url;
-  await event
-      .respond(MessageBuilder.content('Server invite URL: **$inviteUrl**'));
+  await event.respond(MessageBuilder.content(
+    'Server invite URL: **$inviteUrl**',
+  ));
 }
 
 Future<void> latencySlashCommand(ISlashCommandInteractionEvent event) async {
   await event.acknowledge();
 
-  // ! v3 errors
-  // final gatewayLatency = event.client.shardManager.gatewayLatency.inSeconds;
+  final gatewayDelayInMillis = (event.client as INyxxWebsocket)
+          .shardManager
+          .shards
+          .map((e) => e.gatewayLatency.inMilliseconds)
+          .reduce((value, element) => value + element) /
+      (event.client as INyxxWebsocket).shards;
+  final gatewayLatency = gatewayDelayInMillis.abs().floor();
 
   final apiStopwatch = Stopwatch()..start();
   await http.head(
@@ -65,8 +73,8 @@ Future<void> latencySlashCommand(ISlashCommandInteractionEvent event) async {
     ..color = DiscordColor.purple
     ..title = 'Latency'
     ..timestamp = DateTime.now()
-    // ..addField(
-    //     name: 'Gateway latency', content: '$gatewayLatency ms', inline: false)
+    ..addField(
+        name: 'Gateway latency', content: '$gatewayLatency ms', inline: false)
     ..addField(name: 'REST latency', content: '$apiLatency ms', inline: false)
     ..addField(name: 'Message latency', content: 'Pending ...', inline: false)
     ..addFooter((footer) {
