@@ -66,7 +66,13 @@
   - [x] invite
   - [x] ping
 - [ ] db_utils.dart
-- [ ] eval.dart
-- [ ] math.dart
+- [x] eval.dart
+  - [x] eval
+- [x] math.dart
+  - [x] eval
+  - [x] derivative
 - [ ] poll.dart
+  - [ ] poll
 - [ ] roles.dart
+  - [ ] add
+  - [ ] delete

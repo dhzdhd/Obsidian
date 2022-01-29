@@ -17,11 +17,6 @@ class UtilsEvalInteractions {
           'The code to be evaluated in the form of a function.',
           required: true,
         ),
-        CommandOptionBuilder(
-          CommandOptionType.string,
-          'args',
-          'Arguments to the passed function. Pass as comma separated values.',
-        )
       ],
     )..registerHandler(evalSlashCommand));
   }
@@ -32,8 +27,6 @@ class UtilsEvalInteractions {
     final function =
         event.getArg('code').value.toString().replaceAll('```', '');
     final functionName = function.split('()')[0].split(' ')[1];
-    // ! final args = event.getArg('args').value.split(',') ?? 'bro';
-    // print(args);
 
     final uri = Uri.dataFromString(
       '''
@@ -41,21 +34,6 @@ class UtilsEvalInteractions {
       import 'dart:math';
       import 'dart:cli';
       import 'dart:io' hide exit;
-
-      // For http requests
-      import 'package:dio/dio.dart';
-
-      final dio = Dio();
-
-      Future<String> get(String url, {Map<dynamic, dynamic>? params}) async {
-        late final response;
-        try {
-          response = await dio.get(url, queryParameters: params);
-        } catch(err) {
-          return 'Request failed!';
-        }
-        return response.data.toString();
-      }
 
       void main(_, SendPort port) {
         port.send($functionName());

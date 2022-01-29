@@ -22,8 +22,11 @@ class UtilsRolesInteractions {
             '<MOD ONLY> Add users to an existing role.',
             options: [
               CommandOptionBuilder(
-                  CommandOptionType.role, 'role', 'Name of role',
-                  required: true)
+                CommandOptionType.role,
+                'role',
+                'Name of role',
+                required: true,
+              )
             ],
           )..registerHandler(addToRoleSlashCommand),
           CommandOptionBuilder(
@@ -32,8 +35,11 @@ class UtilsRolesInteractions {
             '<MOD ONLY> Delete a role.',
             options: [
               CommandOptionBuilder(
-                  CommandOptionType.role, 'role', 'Name of role.',
-                  required: true)
+                CommandOptionType.role,
+                'role',
+                'Name of role.',
+                required: true,
+              )
             ],
           )..registerHandler(deleteRoleSlashCommand)
         ],
