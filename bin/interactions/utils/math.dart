@@ -16,9 +16,12 @@ class UtilsMathInteractions {
           'eval',
           'Evaluate a mathematical expression.',
           options: [
-            CommandOptionBuilder(CommandOptionType.string, 'expression',
-                'The expression to be evaluated.',
-                required: true)
+            CommandOptionBuilder(
+              CommandOptionType.string,
+              'expression',
+              'The expression to be evaluated.',
+              required: true,
+            )
           ],
         )..registerHandler(evalSlashCommand),
         CommandOptionBuilder(
@@ -26,12 +29,18 @@ class UtilsMathInteractions {
           'derivative',
           'Find the derivative of a function.',
           options: [
-            CommandOptionBuilder(CommandOptionType.string, 'variable',
-                'The differentiating variable',
-                required: true),
-            CommandOptionBuilder(CommandOptionType.string, 'expression',
-                'The expression to be evaluated.',
-                required: true)
+            CommandOptionBuilder(
+              CommandOptionType.string,
+              'variable',
+              'The differentiating variable',
+              required: true,
+            ),
+            CommandOptionBuilder(
+              CommandOptionType.string,
+              'expression',
+              'The expression to be evaluated.',
+              required: true,
+            )
           ],
         )..registerHandler(deriveSlashCommand)
       ],
@@ -41,44 +50,34 @@ class UtilsMathInteractions {
   String evaluate(String expr) {
     expr = expr.replaceAll('x', '*');
 
-    late final dynamic eval;
     final p = Parser();
     final cm = ContextModel();
 
     try {
       final exp = p.parse(expr);
-      eval = exp.evaluate(EvaluationType.REAL, cm);
-    } on RangeError catch (_) {
-      return 'Invalid expression';
-    } on FormatException catch (_) {
+      return exp.evaluate(EvaluationType.REAL, cm).toString();
+    } catch (_) {
       return 'Invalid expression';
     }
-
-    final result = eval.toString();
-    return result;
   }
 
   String derive(String variable, String expr) {
     final p = Parser();
-    late final Expression exp;
 
     try {
-      exp = p.parse(expr);
-    } on RangeError catch (_) {
-      return 'Invalid expression';
-    } on FormatException catch (_) {
+      final exp = p.parse(simplify(expr));
+      final derivative = exp.derive(variable.trim()).toString();
+      return simplify(derivative);
+    } catch (_) {
       return 'Invalid expression';
     }
-    final result = exp.derive(variable.trim());
-    return result.toString();
   }
 
   String simplify(String expr) {
     final p = Parser();
     final exp = p.parse(expr);
 
-    final result = exp.simplify();
-    return result.toString();
+    return exp.simplify().toString();
   }
 
   EmbedBuilder createMathEmbed(String title,
@@ -90,7 +89,7 @@ class UtilsMathInteractions {
 
     return EmbedBuilder()
       ..title = '$title | **$expr**'
-      ..description = 'Result: \n$result'
+      ..description = result
       ..color = DiscordColor.chartreuse
       ..timestamp = DateTime.now()
       ..addFooter((footer) {
@@ -113,6 +112,15 @@ class UtilsMathInteractions {
     await event.acknowledge();
     final expr = event.getArg('expression').value.toString();
     final variable = event.getArg('variable').value.toString();
+
+    if (variable.length != 1) {
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(errorEmbed(
+            'Invalid differentiating variable entered!',
+            event.interaction.userAuthor))),
+      );
+      return;
+    }
 
     final result = derive(variable, expr);
 
