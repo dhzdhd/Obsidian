@@ -75,9 +75,9 @@ class ModCloneInteractions {
     final channel = cloneDict[event.interaction.message!.id.id]!;
     cloneDict.remove(event.interaction.message!.id.id);
 
-    List<PermissionOverrideBuilder>? overrides = [];
-    overrides = channel.permissionOverrides
-        .map((e) => PermissionOverrideBuilder(e.type, e.id))
+    // List<PermissionOverrideBuilder>? overrides = [];
+    final overrides = channel.permissionOverrides
+        .map((e) => PermissionOverrideBuilder.from(e.type, e.id, e.permissions))
         .toList();
     // for (var element in channel.permissionOverrides) {
     //   print(element);
