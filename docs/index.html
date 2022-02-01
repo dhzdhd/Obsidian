@@ -5,10 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" ></script>
   </head>
   <body>
-    <header class="text-gray-400 bg-gray-800 body-font sticky top-0 font-sans">
+    <header class="text-gray-400 bg-gray-800 body-font sticky top-0 ">
       <div
         class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center"
       >
@@ -41,16 +41,17 @@
           >
         </a>
         <div class="lg:w-2/5 inline-flex lg:justify-end ml-5 lg:ml-0">
-          <button
-            class="bg-gradient-to-r from-green-400 to-green-600 border-0 py-2 px-8 focus:outline-none hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-2 px-4 rounded-full"
-          >
-            Invite Now →
-          </button>
+          <a class=" text-white  font-bold inline-flex items-center bg-green-500 border-0 py-1 px-3 focus:outline-none hover:bg-green-600 rounded-full mt-4 md:mt-0"
+          href="">Invite Now
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+              <path d="M5 12h14M12 5l7 7-7 7"></path>
+            </svg>
+          </a>
         </div>
       </div>
     </header>
     <section
-      class="text-gray-400 bg-gradient-to-br from-gray-900 to-gray-800 body-font font-sans"
+      class="text-gray-400 bg-gradient-to-br from-gray-900 to-gray-800 body-font "
     >
       <div
         class="container mx-auto flex px-5 py-24 items-center justify-center flex-col"
@@ -66,7 +67,7 @@
           <h1
             class="title-font font-bold sm:text-4xl text-3xl mb-4 font-medium text-green-500"
           >
-            Obsidian: The multipurpose Discord Bot.
+            Obsidian. The multipurpose Discord Bot.
           </h1>
           <p class="leading-relaxed mb-8">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta
@@ -78,16 +79,19 @@
             quisquam impedit quasi. Aspernatur, dolore magnam.
           </p>
           <div class="flex justify-center">
-            <button
+            <a
               class="inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded text-lg"
+              href=""
             >
-              <a href="">Add to Server</a>
-            </button>
-            <button
+            
+              Add to Server
+          </a>
+            <a
               class="ml-4 inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded text-lg"
+              href="#features"
             >
-              <a href="#features">See Features</a>
-            </button>
+               See Features
+          </a>
           </div>
         </div>
       </div>
@@ -149,17 +153,18 @@
               </p>
             </div>
           </div>
-          <button
-            class="flex mx-auto mt-20 bg-gradient-to-r from-green-400 to-green-600 border-0 py-2 px-8 focus:outline-none hover:from-cyan-500 hover:to-blue-500 rounded-full text-lg text-white"
-          >
-            <a href="#contributing">Contribute</a>
-          </button>
+          <a
+          class=" inline-flex mt-4 text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded-full text-lg justify-center"
+          href="#contributing"
+        >
+           Contribute
+      </a>
         </div>
       </section>
     </div>
     <div id="contributing">
       <section
-        class="text-gray-400 bg-gradient-to-br from-gray-900 to-gray-800 body-font font-sans"
+        class="text-gray-400 bg-gradient-to-br from-gray-900 to-gray-800 body-font container mx-auto  py-2  "
       >
         <div
           class="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center"
@@ -179,20 +184,69 @@
               odit quibusdam reprehenderit, veniam velit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, doloremque odit? Repellendus veritatis ab saepe corporis alias suscipit rerum doloribus dicta non, porro, officia sit debitis dolorum sunt deserunt necessitatibus?
             </p>
             <div class="flex justify-center">
-              <button
+              <a
                 class="inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600 rounded text-lg"
+                href=""
               >
                 Contributing Guidelines
-              </button>
-              <button
+            </a>
+              <a
                 class="ml-4 inline-flex text-white bg-green-500 border-0 py-2 px-6 focus:outline-none hover:bg-green-600  rounded text-lg"
+                href=""
               >
-               <a href="">GitHub</a>
-              </button>
+              Github
+               
+          </a>
+              
             </div>
+            
          
         </div>
       </section>
+    </div>
+    <section class="text-gray-400 bg-gradient-to-br from-gray-900 to-gray-800 body-font">
+      <div class="container px-5 py-24 mx-auto">
+        <div class="flex flex-col text-center w-full mb-20">
+          <h1 class="sm:text-3xl text-2xl font-bold title-font mb-4  text-green-500">Contributors</h1>
+          
+        </div>
+        <div class="flex flex-wrap -m-2">
+          <div class="p-2 lg:w-1/3 md:w-1/2 w-full">
+            <div class="h-full flex items-center border-gray-600 border p-4 rounded-lg">
+              
+              <div class="flex-grow">
+                <a class="text-green-400 title-font font-medium"
+                >dhzdhd</a>
+                <p class="text-gray-400">Bot Dev</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-2 lg:w-1/3 md:w-1/2 w-full">
+            <div class="h-full flex items-center border-gray-600 border p-4 rounded-lg">
+             
+              <div class="flex-grow">
+                <a class="text-green-400 title-font font-medium"
+                >Arnav</a>
+                <p class="text-gray-400">Contributor</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-2 lg:w-1/3 md:w-1/2 w-full">
+            <div class="h-full flex items-center border-gray-600 border p-4 rounded-lg">
+             
+              <div class="flex-grow">
+                <a class="text-green-400 title-font font-medium"
+               >Luka</a>
+                <p class="text-gray-400">Contributor</p>
+              </div>
+            </div>
+          </div>
+          
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
       <div id="support">
         <section class="text-gray-400 bg-gray-900 body-font">
           <div class="container mx-auto flex px-5 py-24 items-center justify-center flex-col">
@@ -209,20 +263,12 @@
         </section>
       </div>
     </div>
-    <footer class="text-gray-400 bg-gray-800 body-font">
-      <div class="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
-        <a class="flex title-font font-medium items-center md:justify-start justify-center text-white"
-        href="https://github.com/dhzdhd/obsidian">
-          <img src="img/obsidian_logo.png" alt="obsidian_logo"
-          width="50px"
-          height="50px"
-          class="rounded-full">
-          <span class="ml-3 text-xl text-green-500">Obsidian</span>
-        </a>
-        <p class="text-sm text-gray-400 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-800 sm:py-2 sm:mt-0 mt-4">© 2022 Dhzdhd —
-          <a href="https://github.com/dhzdhd" class="text-gray-500 ml-1" target="_blank" rel="noopener noreferrer">@dhzdhd</a>
-        </p>
+    <footer class="text-center bg-gray-800 text-white">
 
+    
+      <div class="text-center p-4">
+        © 2022
+        <a class="text-green-400 font-bold" href="https://github.com/dhzdhd/Obsidian/">Obsidian</a>
       </div>
     </footer>
   </body>
