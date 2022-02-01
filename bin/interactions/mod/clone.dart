@@ -38,9 +38,19 @@ class ModCloneInteractions {
       return;
     }
 
-    // ! Add support for channel args
-    final channel =
-        event.interaction.channel.getFromCache() as ITextGuildChannel;
+    late final ITextGuildChannel channel;
+
+    try {
+      final channelArg = event.interaction.resolved?.channels.first;
+      channel = event.interaction.guild
+          ?.getFromCache()
+          ?.channels
+          .where((element) => element.id == channelArg?.id)
+          .first as ITextGuildChannel;
+    } catch (_) {
+      channel = event.interaction.channel.getFromCache() as ITextGuildChannel;
+    }
+
     final author = event.interaction.userAuthor!;
 
     final message = await event.sendFollowup(
@@ -75,18 +85,9 @@ class ModCloneInteractions {
     final channel = cloneDict[event.interaction.message!.id.id]!;
     cloneDict.remove(event.interaction.message!.id.id);
 
-    // List<PermissionOverrideBuilder>? overrides = [];
     final overrides = channel.permissionOverrides
         .map((e) => PermissionOverrideBuilder.from(e.type, e.id, e.permissions))
         .toList();
-    // for (var element in channel.permissionOverrides) {
-    //   print(element);
-    //   overrides.add(PermissionOverrideBuilder.from(
-    //     element.type,
-    //     element.id,
-    //     element.permissions,
-    //   ));
-    // }
 
     await channel.delete();
 
