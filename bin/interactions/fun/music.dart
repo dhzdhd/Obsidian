@@ -5,8 +5,7 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/nyxx_interactions.dart';
 import 'package:nyxx_lavalink/nyxx_lavalink.dart';
 
-import '../../obsidian_dart.dart' show cluster, botInteractions, bot;
-import '../../utils/constants.dart';
+import '../../obsidian_dart.dart' show cluster, botInteractions;
 import '../../utils/embed.dart';
 
 // ! Try with VPN
