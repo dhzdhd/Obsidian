@@ -41,7 +41,7 @@ class ModLogInteractions {
   Future<void> createLogSlashCommand(
       ISlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
-    var channel = event.interaction.resolved?.channels.first;
+    var channel = event.interaction.resolved!.channels.first;
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.embed(
@@ -51,7 +51,7 @@ class ModLogInteractions {
     }
 
     final response =
-        await LogDatabase.add(event.interaction.guild!.id.id, channel!.id.id);
+        await LogDatabase.add(event.interaction.guild!.id.id, channel.id.id);
 
     if (response) {
       await event.respond(MessageBuilder.embed(
@@ -104,7 +104,6 @@ class ModLogInteractions {
 
   Future<void> deleteLogButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
-    await event.interaction.message!.delete();
 
     final response = await LogDatabase.delete(event.interaction.guild!.id.id);
 
@@ -114,20 +113,29 @@ class ModLogInteractions {
           'Successfully deleted the log channel data from database!',
           event.interaction.userAuthor,
         )),
-        hidden: true,
       );
     } else {
-      await deleteMessageWithTimer(
-          message: await event.sendFollowup(
+      await event.respond(
         MessageBuilder.embed(errorEmbed(
           'Error in deleting the log channel data from the database!\n A log channel may not exist in this server!',
           event.interaction.userAuthor,
         )),
-      ));
+      );
     }
 
     final componentMessageBuilder = ComponentMessageBuilder();
-    componentMessageBuilder.addComponentRow(ComponentRowBuilder());
-    await event.sendFollowup(componentMessageBuilder);
+    final componentRow = ComponentRowBuilder()
+      ..addComponent(ButtonBuilder(
+        'Done!',
+        'delete-log-button',
+        ComponentStyle.success,
+        disabled: true,
+      ));
+    componentMessageBuilder.addComponentRow(componentRow);
+
+    await event.editFollowup(
+      event.interaction.message!.id,
+      componentMessageBuilder,
+    );
   }
 }

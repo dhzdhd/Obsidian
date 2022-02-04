@@ -47,10 +47,10 @@
   - [ ] on-guild-leave
   - [ ] on-delete
   - [ ] on-edit (Old message can't be fetched)
-  - [ ] on-bot-dm
-- [ ] log.dart
-  - [ ] assign
-  - [ ] delete
+  - [x] on-bot-dm
+- [x] log.dart
+  - [x] assign
+  - [x] delete
 - [ ] mute.dart
 - [ ] vc.dart
 - [ ] warn_ban.dart
