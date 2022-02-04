@@ -34,8 +34,8 @@
 
 ## Mod
 
-- [ ] clone.dart
-  - [ ] clone
+- [x] clone.dart
+  - [x] clone
 - [x] dm.dart
   - [x] dm
 - [ ] essential.dart

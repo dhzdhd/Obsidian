@@ -23,7 +23,7 @@ class ModCloneInteractions {
           )
         ],
       )..registerHandler(cloneSlashCommand))
-      ..registerButtonHandler('clone-accept-button', cloneButtonAcceptHandler);
+      ..registerButtonHandler('clone-accept-button', cloneAcceptButtonHandler);
   }
 
   Future<void> cloneSlashCommand(ISlashCommandInteractionEvent event) async {
@@ -79,7 +79,7 @@ class ModCloneInteractions {
     cloneDict[message.id.id] = channel;
   }
 
-  Future<void> cloneButtonAcceptHandler(IButtonInteractionEvent event) async {
+  Future<void> cloneAcceptButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
 
     final channel = cloneDict[event.interaction.message!.id.id]!;
