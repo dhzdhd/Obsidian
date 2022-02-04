@@ -1,13 +1,13 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/constants.dart';
 import '../../utils/embed.dart';
 
 class FunMovieInteractions {
-  final String _MOVIE_URL =
-      'http://www.omdbapi.com/?apikey=${Tokens.MOVIE_API_KEY}&plot=full';
+  final String movieUrl =
+      'http://www.omdbapi.com/?apikey=${Tokens.movieApiKey}&plot=full';
 
   FunMovieInteractions() {
     botInteractions.registerSlashCommand(SlashCommandBuilder(
@@ -24,25 +24,27 @@ class FunMovieInteractions {
     )..registerHandler(movieSlashCommand));
   }
 
-  Future<void> movieSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> movieSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    final title = event.getArg('title').value;
+    final title = event.getArg('title').value.toString();
 
-    final response = await dio.get(_MOVIE_URL, queryParameters: {'t': title});
-    final data = response.data;
+    final response = await dio
+        .get<Map>(movieUrl, queryParameters: <String, String>{'t': title});
+    final dynamic data = response.data;
 
     if (data['Title'] == null) {
-      await event.respond(MessageBuilder.embed(errorEmbed(
-        'The given movie was not found by the API.\nPlease try again with a different query.',
-        event.interaction.userAuthor,
-      )));
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(errorEmbed(
+          'The given movie was not found by the API.\nPlease try again with a different query.',
+          event.interaction.userAuthor,
+        ))),
+      );
       return;
     }
 
     final movieEmbed = EmbedBuilder()
       ..title = 'Movie query: **$title**'
-      ..description =
-          '''
+      ..description = '''
       Title: ${data['Title']}
       Year of release: ${data['Year']}
       Runtime: ${data['Runtime']}
@@ -55,10 +57,10 @@ class FunMovieInteractions {
       IMDB rating: ${data['imdbRating']}
       IMDB votes: ${data['imdbVotes']}
       B/O: ${data['BoxOffice']}
-          '''
+      '''
       ..color = DiscordColor.cyan
       ..timestamp = DateTime.now()
-      ..thumbnailUrl = data['Poster']
+      ..thumbnailUrl = data['Poster'].toString()
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();

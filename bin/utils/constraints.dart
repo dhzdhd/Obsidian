@@ -1,17 +1,16 @@
-import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import 'constants.dart';
 
-Future<bool> checkForOwner(SlashCommandInteractionEvent event) async {
-  if (event.interaction.userAuthor?.id.toString() == Tokens.BOT_OWNER) {
+Future<bool> checkForOwner(IInteractionEvent event) async {
+  if (event.interaction.userAuthor?.id.toString() == Tokens.botOwner) {
     return true;
   }
 
   return false;
 }
 
-Future<bool> checkForAdmin(SlashCommandInteractionEvent event) async {
+Future<bool> checkForAdmin(IInteractionEvent event) async {
   if ((await event.interaction.memberAuthor?.effectivePermissions)
           ?.administrator ??
       false) {
@@ -21,7 +20,7 @@ Future<bool> checkForAdmin(SlashCommandInteractionEvent event) async {
   return false;
 }
 
-Future<bool> checkForMod(InteractionEvent event) async {
+Future<bool> checkForMod(IInteractionEvent event) async {
   if ((await event.interaction.memberAuthor?.effectivePermissions)
           ?.manageGuild ??
       false) {

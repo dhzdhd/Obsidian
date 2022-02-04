@@ -1,15 +1,15 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 
 class UtilsPollInteractions {
-  static const EMPTY_BAR = '▒';
-  static const FILLED_BAR = '█';
+  static const emptyBar = '▒';
+  static const filledBar = '█';
   late EmbedBuilder staticPollEmbed;
 
-  var userChoiceMap = {};
-  var optionPercentMap = {};
+  // var userChoiceMap = {};
+  Map<int, int> optionPercentMap = {};
 
   UtilsPollInteractions() {
     botInteractions
@@ -46,7 +46,7 @@ class UtilsPollInteractions {
       ..registerButtonHandler('pollCancel', buttonOptionCancel);
   }
 
-  Future<void> buttonOption1(ButtonInteractionEvent event) async {
+  Future<void> buttonOption1(IButtonInteractionEvent event) async {
     await event.acknowledge();
     var pollEmbed = staticPollEmbed;
 
@@ -55,24 +55,24 @@ class UtilsPollInteractions {
     await event.interaction.message?.edit(MessageBuilder.embed(pollEmbed));
   }
 
-  Future<void> buttonOption2(ButtonInteractionEvent event) async {}
+  Future<void> buttonOption2(IButtonInteractionEvent event) async {}
 
-  Future<void> buttonOption3(ButtonInteractionEvent event) async {}
+  Future<void> buttonOption3(IButtonInteractionEvent event) async {}
 
-  Future<void> buttonOption4(ButtonInteractionEvent event) async {}
+  Future<void> buttonOption4(IButtonInteractionEvent event) async {}
 
-  Future<void> buttonOption5(ButtonInteractionEvent event) async {}
+  Future<void> buttonOption5(IButtonInteractionEvent event) async {}
 
-  Future<void> buttonOptionDeselect(ButtonInteractionEvent event) async {}
+  Future<void> buttonOptionDeselect(IButtonInteractionEvent event) async {}
 
-  Future<void> buttonOptionCancel(ButtonInteractionEvent event) async {}
+  Future<void> buttonOptionCancel(IButtonInteractionEvent event) async {}
 
-  Future<void> pollSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> pollSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final title = event.getArg('title').value;
+    final title = event.getArg('title').value.toString();
     final options = event.getArg('options').value.toString().split(',');
-    final restrict = event.getArg('restrict').value;
+    final restrict = event.getArg('restrict').value.toString();
     print(restrict.runtimeType.toString());
 
     staticPollEmbed = EmbedBuilder()
@@ -86,12 +86,12 @@ class UtilsPollInteractions {
 
     var pollEmbed = staticPollEmbed;
 
-    options.forEach((element) {
+    for (var element in options) {
       pollEmbed.addField(
         name: '${(options.indexOf(element) + 1)}) $element',
-        content: '${EMPTY_BAR * 20}| 0% (0)',
+        content: '${emptyBar * 20}| 0% (0)',
       );
-    });
+    }
 
     await event.sendFollowup(MessageBuilder.embed(pollEmbed));
 
@@ -99,8 +99,8 @@ class UtilsPollInteractions {
     final componentRow = ComponentRowBuilder();
 
     for (var _ = 0; _ < options.length; _++) {
-      componentRow.addComponent(ButtonBuilder(
-          '${(_ + 1).toString()}', 'pollOption$_', ComponentStyle.primary));
+      componentRow.addComponent(
+          ButtonBuilder('${(_ + 1)}', 'pollOption$_', ComponentStyle.primary));
 
       optionPercentMap[_ + 1] = 0;
     }

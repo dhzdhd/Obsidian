@@ -1,5 +1,5 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/constants.dart';
@@ -35,23 +35,13 @@ class ModLogInteractions {
           )..registerHandler(deleteLogSlashCommand)
         ],
       ))
-      ..registerButtonHandler('delete-log', deleteLogButtonHandler);
+      ..registerButtonHandler('delete-log-button', deleteLogButtonHandler);
   }
 
-  Future<void> createLogSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> createLogSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
-    var channel = event.interaction.resolved?.channels.first;
-
-    if (!(await checkForMod(event))) {
-      await deleteMessageWithTimer(
-        message: await event.sendFollowup(
-          MessageBuilder.embed(errorEmbed(
-              'You do not have the permissions to use this command!',
-              event.interaction.userAuthor)),
-        ),
-      );
-      return;
-    }
+    var channel = event.interaction.resolved!.channels.first;
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.embed(
@@ -60,29 +50,28 @@ class ModLogInteractions {
       return;
     }
 
-    var response = await LogDatabase.add(
-        event.interaction.guild?.id.id as int, channel?.id.id as int);
+    final response =
+        await LogDatabase.add(event.interaction.guild!.id.id, channel.id.id);
 
     if (response) {
-      await deleteMessageWithTimer(
-          message: await event.sendFollowup(MessageBuilder.embed(
+      await event.respond(MessageBuilder.embed(
         successEmbed(
-          'Successfully added the log channel data in the database!',
+          'Successfully added the log channel data to the database!',
           event.interaction.userAuthor,
         ),
-      )));
+      ));
     } else {
-      await deleteMessageWithTimer(
-          message: await event.sendFollowup(MessageBuilder.embed(
+      await event.respond(MessageBuilder.embed(
         errorEmbed(
           'Error in adding the log channel data to the database!',
           event.interaction.userAuthor,
         ),
-      )));
+      ));
     }
   }
 
-  Future<void> deleteLogSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> deleteLogSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {
@@ -95,7 +84,7 @@ class ModLogInteractions {
     await event.sendFollowup(
       MessageBuilder.embed(EmbedBuilder()
         ..title = 'Are you sure you want to delete the log channel?'
-        ..color = Colors.AUDIT_COLORS['mod']
+        ..color = Colors.auditColors['mod']
         ..timestamp = DateTime.now()
         ..addFooter((footer) {
           footer.text =
@@ -106,15 +95,15 @@ class ModLogInteractions {
 
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
-      ..addComponent(ButtonBuilder('Yes', 'delete-log', ComponentStyle.danger));
+      ..addComponent(
+          ButtonBuilder('Yes', 'delete-log-button', ComponentStyle.danger));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);
   }
 
-  Future<void> deleteLogButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> deleteLogButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
-    await event.interaction.message!.delete();
 
     final response = await LogDatabase.delete(event.interaction.guild!.id.id);
 
@@ -124,20 +113,29 @@ class ModLogInteractions {
           'Successfully deleted the log channel data from database!',
           event.interaction.userAuthor,
         )),
-        hidden: true,
       );
     } else {
-      await deleteMessageWithTimer(
-          message: await event.sendFollowup(
+      await event.respond(
         MessageBuilder.embed(errorEmbed(
           'Error in deleting the log channel data from the database!\n A log channel may not exist in this server!',
           event.interaction.userAuthor,
         )),
-      ));
+      );
     }
 
     final componentMessageBuilder = ComponentMessageBuilder();
-    componentMessageBuilder.addComponentRow(ComponentRowBuilder());
-    await event.sendFollowup(componentMessageBuilder);
+    final componentRow = ComponentRowBuilder()
+      ..addComponent(ButtonBuilder(
+        'Done!',
+        'delete-log-button',
+        ComponentStyle.success,
+        disabled: true,
+      ));
+    componentMessageBuilder.addComponentRow(componentRow);
+
+    await event.editFollowup(
+      event.interaction.message!.id,
+      componentMessageBuilder,
+    );
   }
 }

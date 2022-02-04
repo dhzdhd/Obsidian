@@ -1,5 +1,5 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 import 'package:dio/dio.dart';
 
 import '../../utils/constants.dart';
@@ -7,10 +7,10 @@ import '../../obsidian_dart.dart' show botInteractions, dio;
 import '../../utils/embed.dart';
 
 class FunYoutubeInteractions {
-  static const YT_URL = 'https://www.googleapis.com/youtube/v3/search/';
-  Map<int, Message> messageMap = {};
+  static const ytUrl = 'https://www.googleapis.com/youtube/v3/search/';
+  Map<int, IMessage> messageMap = {};
   var params = {
-    'key': Tokens.YT_KEY,
+    'key': Tokens.ytKey,
     'part': 'snippet',
     'maxResults': 5,
     'videoEmbeddable': 'true',
@@ -25,43 +25,49 @@ class FunYoutubeInteractions {
         'Search for a youtube video.',
         [
           CommandOptionBuilder(
-              CommandOptionType.string, 'query', 'The video name.',
-              required: true)
+            CommandOptionType.string,
+            'query',
+            'The video name.',
+            required: true,
+          )
         ],
       )..registerHandler(ytSlashCommand))
-      ..registerMultiselectHandler('youtube', ytOptionHandler);
+      ..registerMultiselectHandler('youtube-option', ytOptionHandler);
   }
 
-  Future<void> ytSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> ytSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    var vidIdList = [];
-    late final List videoList;
-    late final EmbedBuilder errEmbed;
+    List<String> vidIdList = [];
+    late final dynamic videoList;
 
-    final query = await event.getArg('query').value;
+    final query = (await event.getArg('query').value).toString();
     params['q'] = query;
 
     try {
-      final response = await dio.get(YT_URL, queryParameters: params);
-      videoList = response.data['items'];
-      var _ = videoList[0];
+      final response =
+          await dio.get<Map<String, dynamic>>(ytUrl, queryParameters: params);
+      videoList = response.data!['items']!.toList();
     } on DioError catch (err) {
       final code = err.response?.statusCode;
       if (code == 403) {
-        errEmbed = errorEmbed(
+        final errEmbed = errorEmbed(
             'YT API Quota finished. Sorry for the inconvenience.',
             event.interaction.userAuthor);
 
-        await event.respond(MessageBuilder.embed(errEmbed));
+        await deleteMessageWithTimer(
+          message: await event.sendFollowup(MessageBuilder.embed(errEmbed)),
+        );
         return;
       }
     } on RangeError catch (_) {
-      errEmbed = errorEmbed(
+      final errEmbed = errorEmbed(
           'The requested video was not found. Try with a different query.',
           event.interaction.userAuthor);
 
-      await event.respond(MessageBuilder.embed(errEmbed));
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(errEmbed)),
+      );
       return;
     }
 
@@ -76,13 +82,13 @@ class FunYoutubeInteractions {
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
 
-    for (var _ = 0; _ < videoList.length; _++) {
+    for (var _ = 0; _ < (videoList as List).length; _++) {
       ytEmbed.addField(
           name: '${_ + 1}) ${videoList[_]['snippet']['title']}',
           content:
               '[Thumbnail](${videoList[_]['snippet']['thumbnails']['high']['url']})',
           inline: false);
-      vidIdList.add(videoList[_]['id']['videoId']);
+      vidIdList.add(videoList[_]['id']['videoId'].toString());
     }
 
     final message = await event.sendFollowup(MessageBuilder.embed(ytEmbed));
@@ -91,7 +97,7 @@ class FunYoutubeInteractions {
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(MultiselectBuilder(
-        'youtube',
+        'youtube-option',
         [
           for (var _ = 0; _ < vidIdList.length; _++)
             MultiselectOptionBuilder('Option ${_ + 1}', vidIdList[_])
@@ -102,7 +108,7 @@ class FunYoutubeInteractions {
     await event.respond(componentMessageBuilder);
   }
 
-  Future<void> ytOptionHandler(MultiselectInteractionEvent event) async {
+  Future<void> ytOptionHandler(IMultiselectInteractionEvent event) async {
     await event.acknowledge();
 
     await event.sendFollowup(MessageBuilder.content(

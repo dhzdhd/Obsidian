@@ -2,132 +2,129 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
-import 'package:nyxx_lavalink/lavalink.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
+import 'package:nyxx_lavalink/nyxx_lavalink.dart';
 
-import '../../obsidian_dart.dart' show cluster, botInteractions, bot;
-import '../../utils/constants.dart';
+import '../../obsidian_dart.dart' show cluster, botInteractions;
 import '../../utils/embed.dart';
+
+// ! Try with VPN
 
 class FunMusicInteractions {
   final _random = Random();
+  Map<Snowflake, int> volumeMap = {};
 
   FunMusicInteractions() {
     initEvents();
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
-        'music',
-        'Music group of commands.',
-        [
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'play',
-            'Play some music.',
-            options: [
-              CommandOptionBuilder(CommandOptionType.string, 'title',
-                  'Title of song to be played.',
-                  required: true)
-            ],
-          )..registerHandler(playMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'skip',
-            'Skip the currently playing music.',
-          )..registerHandler(skipMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'repeat',
-            'Repeat the currently playing music.',
-          )..registerHandler(repeatMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'resume',
-            'Resume paused music.',
-          )..registerHandler(resumeMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'pause',
-            'Pause currently playing music.',
-          )..registerHandler(pauseMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'stop',
-            'Stop playing music and clear queue.',
-          )..registerHandler(stopMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'queue',
-            'View the current queue.',
-          )..registerHandler(queueMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'add',
-            'Add a song to the queue.',
-            options: [
-              CommandOptionBuilder(CommandOptionType.string, 'title',
-                  'Title of song to be added to the queue.',
-                  required: true)
-            ],
-          )..registerHandler(addMusicSlashCommand),
-          CommandOptionBuilder(
-            CommandOptionType.subCommand,
-            'shuffle',
-            'Shuffle tracks in the current queue.',
-          )..registerHandler(shuffleMusicSlashCommand),
-        ],
-      ))
+          'music',
+          'Music group of commands.',
+          [
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'play',
+              'Play some music.',
+              options: [
+                CommandOptionBuilder(CommandOptionType.string, 'title',
+                    'Title of song to be played.',
+                    required: true)
+              ],
+            )..registerHandler(playMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'skip',
+              'Skip the currently playing music.',
+            )..registerHandler(skipMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'repeat',
+              'Repeat the currently playing music.',
+            )..registerHandler(repeatMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'resume',
+              'Resume paused music.',
+            )..registerHandler(resumeMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'pause',
+              'Pause currently playing music.',
+            )..registerHandler(pauseMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'stop',
+              'Stop playing music and clear queue.',
+            )..registerHandler(stopMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'queue',
+              'View the current queue.',
+            )..registerHandler(queueMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'add',
+              'Add a song to the queue.',
+              options: [
+                CommandOptionBuilder(CommandOptionType.string, 'title',
+                    'Title of song to be added to the queue.',
+                    required: true)
+              ],
+            )..registerHandler(addMusicSlashCommand),
+            CommandOptionBuilder(
+              CommandOptionType.subCommand,
+              'shuffle',
+              'Shuffle tracks in the current queue.',
+            )..registerHandler(shuffleMusicSlashCommand),
+          ],
+          guild: Snowflake(791639588606967818)))
+      ..registerButtonHandler(
+          'increase-vol-button', increaseVolumeButtonHandler)
+      ..registerButtonHandler(
+          'decrease-vol-button', decreaseVolumeButtonHandler)
+      ..registerButtonHandler('mute-button', muteButtonHandler)
       ..registerMultiselectHandler('music', musicOptionHandler);
   }
 
   void initEvents() {
-    bot.onVoiceStateUpdate.listen((event) async {
-      var buffer = [];
+    // bot.eventsWs.onVoiceStateUpdate.listen((event) async {
+    // List<Snowflake> buffer = [];
 
-      final botSnowflake = Snowflake(Tokens.BOT_ID);
-      final channel =
-          await event.state.channel?.getOrDownload() as VoiceGuildChannel;
+    // final botSnowflake = Snowflake(Tokens.botId);
+    // final channel =
+    //     await event.state.channel?.getOrDownload() as IVoiceGuildChannel;
 
-      final guild = await event.state.guild?.getOrDownload();
-      final voiceStates = guild?.voiceStates.asMap.keys.toList();
+    //   final guild = await event.state.guild?.getOrDownload();
+    //   final voiceStates = guild?.voiceStates.keys.toList();
 
-      if (voiceStates == null) return;
-      if (voiceStates.contains(botSnowflake)) {
-        buffer.add(botSnowflake);
-        voiceStates.remove(botSnowflake);
-      } else {
-        return;
-      }
+    //   if (voiceStates == null) return;
+    //   if (voiceStates.contains(botSnowflake)) {
+    //     buffer.add(botSnowflake);
+    //     voiceStates.remove(botSnowflake);
+    //   } else {
+    //     return;
+    //   }
 
-      print(voiceStates);
-    });
+    //   print(voiceStates);
+    // });
 
-    bot.onVoiceServerUpdate.listen((event) async {});
+    // bot.eventsWs.onVoiceServerUpdate.listen((event) async {});
   }
 
-  Future<void> playMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> playMusicSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    late VoiceGuildChannel vc;
+    late final IVoiceGuildChannel vc;
     final guildId = event.interaction.guild!.id;
-    final title = event.getArg('title').value;
+    final title = event.getArg('title').value.toString();
 
     // Check if bot is already playing music
-    //!
-    if (cluster
-        .getOrCreatePlayerNode(guildId)
-        .createPlayer(guildId)
-        .queue
-        .isNotEmpty) {
-      await event.respond(MessageBuilder.embed(errorEmbed(
-          'Bot is currently occupied in this server!',
-          event.interaction.userAuthor)));
-      return;
-    }
 
     // Check if user is in a vc
     try {
       vc = event.interaction.memberAuthor?.voiceState?.channel?.getFromCache()
-          as VoiceGuildChannel;
+          as IVoiceGuildChannel;
     } catch (err) {
       await event.respond(MessageBuilder.embed(errorEmbed(
           'User has not joined a voice channel!\nPlease join a voice channel first.',
@@ -141,10 +138,16 @@ class FunMusicInteractions {
 
     final searchResults = await node.autoSearch(title);
     if (searchResults.tracks.isEmpty) {
-      await event.respond(MessageBuilder.embed(errorEmbed(
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(errorEmbed(
           'Song not found! Please try again with a different query.',
-          event.interaction.userAuthor)));
+          event.interaction.userAuthor,
+        ))),
+      );
+      return;
     }
+
+    // Get first track and track info
     final track = searchResults.tracks[0];
     final trackInfo = track.info!;
     final trackTime =
@@ -166,7 +169,26 @@ class FunMusicInteractions {
     );
 
     final componentMessageBuilder = ComponentMessageBuilder();
-    final componentRow = ComponentRowBuilder()
+    final buttonComponentRow = ComponentRowBuilder()
+      ..addComponent(ButtonBuilder(
+        'Increase Volume',
+        'increase-vol-button',
+        ComponentStyle.primary,
+        emoji: UnicodeEmoji('🔊'),
+      ))
+      ..addComponent(ButtonBuilder(
+        'Decrease Volume',
+        'decrease-vol-button',
+        ComponentStyle.primary,
+        emoji: UnicodeEmoji('🔉'),
+      ))
+      ..addComponent(ButtonBuilder(
+        'Mute',
+        'mute-button',
+        ComponentStyle.danger,
+        emoji: UnicodeEmoji('🔇'),
+      ));
+    final optionComponentRow = ComponentRowBuilder()
       ..addComponent(MultiselectBuilder('music', [
         MultiselectOptionBuilder('Pause', 'pause')
           ..description = 'Pause the current playing track'
@@ -187,12 +209,16 @@ class FunMusicInteractions {
           ..description = 'Stop playing tracks and delete the queue'
           ..emoji = UnicodeEmoji('⏹️'),
       ]));
-    componentMessageBuilder.addComponentRow(componentRow);
+    componentMessageBuilder.addComponentRow(buttonComponentRow);
+    componentMessageBuilder.addComponentRow(optionComponentRow);
 
     await event.respond(componentMessageBuilder);
+
+    volumeMap[guildId] = 100;
   }
 
-  Future<void> skipMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> skipMusicSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -205,7 +231,7 @@ class FunMusicInteractions {
   }
 
   Future<void> repeatMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -220,7 +246,7 @@ class FunMusicInteractions {
   }
 
   Future<void> resumeMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -233,7 +259,7 @@ class FunMusicInteractions {
   }
 
   Future<void> pauseMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -243,7 +269,8 @@ class FunMusicInteractions {
         musicEmbed('Pause', 'Paused music.', event.interaction.userAuthor)));
   }
 
-  Future<void> stopMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> stopMusicSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final node = cluster.getOrCreatePlayerNode(event.interaction.guild!.id);
@@ -256,7 +283,7 @@ class FunMusicInteractions {
   }
 
   Future<void> queueMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final guildId = event.interaction.guild!.id;
@@ -271,10 +298,10 @@ class FunMusicInteractions {
         event.interaction.userAuthor)));
   }
 
-  Future<void> addMusicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> addMusicSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final title = event.getArg('title').value;
+    final title = event.getArg('title').value.toString();
     final guildId = event.interaction.guild!.id;
     final node = cluster.getOrCreatePlayerNode(guildId);
 
@@ -288,7 +315,7 @@ class FunMusicInteractions {
   }
 
   Future<void> shuffleMusicSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final guildId = event.interaction.guild!.id;
@@ -301,17 +328,37 @@ class FunMusicInteractions {
       return;
     }
 
-    final shuffledQueue = <QueuedTrack>[];
+    final shuffledQueue = <IQueuedTrack>[];
     for (var _ = 0; _ < player.queue.length; _++) {
-      var randomIndex = _random.nextInt(player.queue.length);
+      final randomIndex = _random.nextInt(player.queue.length);
       shuffledQueue.add(player.queue[randomIndex]);
       player.queue.removeAt(randomIndex);
     }
 
-    player.queue = shuffledQueue;
+    player.queue
+      ..clear()
+      ..addAll(shuffledQueue);
   }
 
-  Future<void> musicOptionHandler(MultiselectInteractionEvent event) async {
+  Future<void> increaseVolumeButtonHandler(
+      IButtonInteractionEvent event) async {
+    final guildId = event.interaction.guild!.id;
+    final newVolume = volumeMap[guildId]! + 50;
+    volumeMap[guildId] = volumeMap[guildId]! + 50;
+    final node =
+        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    node.volume(guildId, newVolume);
+  }
+
+  Future<void> decreaseVolumeButtonHandler(
+      IButtonInteractionEvent event) async {}
+  Future<void> muteButtonHandler(IButtonInteractionEvent event) async {
+    final node =
+        cluster.getOrCreatePlayerNode(event.interaction.guild?.id as Snowflake);
+    node.volume(event.interaction.guild!.id, 1);
+  }
+
+  Future<void> musicOptionHandler(IMultiselectInteractionEvent event) async {
     await event.acknowledge();
     final value = event.interaction.values.first;
     final guildId = event.interaction.guild!.id;

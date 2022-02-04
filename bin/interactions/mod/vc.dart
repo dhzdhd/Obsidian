@@ -1,5 +1,5 @@
 import '../../obsidian_dart.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 import 'package:nyxx/nyxx.dart';
 
 import '../../utils/constraints.dart';
@@ -37,7 +37,7 @@ class ModVcInteractions {
       ..registerButtonHandler('vc-mute-all', vcMuteButtonHandler);
   }
 
-  Future<void> vcMuteSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> vcMuteSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     if (!(await checkForMod(event))) {
@@ -48,7 +48,7 @@ class ModVcInteractions {
     }
   }
 
-  Future<void> vcMuteButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> vcMuteButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge();
 
     if (!(await checkForMod(event))) {
@@ -61,7 +61,7 @@ class ModVcInteractions {
     }
   }
 
-  Future<void> vcUnmuteSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> vcUnmuteSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     if (!(await checkForMod(event))) {

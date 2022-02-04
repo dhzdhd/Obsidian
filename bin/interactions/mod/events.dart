@@ -7,18 +7,18 @@ import '../../utils/embed.dart';
 
 class ModEventsInteractions {
   ModEventsInteractions() {
-    bot.onDmReceived.listen(onDmReceived);
-    bot.onMessageDelete.listen(onMessageDelete);
-    bot.onMessageUpdate.listen(onMessageUpdate);
-    bot.onGuildMemberAdd.listen(onGuildMemberAdd);
-    bot.onGuildMemberRemove.listen(onGuildMemberRemove);
+    bot.eventsWs.onDmReceived.listen(onDmReceived);
+    bot.eventsWs.onMessageDelete.listen(onMessageDelete);
+    bot.eventsWs.onMessageUpdate.listen(onMessageUpdate);
+    bot.eventsWs.onGuildMemberAdd.listen(onGuildMemberAdd);
+    bot.eventsWs.onGuildMemberRemove.listen(onGuildMemberRemove);
   }
 
-  Future<void> onDmReceived(MessageReceivedEvent event) async {
-    final owner = await bot.fetchUser(Snowflake(Tokens.BOT_OWNER));
-    final user = event.message.author as User;
+  Future<void> onDmReceived(IMessageReceivedEvent event) async {
+    final owner = await bot.fetchUser(Snowflake(Tokens.botOwner));
+    final user = event.message.author as IUser;
 
-    if (user == bot.self) return;
+    if (user.bot) return;
 
     final message = event.message;
     final messageCondition = message.content.isNotEmpty
@@ -47,19 +47,19 @@ class ModEventsInteractions {
     await owner.sendMessage(MessageBuilder.embed(dmEmbed));
   }
 
-  Future<void> onMessageDelete(MessageDeleteEvent event) async {
-    final channel = event.channel.getFromCache()! as TextGuildChannel;
+  Future<void> onMessageDelete(IMessageDeleteEvent event) async {
+    final channel = event.channel.getFromCache()! as ITextGuildChannel;
     final message = event.message!;
     final guildId = channel.guild.id.id;
 
     if (message.author.bot) return;
 
-    final response = await LogDatabase.fetch(guildId: guildId);
+    final response = (await LogDatabase.fetch(guildId: guildId)) as List;
 
     if (response.isNotEmpty) {
-      final channelId = response[0]['channel'];
+      final dynamic channelId = response[0]['channel'];
       final logChannel =
-          (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
+          (await bot.fetchChannel(Snowflake(channelId))) as ITextGuildChannel;
 
       final messageCondition = message.content.isNotEmpty
           ? message.content.contains(RegExp(r'\`\`\`(.*?)\`\`\`'))
@@ -69,10 +69,10 @@ class ModEventsInteractions {
       final delEmbed = auditEmbed(
         'Message deleted in channel: ${channel.name}',
         '''
-          Author: ${(message.author as User).mention}
+          Author: ${(message.author as IUser).mention}
           Message: $messageCondition
           ''',
-        message.author as User,
+        message.author as IUser,
         'msg_delete',
       );
 
@@ -84,45 +84,46 @@ class ModEventsInteractions {
     }
   }
 
-  Future<void> onMessageUpdate(MessageUpdateEvent event) async {
+  Future<void> onMessageUpdate(IMessageUpdateEvent event) async {
     /// ! Commented out for now. To be implemented after the API is ready.
     /*
     final channel = event.channel.getFromCache()! as TextGuildChannel;
     final oldMessage = await event.channel.fetchMessage(event.messageId);
     final updatedMessage = event.updatedMessage!;
     final guildId = channel.guild.id.id;
-  
+
     if (updatedMessage.author.bot) return;
-  
+
     final response = await LogDatabase.fetch(guildId: guildId);
-  
+
     if (response.isNotEmpty) {
       final channelId = response[0]['channel'];
       final logChannel =
           (await bot.fetchChannel(Snowflake(channelId))) as TextGuildChannel;
-  
+
       await logChannel.sendMessage(MessageBuilder.embed(auditEmbed(
         'Message edited in channel: ${channel.name}',
         '''
         **Old:**\n${oldMessage.content}
         **New:**\n${updatedMessage.content}
         ''',
-        oldMessage.author as User,
+        oldMessage.author as IUser,
         'msg_edit',
       )));
     }
     */
   }
 
-  Future<void> onGuildMemberAdd(GuildMemberAddEvent event) async {
+  Future<void> onGuildMemberAdd(IGuildMemberAddEvent event) async {
     final guild = event.guild.getFromCache()!;
     final member = event.member;
 
-    final response = await LogDatabase.fetch(guildId: guild.id.id);
+    final response = (await LogDatabase.fetch(guildId: guild.id.id)) as List;
 
     if (response.isNotEmpty) {
-      final channelId = response[0]['channel'];
-      final channel = bot.fetchChannel(channelId) as TextGuildChannel;
+      final dynamic channelId = response[0]['channel'];
+      final channel =
+          bot.fetchChannel(Snowflake(channelId)) as ITextGuildChannel;
 
       await channel.sendMessage(MessageBuilder.embed(auditEmbed(
         'Member joined!',
@@ -133,15 +134,17 @@ class ModEventsInteractions {
     }
   }
 
-  Future<void> onGuildMemberRemove(GuildMemberRemoveEvent event) async {
+  Future<void> onGuildMemberRemove(IGuildMemberRemoveEvent event) async {
     final guild = event.guild.getFromCache()!;
     final user = event.user;
 
-    final response = await LogDatabase.fetch(guildId: guild.id.id);
+    final List response =
+        (await LogDatabase.fetch(guildId: guild.id.id)) as List;
 
     if (response.isNotEmpty) {
-      final channelId = response[0]['channel'];
-      final channel = bot.fetchChannel(channelId) as TextGuildChannel;
+      final dynamic channelId = response[0]['channel'];
+      final channel =
+          bot.fetchChannel(Snowflake(channelId)) as ITextGuildChannel;
 
       await channel.sendMessage(MessageBuilder.embed(auditEmbed(
         'Member left!',

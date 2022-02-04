@@ -7,7 +7,7 @@ services:
     network_mode: host
     restart: on-failure
     volumes:
-      - ./lavalink_server/application.yml:/opt/Lavalink/application.yml
+      - ./lavalink_server/application.yml:/opt/Lavalink/application.yml 
 
   bot:
     container_name: obsidian

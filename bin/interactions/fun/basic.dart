@@ -1,8 +1,7 @@
 import 'dart:math';
 
-import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 import '../../obsidian_dart.dart' show botInteractions;
 import '../../utils/constants.dart';
 
@@ -16,8 +15,17 @@ class FunBasicInteractions {
         'Shows the user profile picture/gif.',
         [
           CommandOptionBuilder(
-              CommandOptionType.user, 'user', 'A server member.')
+            CommandOptionType.user,
+            'user',
+            'A server member.',
+          ),
         ],
+      )..registerHandler(avatarSlashCommand))
+      ..registerSlashCommand(SlashCommandBuilder(
+        'Avatar',
+        null,
+        [],
+        type: SlashCommandType.user,
       )..registerHandler(avatarSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder('roll', 'Roll a die.', [])
         ..registerHandler(rollSlashCommand))
@@ -25,11 +33,14 @@ class FunBasicInteractions {
         ..registerHandler(flipSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
         'rip',
-        'Create a rip user message',
+        'Create a rip user message.',
         [
           CommandOptionBuilder(
-              CommandOptionType.user, 'user', 'A server member.',
-              required: true)
+            CommandOptionType.user,
+            'user',
+            'A server member.',
+            required: true,
+          )
         ],
       )..registerHandler(ripUserSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
@@ -37,13 +48,16 @@ class FunBasicInteractions {
         'Get a google search link for the given query.',
         [
           CommandOptionBuilder(
-              CommandOptionType.string, 'query', 'The query to be googled.',
-              required: true)
+            CommandOptionType.string,
+            'query',
+            'The query to be googled.',
+            required: true,
+          )
         ],
       )..registerHandler(googleSlashCommand));
   }
 
-  Future<void> avatarSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> avatarSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final avatar = event.interaction.resolved?.users.first
@@ -53,19 +67,19 @@ class FunBasicInteractions {
     await event.respond(MessageBuilder.content(avatar!));
   }
 
-  Future<void> rollSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> rollSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     await event.respond(
         MessageBuilder.content(':game_die: ${_random.nextInt(6) + 1}'));
   }
 
-  Future<void> flipSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> flipSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     await event.respond(MessageBuilder.content(
         ':coin: ${['Heads', 'Tails'][_random.nextInt(2)]}'));
   }
 
-  Future<void> ripUserSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> ripUserSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final user = event.interaction.resolved?.users.first;
@@ -82,15 +96,15 @@ ${user?.avatarURL(format: 'png', size: 128)}
 1 like :heart: = 1 prayer :pray:
     ''';
 
-    await event.respond(MessageBuilder.content(Emojis.RIP));
+    await event.respond(MessageBuilder.content(Emojis.rip));
     await channel?.sendMessage(MessageBuilder.content(firstMessage));
     await channel?.sendMessage(MessageBuilder.content(secondMessage));
   }
 
-  Future<void> googleSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> googleSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final query = event.getArg('query').value;
+    final query = event.getArg('query').value.toString();
     final author = event.interaction.userAuthor!;
 
     await event.respond(MessageBuilder.embed(

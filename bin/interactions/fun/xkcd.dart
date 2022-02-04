@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/embed.dart';
 
-const BASE_URL = 'https://xkcd.com';
-
 class FunXkcdInteractions {
+  static const baseUrl = 'https://xkcd.com';
+
   FunXkcdInteractions() {
     botInteractions.registerSlashCommand(
       SlashCommandBuilder(
@@ -36,7 +36,7 @@ class FunXkcdInteractions {
     );
   }
 
-  EmbedBuilder xkcdEmbed(SlashCommandInteractionEvent event, String title,
+  EmbedBuilder xkcdEmbed(ISlashCommandInteractionEvent event, String title,
       String desc, String imgUrl) {
     return EmbedBuilder()
       ..title = title
@@ -53,7 +53,7 @@ class FunXkcdInteractions {
   Future<dynamic> xkcdLatestComicInfo() async {
     late final Response response;
     try {
-      response = await dio.get('$BASE_URL/info.0.json');
+      response = await dio.get<Map>('$baseUrl/info.0.json');
     } on DioError catch (err) {
       print(err);
     }
@@ -61,10 +61,10 @@ class FunXkcdInteractions {
   }
 
   Future<void> xkcdLatestSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final comicInfo = await xkcdLatestComicInfo();
+    final dynamic comicInfo = await xkcdLatestComicInfo();
 
     Timer.periodic(
       const Duration(minutes: 30),
@@ -78,26 +78,28 @@ class FunXkcdInteractions {
       event,
       "${comicInfo['safe_title']} (#${comicInfo['num']})",
       "${comicInfo['alt']}\n\nPublished On: $date",
-      comicInfo['img'],
+      comicInfo['img'].toString(),
     );
     await event.respond(MessageBuilder.embed(embed));
   }
 
-  Future<void> xkcdComicSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> xkcdComicSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final comic = event.getArg('comic').value;
+    final comic = event.getArg('comic').value.toString();
 
     late final Response response;
     try {
-      response = await dio.get('$BASE_URL/$comic/info.0.json');
+      response = await dio.get<Map>('$baseUrl/$comic/info.0.json');
     } on DioError catch (err) {
       await event.respond(MessageBuilder.embed(errorEmbed(
           '${err.response?.statusCode}: Could not retrieve xkcd comic #$comic',
           event.interaction.userAuthor)));
+      return;
     }
 
-    final comicInfo = response.data;
+    final dynamic comicInfo = response.data;
     final date =
         "${comicInfo['year']}/${comicInfo['month']}/${comicInfo['day']}";
 
@@ -105,7 +107,7 @@ class FunXkcdInteractions {
       event,
       "${comicInfo['safe_title']} (#${comicInfo['num']})",
       "${comicInfo['alt']}\n\nPublished On: $date",
-      comicInfo['img'],
+      comicInfo['img'].toString(),
     );
     await event.respond(MessageBuilder.embed(embed));
   }

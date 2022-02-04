@@ -1,58 +1,47 @@
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 import 'package:nyxx/nyxx.dart';
 
 import '../../obsidian_dart.dart' show botInteractions;
 
 class UtilsBookmarkInteractions {
-  late Message? message;
-  late EmbedBuilder bookmarkEmbed;
+  late final EmbedBuilder bookmarkEmbed;
 
   UtilsBookmarkInteractions() {
     botInteractions
-      ..registerSlashCommand(
-          SlashCommandBuilder('bookmark', 'Bookmark a message.', [
-        CommandOptionBuilder(
-          CommandOptionType.string,
-          'id',
-          'Message ID.',
-          required: true,
-        )
-      ])
-            ..registerHandler(bookmarkSlashCommand))
-      ..registerButtonHandler('addBookmark', addOptionHandler)
-      ..registerButtonHandler('deleteBookmark', deleteOptionHandler);
+      ..registerSlashCommand(SlashCommandBuilder(
+        'bookmark',
+        'Bookmark a message.',
+        [
+          CommandOptionBuilder(
+            CommandOptionType.string,
+            'id',
+            'Message ID.',
+            required: true,
+          )
+        ],
+      )..registerHandler(bookmarkSlashCommand))
+      ..registerSlashCommand(SlashCommandBuilder(
+        'Bookmark',
+        null,
+        [],
+        type: SlashCommandType.message,
+      )..registerHandler(bookmarkSlashCommand))
+      ..registerButtonHandler('add-bm-button', addButtonHandler)
+      ..registerButtonHandler('delete-bm-button', deleteButtonHandler);
   }
 
-  Future<void> addOptionHandler(ButtonInteractionEvent event) async {
-    await event.acknowledge();
-    final author = event.interaction.userAuthor;
-
-    await author?.sendMessage(MessageBuilder.embed(bookmarkEmbed)) ??
-        await event.respond(
-          MessageBuilder.content(
-              "Your DM's are closed! I cannot send the bookmarke message to you!"),
-          hidden: true,
-        );
-  }
-
-  Future<void> deleteOptionHandler(ButtonInteractionEvent event) async {
+  Future<void> bookmarkSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    await event.deleteOriginalResponse();
-  }
+    late final IMessage? message;
 
-  Future<void> bookmarkSlashCommand(SlashCommandInteractionEvent event) async {
-    await event.acknowledge();
-
-    final id = int.tryParse(event.getArg('id').value);
-
-    if (id == null) {
-      await event.respond(MessageBuilder.content('Enter a valid message ID!'));
-      return;
+    if (event.interaction.type == SlashCommandType.chat.value) {
+      final id = int.parse(event.getArg('id').value.toString());
+      message = await (await event.interaction.channel.getOrDownload())
+          .fetchMessage(id.toSnowflake());
     } else {
-      message = await event.interaction.channel
-          .getFromCache()
-          ?.fetchMessage(id.toSnowflake());
+      message = (await event.interaction.channel.getOrDownload())
+          .getMessage(event.interaction.targetId!);
     }
 
     bookmarkEmbed = EmbedBuilder()
@@ -70,11 +59,30 @@ class UtilsBookmarkInteractions {
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(ButtonBuilder(
-          'Bookmark this ', 'addBookmark', ComponentStyle.success))
+          'Bookmark this ', 'add-bm-button', ComponentStyle.success))
       ..addComponent(
-          ButtonBuilder('Delete', 'deleteBookmark', ComponentStyle.danger));
+          ButtonBuilder('Delete', 'delete-bm-button', ComponentStyle.danger));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);
+  }
+
+  Future<void> addButtonHandler(IButtonInteractionEvent event) async {
+    await event.acknowledge();
+    final author = event.interaction.userAuthor;
+
+    await author?.sendMessage(MessageBuilder.embed(bookmarkEmbed)) ??
+        await event.respond(
+          MessageBuilder.content(
+            "Your DM's are closed! The bookmarked message cannot be sent!",
+          ),
+          hidden: true,
+        );
+  }
+
+  Future<void> deleteButtonHandler(IButtonInteractionEvent event) async {
+    await event.acknowledge();
+
+    await event.deleteOriginalResponse();
   }
 }

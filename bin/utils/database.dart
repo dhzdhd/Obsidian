@@ -5,7 +5,7 @@ import 'constants.dart';
 late SupabaseClient _supabaseClient;
 
 void initDatabase() {
-  _supabaseClient = SupabaseClient(Tokens.SUPABASE_URL, Tokens.SUPABASE_KEY);
+  _supabaseClient = SupabaseClient(Tokens.supabaseUrl, Tokens.supabaseKey);
 }
 
 class UserDatabase {
@@ -15,18 +15,18 @@ class UserDatabase {
       'id': '$userId$guildId',
       'user': userId,
       'guild': guildId,
-      '$type': value,
+      type: value,
     }).execute();
 
     if (response.error == null) {
       return true;
     } else {
-      var flag = (await update(userId, guildId, type)) ? true : false;
+      final flag = (await update(userId, guildId, type)) ? true : false;
       return flag;
     }
   }
 
-  static Future<List> fetch({int? userId, int? guildId, int? amount}) async {
+  static Future<dynamic> fetch({int? userId, int? guildId, int? amount}) async {
     late final PostgrestResponse response;
 
     if (userId == null) {
@@ -39,7 +39,7 @@ class UserDatabase {
           .execute();
     }
 
-    if (response.data == null) return [];
+    if (response.data == null) return <void>[];
 
     if (amount == null) {
       return response.data;
@@ -53,13 +53,13 @@ class UserDatabase {
   }
 
   static Future<bool> update(int userId, int guildId, String type) async {
-    var viewResponse = await fetch(userId: userId, guildId: guildId);
+    final dynamic viewResponse = await fetch(userId: userId, guildId: guildId);
     var value = int.parse(viewResponse[0][type].toString());
     ++value;
 
     final updateResponse = await _supabaseClient
         .from('users')
-        .update({'$type': value})
+        .update(<String, int>{type: value})
         .eq('id', '$userId$guildId')
         .execute();
 
@@ -100,7 +100,7 @@ class LogDatabase {
     }
   }
 
-  static Future<List> fetch({int? guildId, int? amount}) async {
+  static Future<dynamic> fetch({int? guildId, int? amount}) async {
     late final PostgrestResponse response;
 
     if (guildId == null) {
@@ -113,7 +113,7 @@ class LogDatabase {
           .execute();
     }
 
-    if (response.data == null) return [];
+    if (response.data == null) return <void>[];
 
     if (amount == null) {
       return response.data;
@@ -129,7 +129,7 @@ class LogDatabase {
   static Future<bool> update(int guildId, int channelId) async {
     final response = await _supabaseClient
         .from('log')
-        .update({'channel': channelId})
+        .update(<String, int>{'channel': channelId})
         .eq('guild', guildId)
         .execute();
 

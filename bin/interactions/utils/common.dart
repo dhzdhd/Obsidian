@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart' show botInteractions;
 import '../../utils/constraints.dart';
@@ -22,7 +22,7 @@ class UtilsCommonInteractions {
   }
 }
 
-Future<void> inviteBotSlashCommand(SlashCommandInteractionEvent event) async {
+Future<void> inviteBotSlashCommand(ISlashCommandInteractionEvent event) async {
   await event.acknowledge();
   final guild = event.interaction.guild?.getFromCache();
   final channel = event.interaction.guild
@@ -31,13 +31,15 @@ Future<void> inviteBotSlashCommand(SlashCommandInteractionEvent event) async {
       .firstWhere((element) => element.channelType == ChannelType.text);
 
   if (!(await checkForMod(event))) {
-    await event.respond(MessageBuilder.embed(
-      errorEmbed('Permission Denied!', event.interaction.userAuthor),
-    ));
+    await deleteMessageWithTimer(
+      message: await event.sendFollowup(MessageBuilder.embed(
+        errorEmbed('Permission Denied!', event.interaction.userAuthor),
+      )),
+    );
     return;
   }
 
-  late Invite? invite;
+  late final IInvite? invite;
   try {
     invite = await guild?.fetchGuildInvites().first;
   } catch (err) {
@@ -45,14 +47,21 @@ Future<void> inviteBotSlashCommand(SlashCommandInteractionEvent event) async {
   }
 
   final inviteUrl = invite?.url;
-  await event
-      .respond(MessageBuilder.content('Server invite URL: **$inviteUrl**'));
+  await event.respond(MessageBuilder.content(
+    'Server invite URL: **$inviteUrl**',
+  ));
 }
 
-Future<void> latencySlashCommand(SlashCommandInteractionEvent event) async {
+Future<void> latencySlashCommand(ISlashCommandInteractionEvent event) async {
   await event.acknowledge();
 
-  final gatewayLatency = event.client.shardManager.gatewayLatency.inSeconds;
+  final gatewayDelayInMillis = (event.client as INyxxWebsocket)
+          .shardManager
+          .shards
+          .map((e) => e.gatewayLatency.inMilliseconds)
+          .reduce((value, element) => value + element) /
+      (event.client as INyxxWebsocket).shards;
+  final gatewayLatency = gatewayDelayInMillis.abs().floor();
 
   final apiStopwatch = Stopwatch()..start();
   await http.head(

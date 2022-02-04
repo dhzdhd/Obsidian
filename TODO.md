@@ -4,12 +4,13 @@
 
 - [x] basic.dart
   - [x] avatar
+  - [x] Avatar
   - [x] roll
   - [x] flip
   - [x] rip
   - [x] google
 - [x] dict.dart
-  - [ ] oxford
+  - [x] oxford
   - [x] urban
 - [x] movie.dart
   - [x] movie
@@ -22,7 +23,6 @@
   - [ ] queue
   - [ ] add
   - [ ] shuffle
-- [ ] tictactoe.dart
 - [x] wolfram.dart
   - [x] short
   - [x] image
@@ -32,40 +32,47 @@
 - [x] youtube.dart
   - [x] youtube
 
-------
-
-- [ ] Problems with oxford dict, probably absence of examples in some queries.
-
 ## Mod
 
-- [ ] clone.dart
-  - [ ] clone
+- [x] clone.dart
+  - [x] clone
+- [x] dm.dart
+  - [x] dm
 - [ ] essential.dart
-  - [x] purge
-  - [x] censor
+  - [ ] purge
+  - [ ] censor
   - [ ] slowmode
 - [ ] events.dart
   - [ ] on-guild-join
   - [ ] on-guild-leave
-  - [x] on-delete
+  - [ ] on-delete
   - [ ] on-edit (Old message can't be fetched)
   - [x] on-bot-dm
-- [ ] log.dart
+- [x] log.dart
+  - [x] assign
+  - [x] delete
 - [ ] mute.dart
 - [ ] vc.dart
 - [ ] warn_ban.dart
 
 ------
 
-- [ ] Add audit logging support to all mod commands
-- [ ] Add clone command
+- [ ] Add logging support to all mod commands
 
 ## Utils
 
 - [ ] bookmark.dart
-- [ ] common.dart
+- [x] common.dart
+  - [x] invite
+  - [x] ping
 - [ ] db_utils.dart
-- [ ] eval.dart
-- [ ] math.dart
+- [x] eval.dart
+  - [x] eval
+- [x] math.dart
+  - [x] eval
+  - [x] derivative
 - [ ] poll.dart
+  - [ ] poll
 - [ ] roles.dart
+  - [ ] add
+  - [ ] delete

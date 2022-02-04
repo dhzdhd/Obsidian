@@ -1,14 +1,13 @@
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 import '../../utils/constraints.dart';
 import '../../utils/embed.dart';
 
 class UtilsRolesInteractions {
-  Map<int, Role?> roleMap = {};
+  Map<int, IRole?> roleMap = {};
   Map<int, List> embedRolesMap = {};
-  late EmbedBuilder embed;
 
   UtilsRolesInteractions() {
     botInteractions
@@ -22,8 +21,11 @@ class UtilsRolesInteractions {
             '<MOD ONLY> Add users to an existing role.',
             options: [
               CommandOptionBuilder(
-                  CommandOptionType.role, 'role', 'Name of role',
-                  required: true)
+                CommandOptionType.role,
+                'role',
+                'Name of the role.',
+                required: true,
+              )
             ],
           )..registerHandler(addToRoleSlashCommand),
           CommandOptionBuilder(
@@ -32,33 +34,38 @@ class UtilsRolesInteractions {
             '<MOD ONLY> Delete a role.',
             options: [
               CommandOptionBuilder(
-                  CommandOptionType.role, 'role', 'Name of role.',
-                  required: true)
+                CommandOptionType.role,
+                'role',
+                'Name of role.',
+                required: true,
+              )
             ],
           )..registerHandler(deleteRoleSlashCommand)
         ],
       ))
-      ..registerButtonHandler('role-add', addRoleButtonHandler)
-      ..registerButtonHandler('role-remove', removeRoleButtonHandler)
-      ..registerButtonHandler('role-cancel', cancelButtonHandler);
+      ..registerButtonHandler('role-add-button', addRoleButtonHandler)
+      ..registerButtonHandler('role-remove-button', removeRoleButtonHandler)
+      ..registerButtonHandler('role-cancel-button', cancelButtonHandler);
   }
 
-  Future<void> addToRoleSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> addToRoleSlashCommand(
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
-    final role = event.interaction.resolved?.roles.first;
+    final role = event.interaction.resolved!.roles.first;
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.embed(
-        errorEmbed('Permission Denied!', event.interaction.userAuthor),
-      ));
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(
+          errorEmbed('Permission Denied!', event.interaction.userAuthor),
+        )),
+      );
       return;
     }
 
-    embed = EmbedBuilder()
-      ..title = 'Add the below role to yourself - ${role?.name}'
+    final embed = EmbedBuilder()
+      ..title = 'Add the role to yourself | ${role.name}'
       ..color = DiscordColor.aquamarine
       ..timestamp = DateTime.now()
-      ..addField(name: 'Members who added the role to themselves:')
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
@@ -69,45 +76,49 @@ class UtilsRolesInteractions {
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(
-          ButtonBuilder('Add role', 'role-add', ComponentStyle.primary))
+          ButtonBuilder('Add role', 'role-add-button', ComponentStyle.primary))
+      ..addComponent(ButtonBuilder(
+          'Remove role', 'role-remove-button', ComponentStyle.secondary))
       ..addComponent(
-          ButtonBuilder('Remove role', 'role-remove', ComponentStyle.secondary))
-      ..addComponent(
-          ButtonBuilder('Delete', 'role-cancel', ComponentStyle.danger));
+          ButtonBuilder('Delete', 'role-cancel-button', ComponentStyle.danger));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);
+
     roleMap[message.id.id] = role;
-    embedRolesMap[message.id.id] = [];
+    embedRolesMap[message.id.id] = <void>[];
   }
 
-  Future<void> addRoleButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> addRoleButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
-    final role = roleMap[event.interaction.message!.id.id];
-    final messageId = event.interaction.message!.id.id;
 
-    if (event.interaction.memberAuthor!.roles.contains(role)) {
+    final messageId = event.interaction.message!.id.id;
+    final role = roleMap[messageId];
+
+    // ! Sort out Cacheable matching
+    if (event.interaction.memberAuthor!.roles.contains(role?.id)) {
       await event.interaction.userAuthor?.sendMessage(
         MessageBuilder.content('You already have the role - ${role?.name}!'),
       );
       return;
     }
 
-    await event.interaction.memberAuthor?.addRole(role as SnowflakeEntity);
+    await event.interaction.memberAuthor?.addRole(SnowflakeEntity(role!.id));
 
-    var oldField = embed.fields.first;
+    // var oldField = embed.fields.first;
 
     embedRolesMap[messageId]!.add(event.interaction.userAuthor?.mention);
-    var content = '';
-    embedRolesMap[messageId]!.forEach((element) {
-      content += '${element.toString()}';
-    });
 
-    await event.editOriginalResponse(
-      MessageBuilder.embed(
-        embed..replaceField(name: oldField.name, content: content),
-      ),
-    );
+    final content = StringBuffer();
+    for (var element in embedRolesMap[messageId]!) {
+      content.write('$element');
+    }
+
+    // await event.editOriginalResponse(
+    //   MessageBuilder.embed(
+    //     embed..replaceField(name: oldField.name, content: content.toString()),
+    //   ),
+    // );
 
     await event.interaction.userAuthor?.sendMessage(
       MessageBuilder.embed(successEmbed(
@@ -115,7 +126,7 @@ class UtilsRolesInteractions {
     );
   }
 
-  Future<void> removeRoleButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> removeRoleButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
     final role = roleMap[event.interaction.message!.id.id];
     final messageId = event.interaction.message!.id.id;
@@ -129,20 +140,21 @@ class UtilsRolesInteractions {
       return;
     }
 
-    var oldField = embed.fields.first;
-    print(oldField);
+    // var oldField = embed.fields.first;
+    // print(oldField);
 
     embedRolesMap[messageId]!.remove(event.interaction.userAuthor?.mention);
-    var content = '';
-    embedRolesMap[messageId]!.forEach((element) {
-      content += '${element.toString()}';
-    });
 
-    await event.editOriginalResponse(
-      MessageBuilder.embed(
-        embed..replaceField(name: oldField.name, content: content),
-      ),
-    );
+    final content = StringBuffer();
+    for (var element in embedRolesMap[messageId]!) {
+      content.write('$element');
+    }
+
+    // await event.editOriginalResponse(
+    //   MessageBuilder.embed(
+    //     embed..replaceField(name: oldField.name, content: content.toString()),
+    //   ),
+    // );
 
     await event.interaction.userAuthor?.sendMessage(
       MessageBuilder.embed(successEmbed(
@@ -151,7 +163,7 @@ class UtilsRolesInteractions {
     );
   }
 
-  Future<void> cancelButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> cancelButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge(hidden: true);
 
     if (!(await checkForMod(event))) {
@@ -168,7 +180,7 @@ class UtilsRolesInteractions {
   }
 
   Future<void> deleteRoleSlashCommand(
-      SlashCommandInteractionEvent event) async {
+      ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
     final role = event.interaction.resolved?.roles.first;
 

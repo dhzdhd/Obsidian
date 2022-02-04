@@ -1,5 +1,5 @@
 import '../../obsidian_dart.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 import 'package:nyxx/nyxx.dart';
 
 import '../../utils/constants.dart';
@@ -15,11 +15,17 @@ class ModWarnBanInteractions {
         '<MOD ONLY> Warns user with reason.',
         [
           CommandOptionBuilder(
-              CommandOptionType.user, 'user', 'A server member.',
-              required: true),
+            CommandOptionType.user,
+            'user',
+            'A server member.',
+            required: true,
+          ),
           CommandOptionBuilder(
-              CommandOptionType.string, 'reason', 'Reason for warn.',
-              required: true)
+            CommandOptionType.string,
+            'reason',
+            'Reason for warn.',
+            required: true,
+          )
         ],
       )..registerHandler(warnSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
@@ -27,55 +33,66 @@ class ModWarnBanInteractions {
         '<MOD ONLY> Bans user with optional reason.',
         [
           CommandOptionBuilder(
-              CommandOptionType.user, 'user', 'A server member',
-              required: true),
+            CommandOptionType.user,
+            'user',
+            'A server member.',
+            required: true,
+          ),
           CommandOptionBuilder(
-              CommandOptionType.string, 'reason', 'Reason for ban.')
+            CommandOptionType.string,
+            'reason',
+            'Reason for ban.',
+            required: true,
+          )
         ],
       )..registerHandler(banSlashCommand))
-      ..registerButtonHandler('ban', banButtonHandler);
+      ..registerButtonHandler('ban-button', banButtonHandler);
   }
 
-  Future<void> warnSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> warnSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final user = event.interaction.resolved?.users.first;
-    final reason = event.getArg('reason').value;
+    final reason = event.getArg('reason').value.toString();
 
     if (!(await checkForMod(event))) {
-      await event.respond(MessageBuilder.embed(
-          errorEmbed('Permission Denied!', event.interaction.userAuthor)));
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(
+            errorEmbed('Permission Denied!', event.interaction.userAuthor))),
+      );
       return;
     }
 
     final warnEmbed = EmbedBuilder()
       ..title = ':warning: Warned user: ${user?.username}'
       ..description = '**$reason**'
-      ..color = Colors.AUDIT_COLORS['mod']
+      ..color = Colors.auditColors['mod']
       ..timestamp = DateTime.now()
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
 
-    var response = await UserDatabase.add(
-        user?.id.id as int, event.interaction.guild?.id.id as int, 'warns', 1);
+    final response = await UserDatabase.add(
+        user!.id.id, event.interaction.guild!.id.id, 'warns', 1);
 
     if (response) {
       await event.respond(MessageBuilder.embed(warnEmbed));
     } else {
-      await event.respond(MessageBuilder.embed(errorEmbed(
-          'Error in warning the user!', event.interaction.userAuthor)));
+      await deleteMessageWithTimer(
+        message: await event.sendFollowup(MessageBuilder.embed(errorEmbed(
+            'Error in warning the user!', event.interaction.userAuthor))),
+      );
     }
   }
 
   // TODO: Implement deleteMessageDays in ban()
-  Future<void> banSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> banSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final user = event.interaction.resolved?.users.first;
     final member = event.interaction.resolved?.members.first;
-    final reason = event.getArg('reason').value;
+    final reason = event.getArg('reason').value.toString();
 
     if (!(await checkForMod(event))) {
       await event.respond(MessageBuilder.embed(
@@ -94,7 +111,7 @@ class ModWarnBanInteractions {
     final banEmbed = EmbedBuilder()
       ..title = ':warning: Banned user: ${user?.username}'
       ..description = '**$reason**'
-      ..color = Colors.AUDIT_COLORS['mod']
+      ..color = Colors.auditColors['mod']
       ..timestamp = DateTime.now()
       ..addFooter((footer) {
         footer.text = 'Requested by ${event.interaction.userAuthor?.username}';
@@ -102,7 +119,7 @@ class ModWarnBanInteractions {
       });
 
     var response = await UserDatabase.add(
-        user?.id.id as int, event.interaction.guild?.id.id as int, 'bans', 1);
+        user!.id.id, event.interaction.guild!.id.id, 'bans', 1);
 
     if (response) {
       await event.respond(MessageBuilder.embed(banEmbed));
@@ -113,7 +130,7 @@ class ModWarnBanInteractions {
     }
   }
 
-  Future<void> banButtonHandler(ButtonInteractionEvent event) async {
+  Future<void> banButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge();
 
     if (!(await checkForMod(event))) {

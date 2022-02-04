@@ -1,10 +1,9 @@
 import 'dart:isolate';
 
 import 'package:nyxx/nyxx.dart';
-import 'package:nyxx_interactions/interactions.dart';
+import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
-import '../../utils/constants.dart';
 
 class UtilsEvalInteractions {
   UtilsEvalInteractions() {
@@ -12,18 +11,17 @@ class UtilsEvalInteractions {
       'eval',
       'Evaluate dart code.',
       [
-        CommandOptionBuilder(CommandOptionType.string, 'code',
-            'The code to be evaluated in the form of a function.',
-            required: true)
-      ],
-      defaultPermissions: true,
-      permissions: [
-        ICommandPermissionBuilder.user(Tokens.BOT_OWNER.toSnowflake())
+        CommandOptionBuilder(
+          CommandOptionType.string,
+          'code',
+          'The code to be evaluated in the form of a function.',
+          required: true,
+        ),
       ],
     )..registerHandler(evalSlashCommand));
   }
 
-  Future<void> evalSlashCommand(SlashCommandInteractionEvent event) async {
+  Future<void> evalSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
     final function =
@@ -37,23 +35,6 @@ class UtilsEvalInteractions {
       import 'dart:cli';
       import 'dart:io' hide exit;
 
-      // For http requests
-      import 'package:dio/dio.dart';
-
-      late final dio;
-
-      Future<String> get(String url, {Map<dynamic, dynamic>? params}) async {
-        dio = Dio();
-
-        late final response;
-        try {
-          response = await dio.get(url, queryParameters: params);
-        } catch(err) {
-          return 'Request failed!';
-        }
-        return response.data.toString();
-      }
-
       void main(_, SendPort port) {
         port.send($functionName());
       }
@@ -65,7 +46,7 @@ class UtilsEvalInteractions {
 
     final port = ReceivePort();
     final isolate = await Isolate.spawnUri(uri, [], port.sendPort);
-    final String response = await port.first;
+    final String response = (await port.first).toString();
 
     port.close();
     isolate.kill();
