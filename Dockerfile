@@ -1,5 +1,5 @@
 # Specify the Dart SDK base image version using dart:<version>
-FROM dart:stable
+FROM dart:2.16.0
 
 # Resolve app dependencies.
 COPY pubspec.* ./
