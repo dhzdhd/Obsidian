@@ -69,7 +69,7 @@ void main() async {
   FunWolframInteractions();
   FunYoutubeInteractions();
   FunMovieInteractions();
-  // FunMusicInteractions();
+  FunMusicInteractions();
   FunXkcdInteractions();
 
   // Mod interactions
