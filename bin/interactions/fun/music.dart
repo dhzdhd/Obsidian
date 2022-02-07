@@ -18,66 +18,66 @@ class FunMusicInteractions {
     initEvents();
     botInteractions
       ..registerSlashCommand(SlashCommandBuilder(
-          'music',
-          'Music group of commands.',
-          [
-            CommandOptionBuilder(
-              CommandOptionType.subCommand,
-              'play',
-              'Play some music.',
-              options: [
-                CommandOptionBuilder(CommandOptionType.string, 'title',
-                    'Title of song to be played.',
-                    required: true)
-              ],
-            )..registerHandler(playMusicSlashCommand),
-            CommandOptionBuilder(
-              CommandOptionType.subCommand,
-              'skip',
-              'Skip the currently playing music.',
-            )..registerHandler(skipMusicSlashCommand),
-            CommandOptionBuilder(
-              CommandOptionType.subCommand,
-              'repeat',
-              'Repeat the currently playing music.',
-            )..registerHandler(repeatMusicSlashCommand),
-            CommandOptionBuilder(
-              CommandOptionType.subCommand,
-              'resume',
-              'Resume paused music.',
-            )..registerHandler(resumeMusicSlashCommand),
-            CommandOptionBuilder(
-              CommandOptionType.subCommand,
-              'pause',
-              'Pause currently playing music.',
-            )..registerHandler(pauseMusicSlashCommand),
-            CommandOptionBuilder(
-              CommandOptionType.subCommand,
-              'stop',
-              'Stop playing music and clear queue.',
-            )..registerHandler(stopMusicSlashCommand),
-            CommandOptionBuilder(
-              CommandOptionType.subCommand,
-              'queue',
-              'View the current queue.',
-            )..registerHandler(queueMusicSlashCommand),
-            CommandOptionBuilder(
-              CommandOptionType.subCommand,
-              'add',
-              'Add a song to the queue.',
-              options: [
-                CommandOptionBuilder(CommandOptionType.string, 'title',
-                    'Title of song to be added to the queue.',
-                    required: true)
-              ],
-            )..registerHandler(addMusicSlashCommand),
-            CommandOptionBuilder(
-              CommandOptionType.subCommand,
-              'shuffle',
-              'Shuffle tracks in the current queue.',
-            )..registerHandler(shuffleMusicSlashCommand),
-          ],
-          guild: Snowflake(791639588606967818)))
+        'music',
+        'Music group of commands.',
+        [
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'play',
+            'Play some music.',
+            options: [
+              CommandOptionBuilder(CommandOptionType.string, 'title',
+                  'Title of song to be played.',
+                  required: true)
+            ],
+          )..registerHandler(playMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'skip',
+            'Skip the currently playing music.',
+          )..registerHandler(skipMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'repeat',
+            'Repeat the currently playing music.',
+          )..registerHandler(repeatMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'resume',
+            'Resume paused music.',
+          )..registerHandler(resumeMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'pause',
+            'Pause currently playing music.',
+          )..registerHandler(pauseMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'stop',
+            'Stop playing music and clear queue.',
+          )..registerHandler(stopMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'queue',
+            'View the current queue.',
+          )..registerHandler(queueMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'add',
+            'Add a song to the queue.',
+            options: [
+              CommandOptionBuilder(CommandOptionType.string, 'title',
+                  'Title of song to be added to the queue.',
+                  required: true)
+            ],
+          )..registerHandler(addMusicSlashCommand),
+          CommandOptionBuilder(
+            CommandOptionType.subCommand,
+            'shuffle',
+            'Shuffle tracks in the current queue.',
+          )..registerHandler(shuffleMusicSlashCommand),
+        ],
+      ))
       ..registerButtonHandler(
           'increase-vol-button', increaseVolumeButtonHandler)
       ..registerButtonHandler(
