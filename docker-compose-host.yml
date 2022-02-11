@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  lavalink:
+    container_name: lavalink
+    image: fredboat/lavalink:dev
+    network_mode: host
+    restart: on-failure
+    volumes:
+      - ./lavalink_server/application.yml:/opt/Lavalink/application.yml
+
+  bot:
+    container_name: obsidian
+    image: ghcr.io/dhzdhd/obsidian:stable
+    network_mode: host
+    restart: on-failure
+
+    env_file:
+      - ./.env
+
+    depends_on:
+      - lavalink
