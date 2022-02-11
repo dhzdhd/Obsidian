@@ -11,6 +11,8 @@ services:
 
   bot:
     container_name: obsidian
+    # Change stable to master for newest changes
+    # Warning - newest changes usually means breaking changes too
     image: ghcr.io/dhzdhd/obsidian:stable
     network_mode: host
     restart: on-failure

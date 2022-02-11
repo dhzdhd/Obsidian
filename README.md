@@ -21,7 +21,7 @@ Obsidian is a multipurpose discord bot made using the nyxx discord API wrapper i
           $ git clone https://github.com/dhzdhd/Obsidian.git
           $ cd Obsidian
           ```
-  
+
   - Make a `.env` in the working directory as per `.env-example`
 
   - (Optional) Install and run Lavalink server for music
@@ -67,9 +67,18 @@ Obsidian is a multipurpose discord bot made using the nyxx discord API wrapper i
     $ docker-compose -f docker-compose.yml up --build -d
     ```
 
+## Self Hosting
+You can self host the bot easily using docker
+
+- Install docker and docker-compose from [docker website](https://www.docker.com/products/docker-desktop) for Windows/MacOS and from your preferred package manager in Linux.
+- Download the `docker-compose-host.yml` file.
+- Make an `.env` file and populate as given in `.env-example`
+- Run the bot and music server `docker-compose -f docker-compose-host.yml up`
+- Add a `-d` flag to the above command to run it in the detached mode (No logs).
+
 ## Contributing
 
-**Note:** If you want to contribute you can open a new issue. The issue should be discussed and accepted before you start working on the issue. Do not open a pull request if you aren't assigned to the issue. 
+**Note:** If you want to contribute you can open a new issue. The issue should be discussed and accepted before you start working on the issue. Do not open a pull request if you aren't assigned to the issue.
 
 1. Create a new branch using `git checkout -b <name of new local branch> master`. Make sure the branch name is related to the feature or fix you are working for.
 
