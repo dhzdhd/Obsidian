@@ -14,9 +14,9 @@ dependencies:
   dio: ^4.0.4
   dotenv: ^3.0.0
   http: ^0.13.4
-  nyxx: ^3.2.6
+  nyxx: ^3.3.0-dev.0
   nyxx_extensions: ^3.0.0
-  nyxx_interactions: ^3.3.0
+  nyxx_interactions: ^4.0.0-dev.0
   nyxx_lavalink: ^3.0.1
   math_expressions: ^2.2.0
   supabase: ^0.2.14

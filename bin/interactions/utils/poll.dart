@@ -100,16 +100,15 @@ class UtilsPollInteractions {
 
     for (var _ = 0; _ < options.length; _++) {
       componentRow.addComponent(
-          ButtonBuilder('${(_ + 1)}', 'pollOption$_', ComponentStyle.primary));
+          ButtonBuilder('${(_ + 1)}', 'pollOption$_', ButtonStyle.primary));
 
       optionPercentMap[_ + 1] = 0;
     }
 
     componentRow
       ..addComponent(
-          ButtonBuilder('Deselect', 'pollDeselect', ComponentStyle.secondary))
-      ..addComponent(
-          ButtonBuilder('Cancel', 'pollCancel', ComponentStyle.danger));
+          ButtonBuilder('Deselect', 'pollDeselect', ButtonStyle.secondary))
+      ..addComponent(ButtonBuilder('Cancel', 'pollCancel', ButtonStyle.danger));
 
     componentMessageBuilder.addComponentRow(componentRow);
     await event.respond(componentMessageBuilder);

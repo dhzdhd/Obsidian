@@ -33,20 +33,26 @@ class UtilsBookmarkInteractions {
   Future<void> bookmarkSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    late final IMessage? message;
+    late final IMessage message;
 
-    if (event.interaction.type == SlashCommandType.chat.value) {
+    print(event.interaction.type);
+    print(SlashCommandType.chat.value);
+
+    if (event.interaction.type == 2) {
+      // If event type is a chat command.
       final id = int.parse(event.getArg('id').value.toString());
       message = await (await event.interaction.channel.getOrDownload())
           .fetchMessage(id.toSnowflake());
     } else {
-      message = (await event.interaction.channel.getOrDownload())
-          .getMessage(event.interaction.targetId!);
+      message = event.interaction.resolved!.messages.first;
     }
 
     bookmarkEmbed = EmbedBuilder()
       ..title = 'Bookmarked message'
-      ..description = message?.url
+      ..description = message.content
+      ..imageUrl = message.attachments.first.url
+      ..url = message.url
+          .replaceAll('@me', event.interaction.guild!.id.id.toString())
       ..color = DiscordColor.azure
       ..timestamp = DateTime.now()
       ..addFooter((footer) {
@@ -58,10 +64,10 @@ class UtilsBookmarkInteractions {
 
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
-      ..addComponent(ButtonBuilder(
-          'Bookmark this ', 'add-bm-button', ComponentStyle.success))
       ..addComponent(
-          ButtonBuilder('Delete', 'delete-bm-button', ComponentStyle.danger));
+          ButtonBuilder('Bookmark this ', 'add-bm-button', ButtonStyle.success))
+      ..addComponent(
+          ButtonBuilder('Delete', 'delete-bm-button', ButtonStyle.danger));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);

@@ -173,19 +173,19 @@ class FunMusicInteractions {
       ..addComponent(ButtonBuilder(
         'Increase Volume',
         'increase-vol-button',
-        ComponentStyle.primary,
+        ButtonStyle.primary,
         emoji: UnicodeEmoji('🔊'),
       ))
       ..addComponent(ButtonBuilder(
         'Decrease Volume',
         'decrease-vol-button',
-        ComponentStyle.primary,
+        ButtonStyle.primary,
         emoji: UnicodeEmoji('🔉'),
       ))
       ..addComponent(ButtonBuilder(
         'Mute',
         'mute-button',
-        ComponentStyle.danger,
+        ButtonStyle.danger,
         emoji: UnicodeEmoji('🔇'),
       ));
     final optionComponentRow = ComponentRowBuilder()

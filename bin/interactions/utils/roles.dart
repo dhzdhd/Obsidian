@@ -76,11 +76,11 @@ class UtilsRolesInteractions {
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(
-          ButtonBuilder('Add role', 'role-add-button', ComponentStyle.primary))
+          ButtonBuilder('Add role', 'role-add-button', ButtonStyle.primary))
       ..addComponent(ButtonBuilder(
-          'Remove role', 'role-remove-button', ComponentStyle.secondary))
+          'Remove role', 'role-remove-button', ButtonStyle.secondary))
       ..addComponent(
-          ButtonBuilder('Delete', 'role-cancel-button', ComponentStyle.danger));
+          ButtonBuilder('Delete', 'role-cancel-button', ButtonStyle.danger));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);

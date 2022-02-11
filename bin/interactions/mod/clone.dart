@@ -71,7 +71,7 @@ class ModCloneInteractions {
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(
-          ButtonBuilder('Yes', 'clone-accept-button', ComponentStyle.success));
+          ButtonBuilder('Yes', 'clone-accept-button', ButtonStyle.success));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);

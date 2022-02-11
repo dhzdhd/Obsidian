@@ -96,7 +96,7 @@ class ModLogInteractions {
     final componentMessageBuilder = ComponentMessageBuilder();
     final componentRow = ComponentRowBuilder()
       ..addComponent(
-          ButtonBuilder('Yes', 'delete-log-button', ComponentStyle.danger));
+          ButtonBuilder('Yes', 'delete-log-button', ButtonStyle.danger));
     componentMessageBuilder.addComponentRow(componentRow);
 
     await event.respond(componentMessageBuilder);
@@ -128,7 +128,7 @@ class ModLogInteractions {
       ..addComponent(ButtonBuilder(
         'Done!',
         'delete-log-button',
-        ComponentStyle.success,
+        ButtonStyle.success,
         disabled: true,
       ));
     componentMessageBuilder.addComponentRow(componentRow);
