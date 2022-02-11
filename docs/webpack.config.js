@@ -9,19 +9,8 @@ module.exports = {
   },
   module: {
     rules: [
-    //   {
-    //     test: /\.js$/,
-    //     include: path.resolve(__dirname, 'src'),
-    //     use: {
-    //       loader: 'babel-loader',
-    //       options: {
-    //         presets: ['@babel/preset-env'],
-    //       },
-    //     },
-    //   },
       {
         test: /\.css$/,
-        // include: path.resolve(__dirname, 'src'),
         use: ['style-loader', { loader: 'css-loader', options: { importLoaders: 1 } }, 'postcss-loader'],
       },
     ],
