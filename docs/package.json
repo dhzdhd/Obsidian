@@ -1,11 +1,6 @@
 {
   "name": "docs",
   "private": true,
-  "browser": {
-    "fs": false,
-    "path": false,
-    "os": false
-  },
   "devDependencies": {
     "@babel/core": "^7.17.2",
     "@babel/preset-env": "^7.16.11",
@@ -22,7 +17,7 @@
   },
   "dependencies": {
     "mini-css-extract-plugin": "^2.5.3",
-    "showdown": "^2.0.0-alpha"
+    "showdown": "^1.9.1"
   },
   "scripts": {
     "start": "webpack serve --mode=development",

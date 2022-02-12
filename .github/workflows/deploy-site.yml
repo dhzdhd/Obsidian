@@ -30,6 +30,7 @@ jobs:
         run: |
           cd docs/
           npm install
+          node ./src/convert.js
           npm run build
 
       - name: Deploy

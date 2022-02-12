@@ -39,18 +39,19 @@ class UtilsBookmarkInteractions {
     print(SlashCommandType.chat.value);
 
     if (event.interaction.type == 2) {
-      // If event type is a chat command.
+      // If slash command type is chat.
       final id = int.parse(event.getArg('id').value.toString());
-      message = await (await event.interaction.channel.getOrDownload())
-          .fetchMessage(id.toSnowflake());
+      final channel = await event.interaction.channel.getOrDownload();
+      message = await channel.fetchMessage(id.toSnowflake());
     } else {
       message = event.interaction.resolved!.messages.first;
     }
 
     bookmarkEmbed = EmbedBuilder()
       ..title = 'Bookmarked message'
-      ..description = message.content
-      ..imageUrl = message.attachments.first.url
+      ..description = message.content.isNotEmpty ? message.content : null
+      ..imageUrl =
+          message.attachments.isNotEmpty ? message.attachments.first.url : null
       ..url = message.url
           .replaceAll('@me', event.interaction.guild!.id.id.toString())
       ..color = DiscordColor.azure
