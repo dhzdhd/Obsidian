@@ -11,10 +11,12 @@ fs.readFile('dist/pages/docs.md', (_, data) => {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Obsidian Documentation</title>
-    <link rel="stylesheet" href="./docs.css">
+    <link rel="stylesheet" href="./css/docs.css">
 </head>
 <body>
+    <main>
 ${html}
+    </main>
 </body>
 </html>`;
 

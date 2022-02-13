@@ -1,0 +1,80 @@
+$primary-color: #111827
+$secondary-color: #1f2937
+$primary-text-color: #9ca3af
+$accent-color: #22c55e
+$accent-text-color: white
+$hover-color: #0c9940
+
+*
+    margin: 0
+    padding: 0
+    box-sizing: border-box
+    font-family: sans-serif
+
+body
+    scroll-behavior: smooth
+    background-color: $primary-color
+    color: $primary-text-color
+
+    /* Width */
+    &::-webkit-scrollbar
+        width: 0.5rem
+        height: 1rem
+
+    /* Track */
+    &::-webkit-scrollbar-track
+        background: $primary-color
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb
+        background: $accent-color
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover
+        background: $hover-color
+
+main
+    display: flex
+    flex-direction: row
+    height: 100%
+
+    nav
+        background: $secondary-color
+        height: 100%
+        width: 15rem
+
+        ul
+            padding-top: 1rem
+            padding-left: 0.5rem
+            padding-right: 0.5rem
+            display: flex
+            flex-direction: column
+            gap: 1rem
+            width: 100%
+
+            li
+                display: flex
+                align-items: center
+                list-style-type: none
+                height: 3rem
+
+                a
+                    display: flex
+                    align-items: center
+                    padding-left: 1rem
+                    padding-right: 1rem
+                    color: $accent-text-color
+                    font-size: 1.2rem
+                    text-decoration: none
+                    width: 100%
+                    height: 100%
+                    border-radius: 0.5rem
+
+                    &:hover
+                        background-color: rgba(255, 255, 255, 0.1)
+
+                    &:focus
+                        background-color: $accent-color
+
+    div
+        padding: 1rem
