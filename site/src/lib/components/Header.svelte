@@ -6,8 +6,7 @@
 		<nav
 			class="flex flex-wrap items-center text-base text-transparent lg:w-2/5 md:ml-auto bg-clip-text bg-gradient-to-br from-green-400 to-green-600"
 		>
-			<a class="mr-5 hover:text-green-500" href="index.html">Home</a>
-
+			<a class="mr-5 hover:text-green-500" href="/">Home</a>
 			<a class="mr-5 hover:text-green-500" href="#features">Features</a>
 			<a class="mr-5 hover:text-green-500" href="#contributing">Contribute</a>
 
@@ -27,7 +26,7 @@
 		<div class="inline-flex ml-5 lg:w-2/5 lg:justify-end lg:ml-0">
 			<a
 				class="inline-flex items-center px-3 py-1 mt-4 font-bold text-white bg-green-500 border-0 rounded-full focus:outline-none hover:bg-green-600 md:mt-0"
-				href="pages/docs.html"
+				href="/docs"
 				>Docs
 				<svg
 					fill="none"

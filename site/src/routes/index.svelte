@@ -2,22 +2,13 @@
 	import Header from '$lib/components/Header.svelte';
 </script>
 
-<!-- <html class="scroll-smooth" lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="author" content="dhzdhd">
-    <meta name="description"
-          content="Landing page for the Obsidian Discord bot."
-    >
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Obsidian</title>
-    <link rel="stylesheet" href="./styles.css">
-    <script src="bundle.js"></script>
-  </head> -->
+<svelte:head>
+	<title>Obsidian</title>
+</svelte:head>
 
 <Header />
 <section class="bg-gradient-to-br from-gray-900 to-gray-800 body-font">
-	<div class="flex flex-col items-center justify-center px-5 py-24 mx-auto ">
+	<div class="flex flex-col items-center justify-center px-5 py-24">
 		<img
 			class="object-cover object-center mb-10 rounded-full"
 			alt="hero"
@@ -38,7 +29,7 @@
 			</p>
 			<div class="flex justify-center">
 				<a
-					class="inline-flex px-6 py-2 ml-4 text-lg text-white bg-green-500 border-0 rounded focus:outline-none hover:bg-green-600"
+					class="inline-flex px-6 py-2 text-lg text-white bg-green-500 border-0 rounded focus:outline-none hover:bg-green-600"
 					href="#features"
 				>
 					See Features
