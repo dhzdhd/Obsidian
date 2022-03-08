@@ -1,3 +1,1 @@
-<div>
-    HELLO
-</div>
+<div>HELLO</div>
