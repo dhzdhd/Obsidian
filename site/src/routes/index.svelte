@@ -135,12 +135,13 @@
           Also check the documentation for detailed information on each command which can solve your doubts and save time.
         </p>
         <div class="flex justify-center">
-          <button
+          <a
+            href="https://discord.gg/6zVggku2qX"
             class="inline-flex px-6 py-2 text-lg text-white bg-green-500 border-0 rounded focus:outline-none hover:bg-green-600"
-            >Support Server</button
+            >Support Server</a
           >
           <a
-            href="pages/docs.html"
+            href="/docs"
             class="inline-flex px-6 py-2 ml-4 text-lg text-white bg-green-500 border-0 rounded focus:outline-none hover:bg-green-600"
             >Obsidian Docs</a
           >
