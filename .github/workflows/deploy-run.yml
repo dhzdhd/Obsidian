@@ -14,12 +14,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # - uses: actions/checkout@v2
-  
+
       - name: Pull latest changes to stable branch
         uses: fifsky/ssh-action@v0.0.6
         with:
             command: |
-              cd ~/Obsidian/
+              cd ~/Obsidian/bot/
               sudo docker-compose -f docker-compose.yml down
               git pull
               sudo docker-compose -f docker-compose.yml up --build -d
@@ -28,4 +28,3 @@ jobs:
             user: dhzdhd
             key: ${{ secrets.PRIVATE_KEY }}
             args: "-tt"
-              

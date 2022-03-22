@@ -73,8 +73,8 @@
 - [x] math.dart
   - [x] eval
   - [x] derivative
-- [ ] poll.dart
-  - [ ] poll
+- [x] poll.dart
+  - [x] poll
 - [ ] roles.dart
   - [ ] add
   - [ ] delete
