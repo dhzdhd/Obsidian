@@ -22,7 +22,7 @@ import 'interactions/utils/common.dart';
 import 'interactions/utils/db_utils.dart';
 import 'interactions/utils/eval.dart';
 import 'interactions/utils/math.dart';
-// import 'interactions/utils/poll.dart';
+import 'interactions/utils/poll.dart';
 import 'plugins/logging.dart';
 import 'utils/constants.dart' show Tokens;
 import 'utils/database.dart' show initDatabase;
@@ -85,7 +85,7 @@ void main() async {
   // Utils interactions
   UtilsCommonInteractions();
   UtilsBookmarkInteractions();
-  // UtilsPollInteractions();
+  UtilsPollInteractions();
   UtilsEvalInteractions();
   UtilsMathInteractions();
   UtilsRolesInteractions();

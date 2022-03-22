@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Contributor from '$lib/components/Contributor.svelte';
+
   import Header from '$lib/components/Header.svelte';
 </script>
 
@@ -124,36 +126,7 @@
       <h1 class="mb-4 text-3xl font-bold text-green-500 sm:text-4xl title-font">Contributors</h1>
     </div>
     <div class="flex flex-wrap -m-2">
-      <div class="w-full p-2 lg:w-1/3 md:w-1/2">
-        <div class="flex items-center h-full p-4 border border-gray-600 rounded-lg">
-          <div class="flex-grow">
-            <a class="font-medium text-green-400 title-font" href="https://github.com/dhzdhd"
-              >dhzdhd</a
-            >
-            <p class="text-gray-400">Owner</p>
-          </div>
-        </div>
-      </div>
-      <div class="w-full p-2 lg:w-1/3 md:w-1/2">
-        <div class="flex items-center h-full p-4 border border-gray-600 rounded-lg">
-          <div class="flex-grow">
-            <a class="font-medium text-green-400 title-font" href="https://github.com/Arnav-2004"
-              >Arnav</a
-            >
-            <p class="text-gray-400">Contributor</p>
-          </div>
-        </div>
-      </div>
-      <div class="w-full p-2 lg:w-1/3 md:w-1/2">
-        <div class="flex items-center h-full p-4 border border-gray-600 rounded-lg">
-          <div class="flex-grow">
-            <a class="font-medium text-green-400 title-font" href="https://github.com/ItzLukaDev"
-              >Luka</a
-            >
-            <p class="text-gray-400">Contributor</p>
-          </div>
-        </div>
-      </div>
+      <Contributor />
     </div>
   </div>
 </section>

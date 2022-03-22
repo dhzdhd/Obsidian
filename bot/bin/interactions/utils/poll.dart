@@ -3,13 +3,20 @@ import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
 
+enum _OptionEnum { one, two, three, four, five }
+
+class _EmbedData {
+  EmbedBuilder embed;
+  final Map<Snowflake, _OptionEnum> map;
+  int total;
+
+  _EmbedData({required this.embed, required this.map, required this.total});
+}
+
 class UtilsPollInteractions {
   static const emptyBar = '▒';
   static const filledBar = '█';
-  late EmbedBuilder staticPollEmbed;
-
-  // var userChoiceMap = {};
-  Map<int, int> optionPercentMap = {};
+  Map<Snowflake, _EmbedData> embedMap = {};
 
   UtilsPollInteractions() {
     botInteractions
@@ -26,7 +33,7 @@ class UtilsPollInteractions {
           CommandOptionBuilder(
             CommandOptionType.string,
             'options',
-            'Options for poll as comma separated strings. Max - 5',
+            'Options for poll as comma separated strings. Maximum of 5 options allowed.',
             required: true,
           ),
           CommandOptionBuilder(
@@ -37,35 +44,14 @@ class UtilsPollInteractions {
           ),
         ],
       )..registerHandler(pollSlashCommand))
-      ..registerButtonHandler('pollOption1', buttonOption1)
-      ..registerButtonHandler('pollOption2', buttonOption2)
-      ..registerButtonHandler('pollOption3', buttonOption3)
-      ..registerButtonHandler('pollOption4', buttonOption4)
-      ..registerButtonHandler('pollOption5', buttonOption5)
-      ..registerButtonHandler('pollDeselect', buttonOptionDeselect)
-      ..registerButtonHandler('pollCancel', buttonOptionCancel);
+      ..registerButtonHandler('poll-button-1', buttonHandler1)
+      ..registerButtonHandler('poll-button-2', buttonHandler2)
+      ..registerButtonHandler('poll-button-3', buttonHandler3)
+      ..registerButtonHandler('poll-button-4', buttonHandler4)
+      ..registerButtonHandler('poll-button-5', buttonHandler5)
+      ..registerButtonHandler('poll-button-deselect', deselectButtonHandler)
+      ..registerButtonHandler('poll-button-cancel', cancelButtonHandler);
   }
-
-  Future<void> buttonOption1(IButtonInteractionEvent event) async {
-    await event.acknowledge();
-    var pollEmbed = staticPollEmbed;
-
-    await event.editOriginalResponse(MessageBuilder.embed(pollEmbed));
-
-    await event.interaction.message?.edit(MessageBuilder.embed(pollEmbed));
-  }
-
-  Future<void> buttonOption2(IButtonInteractionEvent event) async {}
-
-  Future<void> buttonOption3(IButtonInteractionEvent event) async {}
-
-  Future<void> buttonOption4(IButtonInteractionEvent event) async {}
-
-  Future<void> buttonOption5(IButtonInteractionEvent event) async {}
-
-  Future<void> buttonOptionDeselect(IButtonInteractionEvent event) async {}
-
-  Future<void> buttonOptionCancel(IButtonInteractionEvent event) async {}
 
   Future<void> pollSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
@@ -75,7 +61,9 @@ class UtilsPollInteractions {
     final restrict = event.getArg('restrict').value.toString();
     print(restrict.runtimeType.toString());
 
-    staticPollEmbed = EmbedBuilder()
+    if (options.isEmpty) {}
+
+    final embed = EmbedBuilder()
       ..title = ':bar_chart: Poll: **$title**'
       ..color = DiscordColor.blue
       ..timestamp = DateTime.now()
@@ -84,33 +72,69 @@ class UtilsPollInteractions {
         footer.iconUrl = event.interaction.userAuthor?.avatarURL();
       });
 
-    var pollEmbed = staticPollEmbed;
-
-    for (var element in options) {
-      pollEmbed.addField(
-        name: '${(options.indexOf(element) + 1)}) $element',
+    for (var i = 0; i < options.length; i++) {
+      embed.addField(
+        name: '${i + 1}) ${options[i]}',
         content: '${emptyBar * 20}| 0% (0)',
       );
     }
 
-    await event.sendFollowup(MessageBuilder.embed(pollEmbed));
+    final message = await event.sendFollowup(MessageBuilder.embed(embed));
+
+    embedMap[message.id] = _EmbedData(embed: embed, map: {}, total: 0);
 
     final componentMessageBuilder = ComponentMessageBuilder();
-    final componentRow = ComponentRowBuilder();
+    final componentRow1 = ComponentRowBuilder();
+    final componentRow2 = ComponentRowBuilder();
 
-    for (var _ = 0; _ < options.length; _++) {
-      componentRow.addComponent(
-          ButtonBuilder('${(_ + 1)}', 'pollOption$_', ButtonStyle.primary));
+    for (var i = 0; i < options.length; i++) {
+      componentRow1.addComponent(ButtonBuilder(
+          '${(i + 1)}', 'poll-button-${i + 1}', ButtonStyle.primary));
+    }
+    componentRow2
+      ..addComponent(ButtonBuilder(
+          'Deselect', 'poll-button-deselect', ButtonStyle.secondary))
+      ..addComponent(
+          ButtonBuilder('Cancel', 'poll-button-cancel', ButtonStyle.danger));
 
-      optionPercentMap[_ + 1] = 0;
+    componentMessageBuilder
+      ..addComponentRow(componentRow1)
+      ..addComponentRow(componentRow2);
+    await event.respond(componentMessageBuilder);
+  }
+
+  Future<void> buttonHandler1(IButtonInteractionEvent event) async {
+    await event.acknowledge();
+    final data = embedMap[event.interaction.message!.id]!;
+
+    data.total++;
+    data.map[event.interaction.userAuthor!.id] = _OptionEnum.one;
+    //! check if user already entered option
+    for (var i = 0; i < data.embed.fields.length; i++) {
+      final optionAmount = data.map.values
+          .where((element) => element == _OptionEnum.values[i])
+          .length;
+      final percent = (optionAmount / data.total) * 100;
+      final barAmount = (percent / 5).round();
+      data.embed.fields[i].content =
+          '${filledBar * barAmount}${emptyBar * (20 - barAmount)}| $percent% ($optionAmount)';
     }
 
-    componentRow
-      ..addComponent(
-          ButtonBuilder('Deselect', 'pollDeselect', ButtonStyle.secondary))
-      ..addComponent(ButtonBuilder('Cancel', 'pollCancel', ButtonStyle.danger));
+    await event.editOriginalResponse(MessageBuilder.embed(data.embed));
+  }
 
-    componentMessageBuilder.addComponentRow(componentRow);
-    await event.respond(componentMessageBuilder);
+  Future<void> buttonHandler2(IButtonInteractionEvent event) async {}
+
+  Future<void> buttonHandler3(IButtonInteractionEvent event) async {}
+
+  Future<void> buttonHandler4(IButtonInteractionEvent event) async {}
+
+  Future<void> buttonHandler5(IButtonInteractionEvent event) async {}
+
+  Future<void> deselectButtonHandler(IButtonInteractionEvent event) async {}
+
+  Future<void> cancelButtonHandler(IButtonInteractionEvent event) async {
+    await event.acknowledge();
+    await event.deleteOriginalResponse();
   }
 }
