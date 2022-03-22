@@ -23,11 +23,8 @@
         Obsidian. The multipurpose Discord bot.
       </h1>
       <p class="mb-8 leading-relaxed text-gray-400">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta distinctio natus assumenda
-        error! Voluptate, labore reprehenderit similique repellat quam optio neque provident quod
-        nesciunt ab deleniti ad beatae corrupti quae! Lorem ipsum dolor sit amet consectetur
-        adipisicing elit. Rerum ipsum, nesciunt, labore sapiente numquam minus ad illo ea id in
-        perspiciatis mollitia corporis nam quisquam impedit quasi. Aspernatur, dolore magnam.
+        Obsidian is a multipurpose, self hosted, slash command only discord bot written in
+        Dart lang with the nyxx library.
       </p>
       <div class="flex justify-center">
         <a
@@ -49,11 +46,9 @@
       >
         <div class="flex-grow mt-6 text-center sm:mt-0">
           <h1 class="mb-16 text-3xl font-bold text-green-500 title-font sm:text-4xl">Features</h1>
-          <h2 class="mb-2 text-lg font-bold text-green-500 title-font">Moderation</h2>
+          <h2 class="mb-2 text-lg font-bold text-green-500 title-font">Fun and Moderation</h2>
           <p class="text-base leading-relaxed text-gray-400">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis culpa nesciunt iusto
-            facere quam laboriosam deserunt omnis sunt reiciendis distinctio quia, dolorum molestiae
-            placeat velit, recusandae sint, necessitatibus odio accusamus!
+            The bot comes with loads of fun, moderation and utility slash commands.
           </p>
         </div>
       </div>
@@ -63,9 +58,8 @@
         <div class="flex-grow mt-6 text-center sm:mt-0">
           <h2 class="mb-2 text-lg font-bold text-green-500 title-font">Music</h2>
           <p class="text-base leading-relaxed text-gray-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi rerum voluptatem illum
-            itaque obcaecati facilis neque molestiae quod suscipit voluptatibus. Debitis, totam?
-            Odit quod, nihil laudantium maiores recusandae sit perferendis?
+            Music in this bot is facilitated by the lavalink library. Listen to music from Youtube and SoundCloud
+             and other sources with near 0 lag
           </p>
         </div>
         <div
@@ -79,9 +73,8 @@
         <div class="flex-grow mt-6 text-center sm:mt-0">
           <h2 class="mb-2 text-lg font-bold text-green-500 title-font">Open Source</h2>
           <p class="text-base leading-relaxed text-gray-400">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Excepturi commodi accusamus
-            blanditiis officia molestias, ex in incidunt quos qui explicabo, numquam voluptas
-            doloremque rerum. Dolorum aliquid dolores quidem nemo temporibus!
+            This bot is fully open source and self hosted. Knowing Dart lang and a bit of the nyxx library,
+             you can easily tweak the code to suit your needs.
           </p>
         </div>
       </div>
@@ -102,9 +95,9 @@
           Conributing To Obsidian
         </h1>
         <p class="mb-8 leading-relaxed text-gray-400">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias dolores eligendi
-          perferendis qui dolore eius autem laboriosam, adipisci hic similique commodi ut
-          aspernatur? Corporis earum nobis nam, laboriosam temporibus velit!
+          Contributions to Obsidian are welcome! Prior knowledge of Dart lang and the nyxx wrapper library is a must for bot development.
+          To help improve the site, knowledge of SvelteKit and WindiCSS is required. You can also help improve the documentation
+          and report general grammar and spelling errors.
         </p>
         <div class="flex justify-center">
           <a
@@ -138,9 +131,8 @@
           Need Help? We got you.
         </h1>
         <p class="mb-8 leading-relaxed text-gray-400">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae magnam praesentium
-          molestias, magni ratione eveniet hic tenetur dolorem voluptatibus illum assumenda eum
-          omnis ut ad nemo esse, expedita nobis necessitatibus.
+          Join our support server for help related to commands or general questions about the bot.
+          Also check the documentation for detailed information on each command which can solve your doubts and save time.
         </p>
         <div class="flex justify-center">
           <button
@@ -159,7 +151,7 @@
 </div>
 <footer class="text-center text-white bg-gray-800">
   <div class="p-4 text-center">
-    © 2022
+    2022
     <a class="font-bold text-green-400" href="https://github.com/dhzdhd/Obsidian/">Obsidian</a>
   </div>
 </footer>

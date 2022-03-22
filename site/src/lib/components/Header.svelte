@@ -2,18 +2,17 @@
 </script>
 
 <header class="sticky top-0 text-gray-400 bg-gray-800 body-font ">
-  <div class="flex flex-col flex-wrap items-center p-5 mx-auto md:flex-row">
+  <div class="flex flex-wrap justify-between items-center p-5 mx-auto md:flex-row">
     <nav
-      class="flex flex-wrap items-center text-base text-transparent lg:w-2/5 md:ml-auto bg-clip-text bg-gradient-to-br from-green-400 to-green-600"
+      class="md:flex lg:flex flex-wrap items-center text-base gap-5 text-transparent lg:w-2/5 md:ml-auto hidden bg-clip-text bg-gradient-to-br from-green-400 to-green-600"
     >
-      <a class="mr-5 hover:text-green-500" href="/">Home</a>
-      <a class="mr-5 hover:text-green-500" href="#features">Features</a>
-      <a class="mr-5 hover:text-green-500" href="#contributing">Contribute</a>
-
+      <a class="hover:text-green-500" href="/">Home</a>
+      <a class="hover:text-green-500" href="#features">Features</a>
+      <a class="hover:text-green-500" href="#contributing">Contribute</a>
       <a class="hover:text-green-500" href="#support">Support</a>
     </nav>
     <a
-      class="flex items-center order-first mb-4 font-medium text-white lg:order-none lg:w-1/5 title-font lg:items-center lg:justify-center md:mb-0"
+      class="flex items-center order-first font-medium text-white lg:order-none lg:w-1/5 title-font lg:items-center lg:justify-center"
       href="/"
     >
       <img class="rounded-full" src="favicon.png" alt="obsidian_logo" width="50px" height="50px" />
@@ -25,7 +24,7 @@
     </a>
     <div class="inline-flex ml-5 lg:w-2/5 lg:justify-end lg:ml-0">
       <a
-        class="inline-flex items-center px-3 py-1 mt-4 font-bold text-white bg-green-500 border-0 rounded-full focus:outline-none hover:bg-green-600 md:mt-0"
+        class="inline-flex items-center px-3 py-1 font-bold text-white bg-green-500 border-0 rounded-full focus:outline-none hover:bg-green-600"
         href="/docs"
         >Docs
         <svg
