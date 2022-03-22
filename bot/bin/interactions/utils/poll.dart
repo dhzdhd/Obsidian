@@ -2,6 +2,7 @@ import 'package:nyxx/nyxx.dart';
 import 'package:nyxx_interactions/nyxx_interactions.dart';
 
 import '../../obsidian_dart.dart';
+import '../../utils/embed.dart';
 
 enum _OptionEnum { one, two, three, four, five }
 
@@ -36,12 +37,6 @@ class UtilsPollInteractions {
             'Options for poll as comma separated strings. Maximum of 5 options allowed.',
             required: true,
           ),
-          CommandOptionBuilder(
-            CommandOptionType.boolean,
-            'restrict',
-            'Restrict multiple choices.',
-            required: true,
-          ),
         ],
       )..registerHandler(pollSlashCommand))
       ..registerButtonHandler('poll-button-1', buttonHandler1)
@@ -58,10 +53,15 @@ class UtilsPollInteractions {
 
     final title = event.getArg('title').value.toString();
     final options = event.getArg('options').value.toString().split(',');
-    final restrict = event.getArg('restrict').value.toString();
-    print(restrict.runtimeType.toString());
 
-    if (options.isEmpty) {}
+    if (options.length > 5) {
+      await deleteMessageWithTimer(
+          message: await event.sendFollowup(MessageBuilder.embed(errorEmbed(
+        'Cannot enter more than 5 options!',
+        event.interaction.userAuthor,
+      ))));
+      return;
+    }
 
     final embed = EmbedBuilder()
       ..title = ':bar_chart: Poll: **$title**'
@@ -103,38 +103,92 @@ class UtilsPollInteractions {
     await event.respond(componentMessageBuilder);
   }
 
-  Future<void> buttonHandler1(IButtonInteractionEvent event) async {
-    await event.acknowledge();
-    final data = embedMap[event.interaction.message!.id]!;
-
-    data.total++;
-    data.map[event.interaction.userAuthor!.id] = _OptionEnum.one;
-    //! check if user already entered option
+  void editEmbedContent(_EmbedData data) {
     for (var i = 0; i < data.embed.fields.length; i++) {
       final optionAmount = data.map.values
           .where((element) => element == _OptionEnum.values[i])
           .length;
-      final percent = (optionAmount / data.total) * 100;
+      final percent = data.total != 0 ? (optionAmount / data.total) * 100 : 0;
       final barAmount = (percent / 5).round();
       data.embed.fields[i].content =
-          '${filledBar * barAmount}${emptyBar * (20 - barAmount)}| $percent% ($optionAmount)';
+          '${filledBar * barAmount}${emptyBar * (20 - barAmount)} ${percent.toStringAsFixed(2)}% ($optionAmount)';
+    }
+  }
+
+  void editEmbedMap(
+      _OptionEnum option, _EmbedData data, IButtonInteractionEvent event) {
+    if (data.map.containsKey(event.interaction.userAuthor!.id) &&
+        data.map[event.interaction.userAuthor!.id] == option) {
+      return;
+    } else if (data.map.containsKey(event.interaction.userAuthor!.id) &&
+        data.map[event.interaction.userAuthor!.id] != option) {
+      data.total--;
+      data.map.remove(event.interaction.userAuthor!.id);
     }
 
+    data.total++;
+    data.map[event.interaction.userAuthor!.id] = option;
+  }
+
+  Future<void> buttonHandler1(IButtonInteractionEvent event) async {
+    await event.acknowledge();
+    final data = embedMap[event.interaction.message!.id]!;
+
+    editEmbedMap(_OptionEnum.one, data, event);
+    editEmbedContent(data);
     await event.editOriginalResponse(MessageBuilder.embed(data.embed));
   }
 
-  Future<void> buttonHandler2(IButtonInteractionEvent event) async {}
+  Future<void> buttonHandler2(IButtonInteractionEvent event) async {
+    await event.acknowledge();
+    final data = embedMap[event.interaction.message!.id]!;
 
-  Future<void> buttonHandler3(IButtonInteractionEvent event) async {}
+    editEmbedMap(_OptionEnum.two, data, event);
+    editEmbedContent(data);
+    await event.editOriginalResponse(MessageBuilder.embed(data.embed));
+  }
 
-  Future<void> buttonHandler4(IButtonInteractionEvent event) async {}
+  Future<void> buttonHandler3(IButtonInteractionEvent event) async {
+    await event.acknowledge();
+    final data = embedMap[event.interaction.message!.id]!;
 
-  Future<void> buttonHandler5(IButtonInteractionEvent event) async {}
+    editEmbedMap(_OptionEnum.three, data, event);
+    editEmbedContent(data);
+    await event.editOriginalResponse(MessageBuilder.embed(data.embed));
+  }
 
-  Future<void> deselectButtonHandler(IButtonInteractionEvent event) async {}
+  Future<void> buttonHandler4(IButtonInteractionEvent event) async {
+    await event.acknowledge();
+    final data = embedMap[event.interaction.message!.id]!;
+
+    editEmbedMap(_OptionEnum.four, data, event);
+    editEmbedContent(data);
+    await event.editOriginalResponse(MessageBuilder.embed(data.embed));
+  }
+
+  Future<void> buttonHandler5(IButtonInteractionEvent event) async {
+    await event.acknowledge();
+    final data = embedMap[event.interaction.message!.id]!;
+
+    editEmbedMap(_OptionEnum.five, data, event);
+    editEmbedContent(data);
+    await event.editOriginalResponse(MessageBuilder.embed(data.embed));
+  }
+
+  Future<void> deselectButtonHandler(IButtonInteractionEvent event) async {
+    await event.acknowledge();
+    final data = embedMap[event.interaction.message!.id]!;
+
+    data.total--;
+    data.map.remove(event.interaction.userAuthor!.id);
+
+    editEmbedContent(data);
+    await event.editOriginalResponse(MessageBuilder.embed(data.embed));
+  }
 
   Future<void> cancelButtonHandler(IButtonInteractionEvent event) async {
     await event.acknowledge();
+    embedMap.remove(event.interaction.message!.id);
     await event.deleteOriginalResponse();
   }
 }
