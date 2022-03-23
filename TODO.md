@@ -75,6 +75,8 @@
   - [x] derivative
 - [x] poll.dart
   - [x] poll
+- [ ] remind.dart
+  - [ ] remind
 - [ ] roles.dart
   - [ ] add
   - [ ] delete
