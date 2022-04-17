@@ -30,17 +30,7 @@
     </div>
   </div>
 </header>
-<section class="bg-gradient-to-r from-gray-900 to-gray-800 ">
-  <h1
-    class="pt-4 text-center text-4xl font-bold text-green-500 md:px-5 md:pt-12 md:pb-2 md:text-left"
-  >
-    Documentation
-  </h1>
-  <p class="p-0 text-center text-xl text-gray-400 md:px-5 md:text-left">
-    Expore our guides to work with Obsidian
-  </p>
-</section>
-<section class="body-font bg-gradient-to-r from-gray-900 to-gray-800 text-gray-400">
+<section class="body-font  bg-gradient-to-r from-gray-900 to-gray-800 text-gray-400">
   <div class=" mx-auto flex flex-col items-center px-5 py-16 md:flex-row">
     <div
       class="mb-16 flex flex-col items-center text-center md:mb-0 md:w-1/2 md:items-start md:pr-16 md:text-left lg:flex-grow lg:pr-24"
