@@ -23,8 +23,8 @@
         Obsidian. The multipurpose Discord bot.
       </h1>
       <p class="mb-8 leading-relaxed text-gray-400">
-        Obsidian is a multipurpose, self hosted, slash command only discord bot written in
-        Dart lang with the nyxx library.
+        Obsidian is a multipurpose, self hosted, slash command only discord bot written in Dart lang
+        with the nyxx library.
       </p>
       <div class="flex justify-center">
         <a
@@ -58,8 +58,8 @@
         <div class="flex-grow mt-6 text-center sm:mt-0">
           <h2 class="mb-2 text-lg font-bold text-green-500 title-font">Music</h2>
           <p class="text-base leading-relaxed text-gray-400">
-            Music in this bot is facilitated by the lavalink library. Listen to music from Youtube and SoundCloud
-             and other sources with near 0 lag
+            Music in this bot is facilitated by the lavalink library. Listen to music from Youtube
+            and SoundCloud and other sources with near 0 lag
           </p>
         </div>
         <div
@@ -73,8 +73,8 @@
         <div class="flex-grow mt-6 text-center sm:mt-0">
           <h2 class="mb-2 text-lg font-bold text-green-500 title-font">Open Source</h2>
           <p class="text-base leading-relaxed text-gray-400">
-            This bot is fully open source and self hosted. Knowing Dart lang and a bit of the nyxx library,
-             you can easily tweak the code to suit your needs.
+            This bot is fully open source and self hosted. Knowing Dart lang and a bit of the nyxx
+            library, you can easily tweak the code to suit your needs.
           </p>
         </div>
       </div>
@@ -95,9 +95,10 @@
           Conributing To Obsidian
         </h1>
         <p class="mb-8 leading-relaxed text-gray-400">
-          Contributions to Obsidian are welcome! Prior knowledge of Dart lang and the nyxx wrapper library is a must for bot development.
-          To help improve the site, knowledge of SvelteKit and WindiCSS is required. You can also help improve the documentation
-          and report general grammar and spelling errors.
+          Contributions to Obsidian are welcome! Prior knowledge of Dart lang and the nyxx wrapper
+          library is a must for bot development. To help improve the site, knowledge of SvelteKit
+          and WindiCSS is required. You can also help improve the documentation and report general
+          grammar and spelling errors.
         </p>
         <div class="flex justify-center">
           <a
@@ -132,7 +133,8 @@
         </h1>
         <p class="mb-8 leading-relaxed text-gray-400">
           Join our support server for help related to commands or general questions about the bot.
-          Also check the documentation for detailed information on each command which can solve your doubts and save time.
+          Also check the documentation for detailed information on each command which can solve your
+          doubts and save time.
         </p>
         <div class="flex justify-center">
           <a
