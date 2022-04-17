@@ -1,6 +1,3 @@
-<script lang="ts">
-</script>
-
 <header class="sticky top-0 text-gray-400 bg-gray-800 body-font ">
   <div class="flex flex-wrap justify-between items-center p-5 mx-auto md:flex-row">
     <nav
