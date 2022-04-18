@@ -5,7 +5,7 @@
   <div class="mx-auto flex flex-wrap items-center justify-between p-5 md:flex-row">
     <a class="flex items-center  font-medium   lg:justify-center" href="/docs">
       <span
-        class="ml-2 bg-gradient-to-br from-green-400 to-green-600  bg-clip-text text-3xl font-bold text-transparent"
+        class="ml-2 bg-gradient-to-br from-green-400 to-green-600  bg-clip-text text-xl font-bold text-transparent"
       >
         Obsidian Docs
       </span>
