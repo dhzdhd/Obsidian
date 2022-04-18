@@ -30,23 +30,26 @@
     </div>
   </div>
 </header>
-<section class="body-font  bg-gradient-to-r from-gray-900 to-gray-800 text-gray-400">
-  <div class=" mx-auto flex flex-col items-center px-5 py-16 md:flex-row">
-    <div
-      class="mb-16 flex flex-col items-center text-center md:mb-0 md:w-1/2 md:items-start md:pr-16 md:text-left lg:flex-grow lg:pr-24"
-    >
-      <h1 class=" mb-4 text-3xl font-bold text-green-500 sm:text-4xl">Getting Started</h1>
-      <p class="mb-8">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit Sunt neque eum nemo minima<br />
-        fuga corrupti perferendis asperiores eaque quibusdam odio explicabo non libero<br /> laboriosam
-        consectetur veritatis qui. Rem, animi corporis.
+<section class="body-font bg-gradient-to-br from-gray-900 to-gray-800">
+  <div class="flex flex-col items-center justify-center px-5 py-24">
+    <div class="w-full text-center lg:w-2/3">
+      <h1 class="title-font mb-4 text-3xl font-bold text-green-500 sm:text-4xl">
+        Obsidian Documentation
+      </h1>
+      <p class="mb-8 leading-relaxed text-gray-400">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Error explicabo voluptate
+        excepturi, sed officiis sit dignissimos facere atque possimus in pariatur rem placeat quod
+        cumque quasi id deleniti, quos ut. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        Quam veniam asperiores consequuntur dolor blanditiis nisi voluptate natus illo, molestiae
+        ad. Dicta sit sed inventore id, culpa blanditiis animi impedit distinctio?
       </p>
       <div class="flex justify-center">
         <a
+          class="inline-flex rounded border-0 bg-green-500 px-6 py-2 text-lg text-white hover:bg-green-600 focus:outline-none"
           href="/"
-          class="inline-flex rounded border-0 bg-green-500 py-2 px-6 text-lg text-white hover:bg-green-600 focus:outline-none"
-          >Get Started</a
         >
+          Get Started
+        </a>
       </div>
     </div>
   </div>
