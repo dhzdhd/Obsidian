@@ -9,26 +9,26 @@
 </svelte:head>
 
 <Header />
-<section class="bg-gradient-to-br from-gray-900 to-gray-800 body-font">
+<section class="body-font bg-gradient-to-br from-gray-900 to-gray-800">
   <div class="flex flex-col items-center justify-center px-5 py-24">
     <img
-      class="object-cover object-center mb-10 rounded-full"
+      class="mb-10 rounded-full object-cover object-center"
       alt="hero"
       src="favicon.png"
       width="200px"
       height="200px"
     />
     <div class="w-full text-center lg:w-2/3">
-      <h1 class="mb-4 text-3xl font-bold text-green-500 title-font sm:text-4xl">
+      <h1 class="title-font mb-4 text-3xl font-bold text-green-500 sm:text-4xl">
         Obsidian. The multipurpose Discord bot.
       </h1>
       <p class="mb-8 leading-relaxed text-gray-400">
-        Obsidian is a multipurpose, self hosted, slash command only discord bot written in
-        Dart lang with the nyxx library.
+        Obsidian is a multipurpose, self hosted, slash command only discord bot written in Dart lang
+        with the nyxx library.
       </p>
       <div class="flex justify-center">
         <a
-          class="inline-flex px-6 py-2 text-lg text-white bg-green-500 border-0 rounded focus:outline-none hover:bg-green-600"
+          class="inline-flex rounded border-0 bg-green-500 px-6 py-2 text-lg text-white hover:bg-green-600 focus:outline-none"
           href="#features"
         >
           See Features
@@ -39,47 +39,47 @@
 </section>
 
 <div id="features">
-  <section class="text-center bg-gray-900 body-font">
-    <div class="px-5 py-24 mx-auto ">
+  <section class="body-font bg-gray-900 text-center">
+    <div class="mx-auto px-5 py-24 ">
       <div
-        class="flex flex-col items-center pb-10 mx-auto mb-10 border-b border-gray-800 lg:w-3/5 sm:flex-row"
+        class="mx-auto mb-10 flex flex-col items-center border-b border-gray-800 pb-10 sm:flex-row lg:w-3/5"
       >
-        <div class="flex-grow mt-6 text-center sm:mt-0">
-          <h1 class="mb-16 text-3xl font-bold text-green-500 title-font sm:text-4xl">Features</h1>
-          <h2 class="mb-2 text-lg font-bold text-green-500 title-font">Fun and Moderation</h2>
+        <div class="mt-6 flex-grow text-center sm:mt-0">
+          <h1 class="title-font mb-16 text-3xl font-bold text-green-500 sm:text-4xl">Features</h1>
+          <h2 class="title-font mb-2 text-lg font-bold text-green-500">Fun and Moderation</h2>
           <p class="text-base leading-relaxed text-gray-400">
             The bot comes with loads of fun, moderation and utility slash commands.
           </p>
         </div>
       </div>
       <div
-        class="flex flex-col items-center pb-10 mx-auto mb-10 border-b border-gray-800 lg:w-3/5 sm:flex-row"
+        class="mx-auto mb-10 flex flex-col items-center border-b border-gray-800 pb-10 sm:flex-row lg:w-3/5"
       >
-        <div class="flex-grow mt-6 text-center sm:mt-0">
-          <h2 class="mb-2 text-lg font-bold text-green-500 title-font">Music</h2>
+        <div class="mt-6 flex-grow text-center sm:mt-0">
+          <h2 class="title-font mb-2 text-lg font-bold text-green-500">Music</h2>
           <p class="text-base leading-relaxed text-gray-400">
-            Music in this bot is facilitated by the lavalink library. Listen to music from Youtube and SoundCloud
-             and other sources with near 0 lag
+            Music in this bot is facilitated by the lavalink library. Listen to music from Youtube
+            and SoundCloud and other sources with near 0 lag
           </p>
         </div>
         <div
-          class="inline-flex items-center justify-center flex-shrink-0 text-green-400 bg-gray-800 rounded-full"
+          class="inline-flex flex-shrink-0 items-center justify-center rounded-full bg-gray-800 text-green-400"
         />
       </div>
-      <div class="flex flex-col items-center mx-auto lg:w-3/5 sm:flex-row">
+      <div class="mx-auto flex flex-col items-center sm:flex-row lg:w-3/5">
         <div
-          class="inline-flex items-center justify-center flex-shrink-0 text-green-400 bg-gray-800 rounded-full"
+          class="inline-flex flex-shrink-0 items-center justify-center rounded-full bg-gray-800 text-green-400"
         />
-        <div class="flex-grow mt-6 text-center sm:mt-0">
-          <h2 class="mb-2 text-lg font-bold text-green-500 title-font">Open Source</h2>
+        <div class="mt-6 flex-grow text-center sm:mt-0">
+          <h2 class="title-font mb-2 text-lg font-bold text-green-500">Open Source</h2>
           <p class="text-base leading-relaxed text-gray-400">
-            This bot is fully open source and self hosted. Knowing Dart lang and a bit of the nyxx library,
-             you can easily tweak the code to suit your needs.
+            This bot is fully open source and self hosted. Knowing Dart lang and a bit of the nyxx
+            library, you can easily tweak the code to suit your needs.
           </p>
         </div>
       </div>
       <a
-        class="inline-flex justify-center px-6 py-2 mt-16 text-lg text-white bg-green-500 border-0 rounded-full focus:outline-none hover:bg-green-600"
+        class="mt-16 inline-flex justify-center rounded-full border-0 bg-green-500 px-6 py-2 text-lg text-white hover:bg-green-600 focus:outline-none"
         href="#contributing"
       >
         Contribute
@@ -88,24 +88,25 @@
   </section>
 </div>
 <div id="contributing">
-  <section class="bg-gradient-to-br from-gray-900 to-gray-800 body-font">
-    <div class="flex flex-col items-center justify-center px-5 py-24 mx-auto ">
+  <section class="body-font bg-gradient-to-br from-gray-900 to-gray-800">
+    <div class="mx-auto flex flex-col items-center justify-center px-5 py-24 ">
       <div class="w-full text-center lg:w-2/3">
-        <h1 class="mb-4 text-3xl font-bold text-green-500 title-font sm:text-4xl">
+        <h1 class="title-font mb-4 text-3xl font-bold text-green-500 sm:text-4xl">
           Conributing To Obsidian
         </h1>
         <p class="mb-8 leading-relaxed text-gray-400">
-          Contributions to Obsidian are welcome! Prior knowledge of Dart lang and the nyxx wrapper library is a must for bot development.
-          To help improve the site, knowledge of SvelteKit and WindiCSS is required. You can also help improve the documentation
-          and report general grammar and spelling errors.
+          Contributions to Obsidian are welcome! Prior knowledge of Dart lang and the nyxx wrapper
+          library is a must for bot development. To help improve the site, knowledge of SvelteKit
+          and WindiCSS is required. You can also help improve the documentation and report general
+          grammar and spelling errors.
         </p>
         <div class="flex justify-center">
           <a
-            class="inline-flex px-6 py-2 text-lg text-white bg-green-500 border-0 rounded focus:outline-none hover:bg-green-600"
+            class="inline-flex rounded border-0 bg-green-500 px-6 py-2 text-lg text-white hover:bg-green-600 focus:outline-none"
             href="https://github.com/dhzdhd/Obsidian#contributing">Contributing Guidelines</a
           >
           <a
-            class="inline-flex px-6 py-2 ml-4 text-lg text-white bg-green-500 border-0 rounded focus:outline-none hover:bg-green-600"
+            class="ml-4 inline-flex rounded border-0 bg-green-500 px-6 py-2 text-lg text-white hover:bg-green-600 focus:outline-none"
             href="https://github.com/dhzdhd/Obsidian">GitHub</a
           >
         </div>
@@ -113,36 +114,37 @@
     </div>
   </section>
 </div>
-<section class="text-gray-400 bg-gradient-to-br from-gray-900 to-gray-800 body-font">
-  <div class="px-5 py-24 mx-auto">
-    <div class="flex flex-col w-full mb-20 text-center">
-      <h1 class="mb-4 text-3xl font-bold text-green-500 sm:text-4xl title-font">Contributors</h1>
+<section class="body-font bg-gradient-to-br from-gray-900 to-gray-800 text-gray-400">
+  <div class="mx-auto px-5 py-24">
+    <div class="mb-20 flex w-full flex-col text-center">
+      <h1 class="title-font mb-4 text-3xl font-bold text-green-500 sm:text-4xl">Contributors</h1>
     </div>
-    <div class="flex flex-wrap -m-2">
+    <div class="-m-2 flex flex-wrap">
       <Contributor />
     </div>
   </div>
 </section>
 <div id="support">
-  <section class="text-gray-400 bg-gray-900 body-font">
-    <div class="flex flex-col items-center justify-center px-5 py-24 mx-auto ">
+  <section class="body-font bg-gray-900 text-gray-400">
+    <div class="mx-auto flex flex-col items-center justify-center px-5 py-24 ">
       <div class="w-full text-center lg:w-2/3">
-        <h1 class="mb-4 text-3xl font-bold text-green-500 title-font sm:text-4xl">
+        <h1 class="title-font mb-4 text-3xl font-bold text-green-500 sm:text-4xl">
           Need Help? We got you.
         </h1>
         <p class="mb-8 leading-relaxed text-gray-400">
           Join our support server for help related to commands or general questions about the bot.
-          Also check the documentation for detailed information on each command which can solve your doubts and save time.
+          Also check the documentation for detailed information on each command which can solve your
+          doubts and save time.
         </p>
         <div class="flex justify-center">
           <a
             href="https://discord.gg/6zVggku2qX"
-            class="inline-flex px-6 py-2 text-lg text-white bg-green-500 border-0 rounded focus:outline-none hover:bg-green-600"
+            class="inline-flex rounded border-0 bg-green-500 px-6 py-2 text-lg text-white hover:bg-green-600 focus:outline-none"
             >Support Server</a
           >
           <a
             href="/docs"
-            class="inline-flex px-6 py-2 ml-4 text-lg text-white bg-green-500 border-0 rounded focus:outline-none hover:bg-green-600"
+            class="ml-4 inline-flex rounded border-0 bg-green-500 px-6 py-2 text-lg text-white hover:bg-green-600 focus:outline-none"
             >Obsidian Docs</a
           >
         </div>
@@ -150,7 +152,7 @@
     </div>
   </section>
 </div>
-<footer class="text-center text-white bg-gray-800">
+<footer class="bg-gray-800 text-center text-white">
   <div class="p-4 text-center">
     2022
     <a class="font-bold text-green-400" href="https://github.com/dhzdhd/Obsidian/">Obsidian</a>
