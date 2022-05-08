@@ -1,8 +1,8 @@
 <script lang="ts">
 </script>
 
-<header class="body-font sticky top-0 bg-gray-800 text-gray-400 ">
-  <div class="mx-auto flex flex-wrap items-center justify-between p-5 md:flex-row">
+<header class="body-font h-22 sticky top-0 bg-gray-800 text-gray-400 ">
+  <div class="mx-auto flex flex-wrap items-center justify-between p-5 pt-7 md:flex-row">
     <a class="flex items-center  font-medium   lg:justify-center" href="/docs">
       <span
         class="ml-2 bg-gradient-to-br from-green-400 to-green-600  bg-clip-text text-xl font-bold text-transparent"
