@@ -15,11 +15,13 @@ class UtilsRemindInteraction {
           CommandOptionType.string,
           'event',
           'The event you need to be reminded of.',
+          required: true,
         ),
         CommandOptionBuilder(
           CommandOptionType.string,
           'time',
           'The time until which you want to be reminded of the event.',
+          required: true,
         ),
       ],
     )..registerHandler(remindSlashCommand));
@@ -32,7 +34,7 @@ class UtilsRemindInteraction {
   Future<void> remindSlashCommand(ISlashCommandInteractionEvent event) async {
     await event.acknowledge();
 
-    final eventTitle = event.getArg('title');
+    final eventTitle = event.getArg('event');
     final rawTime = event.getArg('time').toString();
 
     final time = parseTimeString(rawTime);

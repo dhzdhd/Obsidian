@@ -1,4 +1,4 @@
-import 'package:dotenv/dotenv.dart' show load, env;
+import 'package:dotenv/dotenv.dart';
 import 'package:nyxx/nyxx.dart';
 
 class Tokens {
@@ -16,7 +16,7 @@ class Tokens {
   static String movieApiKey = '';
 
   static void loadEnv() {
-    load('.env');
+    final env = DotEnv(includePlatformEnvironment: true)..load();
 
     botToken = env['BOT_TOKEN'].toString();
     botOwner = env['BOT_OWNER'].toString();
@@ -81,4 +81,18 @@ class Names {
     'say_msg': 'Command invoked by',
     'member': 'Command invoked by'
   };
+}
+
+class Perms {
+  static const modPerms = PermissionsConstants.manageMessages |
+      PermissionsConstants.banMembers |
+      PermissionsConstants.muteMembers |
+      PermissionsConstants.manageGuild |
+      PermissionsConstants.administrator |
+      PermissionsConstants.kickMembers;
+  static const adminPerms = PermissionsConstants.administrator;
+  static const managerPerms = PermissionsConstants.manageChannels |
+      PermissionsConstants.manageMessages |
+      PermissionsConstants.manageGuild |
+      PermissionsConstants.manageRolesOrPermissions;
 }

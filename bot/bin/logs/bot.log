@@ -1,0 +1,24 @@
+
+
+
+░█████╗░██████╗░░██████╗██╗██████╗░██╗░█████╗░███╗░░██╗
+██╔══██╗██╔══██╗██╔════╝██║██╔══██╗██║██╔══██╗████╗░██║
+██║░░██║██████╦╝╚█████╗░██║██║░░██║██║███████║██╔██╗██║
+██║░░██║██╔══██╗░╚═══██╗██║██║░░██║██║██╔══██║██║╚████║
+╚█████╔╝██████╦╝██████╔╝██║██████╔╝██║██║░░██║██║░╚███║
+░╚════╝░╚═════╝░╚═════╝░╚═╝╚═════╝░╚═╝╚═╝░░╚═╝╚═╝░░╚══╝
+
+
+
+
+**************************************************
+
+
+[2022-07-09 21:45:15.225356] [INFO] [Interactions] Interactions ready
+[2022-07-09 21:45:15.226353] [SHOUT] [Client] Got Error: Message: [InvalidSnowflakeException: Cannot parse [null] to Snowflake]. Stacktrace: 
+#0      new Snowflake (package:nyxx/src/core/snowflake.dart:39)
+#1      main (file:///d:/programming/dart/obsidian/obsidian_dart/bot/bin/obsidian_dart.dart:61)
+<asynchronous suspension>
+
+[2022-07-09 21:45:15.713706] [SHOUT] [Client] Got Error: Message: [[Code: 401] [Message: {"message": "401: Unauthorized", "code": 0}]]. Stacktrace: 
+Instance of '_StringStackTrace'

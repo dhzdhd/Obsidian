@@ -27,6 +27,8 @@ class ModWarnBanInteractions {
             required: true,
           )
         ],
+        canBeUsedInDm: false,
+        requiredPermissions: Perms.modPerms,
       )..registerHandler(warnSlashCommand))
       ..registerSlashCommand(SlashCommandBuilder(
         'ban',
@@ -45,6 +47,8 @@ class ModWarnBanInteractions {
             required: true,
           )
         ],
+        canBeUsedInDm: false,
+        requiredPermissions: Perms.modPerms,
       )..registerHandler(banSlashCommand))
       ..registerButtonHandler('ban-button', banButtonHandler);
   }

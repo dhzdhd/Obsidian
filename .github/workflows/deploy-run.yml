@@ -4,7 +4,6 @@ on:
   push:
     branches: [ stable ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
@@ -12,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # - uses: actions/checkout@v2
+      # - uses: actions/checkout@v3
 
       - name: Pull latest changes to stable branch
         uses: fifsky/ssh-action@v0.0.6
